@@ -1,0 +1,41 @@
+vbell on
+autodetach on
+startup_message off
+# emulate .logout message
+pow_detach_msg "Screen session of \$LOGNAME \$:cr:\$:nl:ended."
+shell -$SHELL
+# set every new windows hardstatus line to somenthing descriptive
+# defhstatus "screen: ^En (^Et)"
+defscrollback 10000
+# enable support for the "alternate screen" capability in all windows
+# altscreen on
+hardstatus alwayslastline "%-Lw%50>%n%f* %t%+Lw%<  %=Load: %l %c"
+nonblock on
+term screen-256color
+
+################
+#
+# keybindings
+#
+
+#remove some stupid / dangerous key bindings
+bind k
+bind ^k
+bind .
+bind ^\
+bind \\
+bind ^h
+bind h
+#make them better
+bind 'K' kill
+bind 'I' login on
+bind 'O' login off
+bind '}' history
+
+# Yet another hack:
+# Prepend/append register [/] to the paste if ^a^] is pressed.
+# This lets me have autoindent mode in vi.
+register [ "\033:se noai\015a"
+register ] "\033:se ai\015a"
+bind ^] paste [.]
+

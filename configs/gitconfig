@@ -1,0 +1,14 @@
+[user]
+	email = jbalint@gmail.com
+	name = Jess Balint
+
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+[core]
+	pager = less
+
+[status]
+	showUntrackedFiles = no
+

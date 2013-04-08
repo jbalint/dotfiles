@@ -1,0 +1,37 @@
+define wchar_print
+	echo "
+
+	set $i = 0
+	while (1 == 1)
+		set $c = (char)(($arg0)[$i++])
+		if ($c == '\0')
+			loop_break
+		end
+		printf "%c", $c
+	end
+
+	echo "\n
+end
+
+document wchar_print
+wchar_print <wstr>
+Print ASCII part of <wstr>, which is a wide character string of type wchar_t*.
+end
+
+define bp_list
+	set $b = breakpoint_chain
+	printf "Num\tDisp\tEnb\tAddress\tWhat\n"
+	while ($b)
+		# TODO need a way to printf the enum value, like print
+		printf "%d\t", $b->number
+		print $b->disposition
+		echo "\t"
+		print $b->enable_state
+		echo "\t"
+		printf "%p\tin %s at %s:%d\n", $b->loc, ($b->addr_string?$b->addr_string:"<unknown>"), ($b->source_file?$b->source_file:"<unknown>"), $b->line_number
+		set $b = $b->next
+	end
+end
+
+set print pretty on
+
