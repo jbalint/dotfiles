@@ -8,3 +8,5 @@ fi
 for C in configs/* ; do
     ln -s `pwd`/$C $HOME/.${C##*/}
 done
+ln -s `pwd`/configs/emacs.d/.emacs $HOME/.emacs
+
