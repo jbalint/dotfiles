@@ -1,0 +1,20 @@
+[general]
+accounts = Work
+
+[Account Work]
+localrepository = Local
+remoterepository = Remote
+presynchook = /usr/bin/imapfilter -vc ~/.imapfilter/oracle.lua
+
+[Repository Local]
+type = Maildir
+localfolders = ~/mutt_mail/OracleIMAP
+
+[Repository Remote]
+type = IMAP
+remotehost = stbeehive.oracle.com
+remoteuser = jess.balint@oracle.com
+remotepassfile = ~/.oracle_sso_pw
+ssl = yes
+cert_fingerprint = eba5fe8ba4ea50ee94aca39f8512aafb02b22549
+

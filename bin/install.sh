@@ -6,5 +6,5 @@ if [ ! -e bin/install.sh ] ; then
 fi
 
 for C in configs/* ; do
-    ln -si `pwd`/$C $HOME/.${C##*/}
+    ln -s `pwd`/$C $HOME/.${C##*/}
 done
