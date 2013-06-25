@@ -31,7 +31,8 @@ connectors = {destination="connectors",
                        "mysql-connectors_ww_grp@oracle.com",
                        "mysql-connectors-java_grp@oracle.com"}}
 dev_bugs = {destination="dev-bugs",
-            sent_to={"mysql_dev-bugs_ww@oracle.com"}}
+            sent_to={"mysql_dev-bugs_ww@oracle.com",
+                     "MYSQL_DEV-BUGS_WW@oracle.com"}}
 dev_private = {destination="dev-private",
                sent_to={"mysql_dev-private_ww_grp@oracle.com",
                         "MYSQL_DEV-PRIVATE_WW@oracle.com"}}
