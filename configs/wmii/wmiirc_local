@@ -1,0 +1,19 @@
+MODKEY=Mod4
+# Status Bar Info
+status() {
+	TOTALMEM=$(free | grep Mem: | gawk '{print $2}')
+	USEDMEM=$(free | grep buffers/cache | gawk '{print $3}')
+	MEM="Mem: $(echo $USEDMEM / $TOTALMEM \* 100 | bc -l | perl -lpe's/\..*//')%"
+	WIFI="Wifi: $(iwconfig wlp3s0 | grep SSID | perl -lpe's/.*\"(.+)\".*/$1/') ($(iwconfig wlp3s0 | grep Quality | perl -lpe's/.*Quality=(.+?) .*/$1/'))"
+	BATT="Batt: $(acpi -b | perl -lpe's/.*?(\d+%).*/$1/')"
+	LOAD="$(uptime | perl -lpe's/.*average: //')"
+	DATE="$(date '+%c')"
+
+	STATUS="$MEM | $BATT | $LOAD | $DATE"
+	if [ `ip link show wlp3s0 | grep 'state UP' | wc -l` -eq 1 ] ; then
+		STATUS="$WIFI | $STATUS"
+	fi
+	echo -n " $STATUS "
+}
+
+
