@@ -1,42 +1,16 @@
-
-#
-# Lines begin with `#' are comment.
-# Empty lines are ignored
-#
-# FOLDER NAME  "FOLDER NICKNAME"
-# (nicknames are not necessary)
-#
+# folders for Wanderlust
 .INBOX
 .followup
 .connectors
 .interesting
 .fabric
-.archive
-.Drafts
-.Sent Items
-.dev-bugs
-.dev-commits
-.dev-private
-.Trash
-.Junk E-mail
-
-## %inbox  "Inbox"
-## +trash  "Trash"
-## +draft  "Drafts"
-## %#mh/Backup@my.imap.example.com "Sent"
-## # Folder Group
-## Emacsen{
-##     %#mh/spool/wl            "Wanderlust ML"
-##     %#mh/spool/elips         "ELIPS ML"
-##     %#mh/spool/apel-ja       "APEL Japanese ML"
-##     %#mh/spool/xemacs-beta   "XEmacs beta"
-##     -fj.news.reader.gnus@other.nntp.example.com "Gnus Net news"
-##     *-fj.editor.xemacs,-fj.editor.mule,-fj.editor.emacs "fj's Emacsen"
-## }
-## #
-## # If folder name ends with `/', that means an `access group',
-## # all subfolders automatically included in one folder group.
-## #
-## %#mh/expire@localhost /
-## # All MH folders are included in one folder group.
-## + /
+Boring {
+  .archive
+  .Drafts
+  .Sent Items
+  .dev-bugs
+  .dev-commits
+  .dev-private
+  .Trash
+  .Junk E-mail
+}

@@ -1,3 +1,5 @@
+;; mode:-*-emacs-lisp-*-
+;; wanderlust
 
 ;; ######## ##     ##    ###    #### ##       
 ;; ##       ###   ###   ## ##    ##  ##       
@@ -9,6 +11,14 @@
 
 ;; Config c.f.
 ;; http://emacs-fu.blogspot.com/2009/06/e-mail-with-wanderlust.html
+;; http://emacs-fu.blogspot.com/2009/09/wanderlust-tips-and-tricks.html
+;; http://emacs-fu.blogspot.com/2010/02/i-have-been-using-wanderlust-e-mail.html
+;; http://emacs-fu.blogspot.com/2009/08/managing-e-mail-addresses-with-bbdb.html
+;; --
+;; http://dis-dot-dat.blogspot.com/2010/04/ive-used-combination-of-mutt-emacs.html
+;; http://dis-dot-dat.blogspot.com/2010/04/my-wanderlust-setup.html
+;; -- for later checking:
+;; http://www.gnumonk.com/my-config/my-wl-1
 
 ; for debugging mail sending c.f. info -> SMTP -> Debugging
 ;; (setq
@@ -35,6 +45,7 @@
  wl-fcc ".Sent Items"
  wl-fcc-force-as-read t
  mime-edit-split-message nil
+ wl-summary-width 150
 )
 
 ;; (setq starttls-use-gnutls t)
