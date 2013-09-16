@@ -1,0 +1,46 @@
+
+;; ######## ##     ##    ###    #### ##       
+;; ##       ###   ###   ## ##    ##  ##       
+;; ##       #### ####  ##   ##   ##  ##       
+;; ######   ## ### ## ##     ##  ##  ##       
+;; ##       ##     ## #########  ##  ##       
+;; ##       ##     ## ##     ##  ##  ##       
+;; ######## ##     ## ##     ## #### ######## 
+
+;; Config c.f.
+;; http://emacs-fu.blogspot.com/2009/06/e-mail-with-wanderlust.html
+
+; for debugging mail sending c.f. info -> SMTP -> Debugging
+;; (setq
+;;  smtpmail-debug-info t
+;;  smtpmail-debug-verb t)
+
+(setq
+ elmo-maildir-folder-path "/home/jbalint/mutt_mail/OracleIMAP"
+
+ wl-smtp-posting-server "stbeehive.oracle.com"
+ wl-smtp-posting-port 465
+ wl-smtp-posting-user "jess.balint@oracle.com"
+ wl-smtp-connection-type 'ssl
+ wl-smtp-authenticate-type "login"
+
+ wl-from "Jess Balint <jess.balint@oracle.com>"
+ wl-local-domain "oracle.com"
+
+ wl-auto-save-drafts-interval nil
+ wl-draft-folder ".Drafts"
+ wl-draft-enable-queuing nil
+ wl-trash-folder ".Trash"
+ wl-spam-folder ".Junk E-mail"
+ wl-fcc ".Sent Items"
+ wl-fcc-force-as-read t
+ mime-edit-split-message nil
+)
+
+;; (setq starttls-use-gnutls t)
+;; (setq starttls-gnutls-program "gnutls-cli")
+;; (setq starttls-extra-arguments '("--insecure"))
+
+;; (setq ssl-program-name "openssl s_client -ssl2 -connect %s:%p")
+;; (setq smtpmail-auth-credentials '(("stbeehive.oracle.com" 465 "jess.balint@oracle.com" "myPassW3rd....")))
+;; (setq smtp-server "stbeehive.oracle.com")
