@@ -1,0 +1,373 @@
+# ZSH configuration
+#
+# http://www.network-science.de/ascii/
+# style=banner
+
+ulimit -c unlimited
+
+# view images with `feh'
+
+#FANCY_IP=192.168.1.114
+FANCY_IP=24.241.225.93
+LAN_IF=wlp3s0
+LAN_IP=$(ip addr show $LAN_IF | grep 'inet ' | perl -lpe's/.*inet\ (\d+\.\d+\.\d+\.\d+)\/.*/$1/')
+LAN_GW_IP=$(ip route show | grep default | head -1 | gawk '{print $3}')
+LAN_DNS=$(grep nameserver /etc/resolv.conf | head -n 1 | gawk '{print $2}')
+
+export HOSTNAME=$(hostname)
+export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/bin/core_perl
+export JAVA5_HOME=~/sw/jdk5
+export JAVA6_HOME=~/sw/jdk6
+export JAVA7_HOME=~/sw/jdk7
+export LUA_HOME=~/sw/lua-5.2.2
+
+export MYSQL_HOME=~/sw/mysql-5.5.30-linux2.6-x86_64
+
+export OPCODEDIR=/usr/lib/csound/plugins
+export CSSTRNGS=/usr/share/locale
+export WINEPREFIX=/home/jbalint/wine_test1
+export WINEARCH=win32
+
+export LD_LIBRARY_PATH=~/sw/yellow-tree:~/lib
+
+if [ "$JAVA_HOME" = "" ] ; then
+	export JAVA_HOME=$JAVA5_HOME
+fi
+for X ( /opt/cisco/vpn/bin \
+	~/bin \
+	~/.local/bin \
+	~/sw/FoxitReader-1.1-release \
+	~/sw/apache-ant-1.9.2/bin \
+	~/sw/lunit-0.5 \
+	$JAVA_HOME/bin ) ; do
+	export PATH="$X:$PATH"
+done
+
+export EDITOR=vim
+export LUA_PATH="/home/jbalint/sw/yellow-tree/?.lua;/home/jbalint/sw/lunit-0.5/?.lua;;"
+
+alias vi=vim
+alias rein=". ~/.zshrc"
+alias java5="export JAVA_HOME=$JAVA5_HOME ; rein"
+alias java6="export JAVA_HOME=$JAVA6_HOME ; rein"
+alias java7="export JAVA_HOME=$JAVA7_HOME ; rein"
+alias sibelius="cd '/home/jbalint/wine_test1/drive_c/Program Files/Sibelius Software/Sibelius 4' ; wine Sibelius"
+alias edrc="vi ~/.zshrc"
+alias reset_inotify="echo 9999 | sudo tee /proc/sys/fs/inotify/max_user_watches"
+alias dnsme="echo nameserver 127.0.0.1 | sudo tee /etc/resolv.conf"
+alias screenshot="sleep 3s; import -window root screenshot.png"
+alias bzr-diff="bzr cdiff | less -r"
+ 
+alias FETbasic="wine ~/wine_test1/drive_c/Program\ Files/Functional\ Ear\ Trainer\ -\ Basic/FunctionalEarTrainer.exe"
+alias FETadvanced="wine ~/wine_test1/drive_c/Program\ Files/Functional\ Ear\ Trainer\ -\ Advanced/FET_advanced.exe"
+
+alias facebook="chromium facebook.com"
+alias timidity="timidity -iA -R 1"
+
+xterm_title() {
+	echo "\033]2;$1\007"
+}
+
+sS() {
+	xterm_title "$1"
+	screen -S "$1"
+	xterm_title "urxvt"
+}
+
+sr() {
+	xterm_title "$1"
+	screen -rd "$1"
+	xterm_title "urxvt"
+}
+
+alias sl='screen -list'
+
+Ts() {
+	tmux new-session -s "$1"
+}
+
+Tl() {
+	tmux list-sessions
+}
+
+Tr() {
+	tmux attach-session -t "$1"
+}
+
+tmux-list() {
+	ss -f unix -lp | grep tmux
+}
+
+yt_pid() {
+	#YT_PID=$(ps w | egrep "Xcheck.*lunit" | grep -v grep  | awk "{print \$1}")
+	YT_PID=$(ps w | egrep "Xcheck.*yt" | egrep -v "grep|gdb"  | awk "{print \$1}")
+	echo $YT_PID
+}
+
+yt_jstack() {
+	YT_PID=$(yt_pid)
+	if [ "$YT_PID" -ne "" ] ; then
+		jstack $YT_PID
+	else
+		echo "None running"
+	fi
+}
+
+yt_gstack() {
+	YT_PID=$(yt_pid)
+	if [ "$YT_PID" -ne "" ] ; then
+		gstack $YT_PID
+	else
+		echo "None running"
+	fi
+}
+
+gstack() {
+	gdb -batch -ex "thread apply all bt full" -p $1
+}
+
+# Setup a route to 'fancy' at home for web (port 8023)
+# requires local DNS to fancy to LAN_IP
+route_fancy() {
+	sudo iptables -t nat -F
+	sudo iptables -t nat -A OUTPUT -d $LAN_IP -p tcp -m tcp --dport 80 -j DNAT --to-destination $FANCY_IP:8023
+}
+
+mount_fancy() {
+	if [ "$FANCY_CIFS_PW" = "" ] ; then
+		echo "Please set FANCY_CIFS_PW"
+		return
+	fi
+	sudo mount -t cifs '//fancy/K$'             /mnt/fancy/K        -o "user=Administrator,password=$FANCY_CIFS_PW"
+	sudo mount -t cifs '//fancy/D$'             /mnt/fancy/D        -o "user=Administrator,password=$FANCY_CIFS_PW"
+	sudo mount -t cifs '//fancy/D$/DL/Torrents' /mnt/fancy/Torrents -o "user=Administrator,password=$FANCY_CIFS_PW"
+}
+
+mouse_invert() {
+	BTNS="1 2 3"
+	if [ "$1" = "t" ] ; then
+		BTNS="3 2 1"
+	fi
+	xmodmap -e "pointer = $BTNS"
+}
+
+####################################
+####################################
+##                                ##
+## #     #                        ##
+## #     # # #####  ######  ####  ##
+## #     # # #    # #      #    # ##
+## #     # # #    # #####  #    # ##
+##  #   #  # #    # #      #    # ##
+##   # #   # #    # #      #    # ##
+##    #    # #####  ######  ####  ##
+##                                ##
+####################################
+####################################
+
+tv_on() {
+	xrandr --output HDMI1 --auto --mode 1366x768 --same-as LVDS1
+}
+
+tv_off() {
+	xrandr --output HDMI1 --off
+}
+
+monitor_on() {
+	#xrandr --output HDMI1 --auto --mode 1680x1050 --same-as LVDS1
+	xrandr --output HDMI1 --auto --mode 1680x1050 --right-of LVDS1
+	echo "Remember to invert mouse buttons"
+}
+
+monitor_off() {
+	xrandr --output HDMI1 --off
+}
+
+laptop_on() {
+	xrandr --output LVDS1 --auto --mode 1366x768
+}
+
+laptop_off() {
+	xrandr --output LVDS1 --off
+}
+
+#xbmc-tv() {
+#	tv_on
+#	laptop_off
+#	pa-hdmi
+#	xbmc
+#	tv_off
+#	laptop_on
+#	pa-analog
+#}
+
+run-xbmc() {
+	PULSE_SINK=alsa_output.pci-0000_00_1b.0.hdmi-stereo xbmc
+}
+
+# xrandr --output VGA1 --auto --output HDMI1 --auto --right-of VGA1
+# xrandr --output LVDS1 --auto --output HDMI1 --auto
+# xrandr --output LVDS1 --mode 1366x768 --auto --output HDMI1 --mode 1366x768 --auto
+# xrandr --output LVDS1 --mode 1366x768 --auto --output HDMI1 --mode 1680x1050 --right-of LVDS1
+
+####################################
+####################################
+##                                ##
+##    #                           ##
+##   # #   #    # #####  #  ####  ##
+##  #   #  #    # #    # # #    # ##
+## #     # #    # #    # # #    # ##
+## ####### #    # #    # # #    # ##
+## #     # #    # #    # # #    # ##
+## #     #  ####  #####  #  ####  ##
+##                                ##
+####################################
+####################################
+
+alias pa-hdmi="pacmd set-card-profile alsa_card.pci-0000_00_1b.0 output:hdmi-stereo+input:analog-stereo"
+alias pa-analog="pacmd set-card-profile alsa_card.pci-0000_00_1b.0 output:analog-stereo+input:analog-stereo"
+
+pa-internal() {
+	pacmd set-default-sink alsa_output.pci-0000_00_1b.0.analog-stereo
+	pacmd set-default-source alsa_input.pci-0000_00_1b.0.analog-stereo
+}
+
+pa-h4() {
+	pacmd set-default-sink alsa_output.usb-ZOOM_Corporation_H4-00-H4.analog-stereo
+	pacmd set-default-source alsa_input.usb-ZOOM_Corporation_H4-00-H4.analog-stereo
+}
+
+################################################
+# The following lines were added by compinstall
+
+zstyle ':completion:*' completer _complete _ignored
+zstyle :compinstall filename '/home/jbalint/.zshrc'
+
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
+# Lines configured by zsh-newuser-install
+HISTFILE=~/.histfile
+HISTSIZE=10000
+SAVEHIST=10000
+setopt appendhistory autocd extendedglob nomatch
+bindkey -v
+# End of lines configured by zsh-newuser-install
+
+# Prevent C-s and C-q from sending term codes
+# Needed to use rtorrent
+stty stop undef
+stty start undef
+
+# sometimes this module (the network card) prevents the computer from suspending
+# sudo rmmod e1000e
+# sudo systemctl suspend
+
+install_aur() {
+	cd ~/aur && \
+	tar -zxvf ~/Downloads/$1.tar.gz && \
+	cd $1 && \
+	makepkg -s && \
+	sudo pacman -U ${1}*.pkg.tar.xz
+}
+
+source ~/perl5/perlbrew/etc/bashrc
+
+# wmii-print-client - Print details about a client given a client id
+# arguments:
+#  -v (verbose)
+#  client id
+#  will read stdin if no client id is given
+wmii-print-client() {
+	local verbose
+	if [[ $1 = -v ]] ; then
+		verbose=1
+		shift
+	fi
+
+	# futz around with client id if provided to use as input stream
+	local clientId=$1
+	local cmd="echo $clientId"
+	if [[ $clientId = "" ]] ; then
+		cmd="cat"
+	fi
+
+	local label
+	bash -c "$cmd" | sed 's#/\+$##' | while read i ; do
+		label="`wmiir read /client/$i/label`"
+		if [[ $? != 0 ]] ; then
+			echo "$i is not a valid client"
+			continue
+		fi
+		local tags=`wmiir read /client/$i/tags`
+		echo -e "${i%/} : $label \n\t$tags"
+		if [[ $verbose = 1 ]] ; then
+			local props="`wmiir read /client/$i/props`"
+			echo -e "\tPROPS: $props"
+			local ctl="`wmiir read /client/$i/ctl | tr '\n' ' '`"
+			echo -e "\tCTL: $ctl"
+		fi
+	done
+}
+
+# Find the wmii ID for the label matching the given regex
+wmii-id-for-label() {
+	wmii-find $1 | head -n 1
+}
+
+# Find a wmii client by props (program:class:label)
+wmii-find() {
+	setopt localoptions
+	setopt nocasematch
+	local verbose
+	# regex to match
+	if [[ $1 = -v ]] ; then
+		verbose=1
+		shift
+	fi
+	local labelRe=$1
+	wmiir ls /client | grep \^0x | while read i ; do
+		thisLabel=`wmiir read /client/$i/props`
+		if [[ $thisLabel =~ $labelRe ]] ; then
+			if [[ $verbose = 1 ]] ; then
+				wmii-print-client -v $i
+			else
+				echo ${i%/}
+			fi
+		fi
+	done
+}
+
+# List all wmii clients including their labels and tags
+wmii-list() {
+	wmiir ls /client | grep \^0x | wmii-print-client $1
+}
+
+wmii_normcolors='#000000 #c1c48b #81654f'
+wmii_focuscolors='#000000 #81654f #000000'
+wmii_background='#333333'
+wmii_noticecolors='#CCCCCC #660011 #EEEEEE'
+wmii_font='drift,-*-fixed-*-*-*-*-9-*-*-*-*-*-*-*'
+
+wmii-highlight() {
+	wmiir xwrite "/lbar/$1" "$wmii_noticecolors" "$1"
+}
+
+wmii-notice() {
+	if [[ $1 = "" ]] ; then
+		wmiir xwrite '/rbar/!notice' "$wmii_normcolors" ""
+	else
+		wmiir xwrite '/rbar/!notice' "$wmii_noticecolors" "$1"
+	fi
+}
+
+wmii-view-tag() {
+	wmiir xwrite /ctl view $1
+}
+
+# wmiir xwrite /tag/1/ctl select client 0xc146b3
+
+set -o emacs
+
+# dbus-monitor "path='/im/pidgin/purple/PurpleObject',interface='im.pidgin.purple.PurpleInterface',member='ReceivedChatMsg'"
+
