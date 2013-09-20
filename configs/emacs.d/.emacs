@@ -164,3 +164,8 @@
 
  '(( "From" . "no.?reply\\|DAEMON\\|daemon\\|facebookmail\\|twitter"))
 )
+
+(if (not window-system)
+	(progn
+	  (require 'xclip)
+	  (turn-on-xclip)))
