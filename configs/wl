@@ -46,7 +46,15 @@
  wl-fcc-force-as-read t
  mime-edit-split-message nil
  wl-summary-width 150
+ wl-draft-always-delete-myself t
 )
+
+(require 'bbdb-wl)
+(bbdb-wl-setup)
+
+;; (setq 
+;;   bbdb-wl-folder-regexp    ;; get addresses only from these folders
+;;   "^\.inbox$\\|^.sent")    ;; 
 
 ;; (setq starttls-use-gnutls t)
 ;; (setq starttls-gnutls-program "gnutls-cli")
@@ -55,3 +63,4 @@
 ;; (setq ssl-program-name "openssl s_client -ssl2 -connect %s:%p")
 ;; (setq smtpmail-auth-credentials '(("stbeehive.oracle.com" 465 "jess.balint@oracle.com" "myPassW3rd....")))
 ;; (setq smtp-server "stbeehive.oracle.com")
+
