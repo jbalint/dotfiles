@@ -1,0 +1,197 @@
+*kent-occam.txt*		Kent occam Extensions
+*kent-occam*
+
+		VIM REFERENCE MANUAL by Mario Schweigler <ms44@kent.ac.uk>
+			Last Change: 23 April 2003
+
+==============================================================================
+
+This help file gives an overview over the Kent occam Extensions.
+
+==============================================================================
+Contents:
+
+|kent-occam-kroccompile|		Compile with KRoC
+|kent-occam-gotosourceline|		Goto source line
+|kent-occam-runoccamprogram|		Run occam program
+|kent-occam-toggleoccamfiletype|	Toggle file type between occam and
+					none
+
+Please note that in console mode some of the shortcuts might not work. In this
+case please use the commands.
+
+For a general introduction to occam see the |occam| Checklist.
+
+==============================================================================
+*kent-occam-kroccompile*
+Compile with KRoC
+=================
+
+Commands
+--------
+			*:Kroccompile* *:KC*
+:Kroccompile [options]	Compile the occam file in the current buffer with
+:KC [options]		KRoC. The file is saved beforehand. The output of the
+			compiler is put in a new window (see also
+			|kent-occam-gotosourceline|). For compiler options see
+			|kent-occam-kroccompile-options|.
+
+Shortcuts
+---------
+			*F5* *<F5>*
+<F5>			Compile the occam file in the current buffer with
+			KRoC. The file is saved beforehand. The output of the
+			compiler is put in a new window (see also
+			|kent-occam-gotosourceline|). For compiler options see
+			|kent-occam-kroccompile-options|.
+
+*kent-occam-kroccompile-options*
+Compiler options
+----------------
+
+To define general options for the KRoC compiler, put them in the environment
+variable >
+
+	OCOPTIONS
+
+To tell KRoC to compile the currently edited occam source file to a shared
+(.so) library, put >
+
+	-- KROC-LIBRARY
+
+or >
+
+	-- KROC-LIBRARY.so
+
+in the first line of the file. To create a .a library, put >
+
+	-- KROC-LIBRARY.a
+
+in the first line of the file.
+
+To define options for the compiler which are local to the source file, put >
+
+	-- KROC-OPTIONS: {options}
+
+in the first line of the file (or in the second line if the first line is
+"-- KROC-LIBRARY[.so|.a]").
+
+To define options just for a single run of the compiler, call the :Kroccompile
+command like >
+
+	:Kroccompile [options]
+
+Note: All options (global, local to source file, local to compiler run) are
+used together in the above order.
+
+==============================================================================
+*kent-occam-gotosourceline*
+Goto source line
+================
+
+If there are error messages in the compiler output window you can go to the
+concerning line in the source code. If the error line is inside an entered
+fold, the line is displayed in the compiler output like >
+
+	(250>10)
+
+where 250 is the global number of the line and 10 is the local number of the
+line, relative to the currently entered fold.
+
+In order to go to an error line, place the cursor on the line number (no
+matter whether on a global or on a local one). (You can jump between line
+numbers with <Tab> and <Shift-Tab>.) To go to this line in the source code
+window either press <Enter> or call the |:Gotosourceline| command.
+
+If the line is not in the currently entered fold, you should first exit all
+folds (see |:Foldexitall|) in the source code window, switch back to the
+compiler output window, and then try again.
+
+Commands
+--------
+			*:Gotosourceline* *:GS*
+:Gotosourceline		If you are in a compiler output window, and there is a
+:GS			valid line number under the cursor, this command
+			switches to the source code window and puts the cursor
+			on that line.
+
+==============================================================================
+*kent-occam-runoccamprogram*
+Run occam program
+=================
+
+Commands
+--------
+				*:Runoccamprogram* *:RO*
+:Runoccamprogram [parameters]	Run the occam program whose source code is in
+:RO [parameters]		the current buffer.
+
+				Note: This ONLY works for programs which ONLY
+				output FINITE amounts of TEXT!
+				* Do NOT use this for programs which use
+				  Escape sequences to place text on the screen!
+				* Do NOT use this for programs which use
+				  graphics!
+				* Do NOT use this for programs which require
+				  input!
+				* Do NOT use this for programs which output
+				  infinite amounts of text!
+
+				For running parameters see
+				|kent-occam-runoccamprogram-parameters|.
+
+Shortcuts
+---------
+			*Ctrl-F5* *<Ctrl-F5>* *<C-F5>*
+<Ctrl-F5>		Run the occam program whose source code is in the
+			current buffer.
+
+			Note: This ONLY works for programs which ONLY output
+			FINITE amounts of TEXT!
+			* Do NOT use this for programs which use Escape
+			  sequences to place text on the screen!
+			* Do NOT use this for programs which use graphics!
+			* Do NOT use this for programs which require input!
+			* Do NOT use this for programs which output infinite
+			  amounts of text!
+
+			For running parameters see
+			|kent-occam-runoccamprogram-parameters|.
+
+*kent-occam-runoccamprogram-parameters*
+Parameters
+----------
+
+To define parameters to run an occam program with, put >
+
+	-- RUN-PARAMETERS: {parameters}
+
+in the first line of the source file (or in the second line if the first line
+is "-- KROC-OPTIONS: {options}" (see |kent-occam-kroccompile-options|)).
+
+To define parameters just for a single run of the program, call the
+:Runoccamprogram command like >
+
+	:Runoccamprogram [parameters]
+
+Note: All parameters (in the file or with the command) are used together in
+the above order.
+
+==============================================================================
+*kent-occam-toggleoccamfiletype*
+Toggle file type between occam and none
+=======================================
+
+Commands
+--------
+			*:Toggleoccamfiletype* *:TOF*
+:Toggleoccamfiletype	Toggle the file type of the current buffer between
+:TOF			occam and no file type.
+
+Commands
+--------
+			*F6* *<F6>*
+<F6>			Toggle the file type of the current buffer between
+			occam and no file type.
+
+vim:tw=78:ts=8:isk+=-:ft=help:norl:

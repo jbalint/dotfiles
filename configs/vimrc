@@ -1,0 +1,399 @@
+" Little debugging action
+"set verbose=9
+set verbose=0
+
+if has("win32")
+	let vUserProfile = $SYSTEMDRIVE."/Docume~1/".$USERNAME
+	let VIMFILES = vUserProfile."/vimfiles"
+else
+	let VIMFILES = $HOME . "/.vim"
+end
+
+" Not sure when these were introduced
+if version >= 600
+	syntax on
+
+	filetype on
+	filetype plugin on
+	set ar					" Auto Read
+	set dy=uhex,lastline	" Expand hex characters (lastline too?)
+	set pt=<F11>			" Paste toggle
+	set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ %{strftime(\"%d/%m/%y\ -\ %H:%M\")}
+endif
+
+if version >= 620
+	set ci			" Copy Indent
+endif
+
+if version < 600
+	" Don't think they have a default
+	set makeef=/tmp/vim-make-jbalint
+endif
+
+set so=10			" Scroll Off
+					" There is a possible bug in scroll off that happens when
+					" you put the cursor at the bottom of the screen and then
+					" scroll past the bottom. when scrolling up, the scroll
+					" off doesn't kick in until the last line of the file is
+					" at the bottom of the screen (eg, ~ lines don't activate
+					" scrolloff)
+
+set ai				" Auto Indent
+set aw				" Autowrite
+set hls				" Highlight Search
+set is				" Incremental Search
+
+set noic			" Ignore Case
+set ru				" Ruler, not shown in multi-windows
+set sc				" Show Command
+set sm				" Show Match
+set smd				" Show Mode
+" set magic
+set esckeys
+set nocp			" Vi Compatibility
+set bs=2			" Backspace
+set modelines=1
+set cindent
+set mef=
+
+" set wildmode=longest,full
+set ts=4
+set sw=4
+set noet
+set nonu
+"set bex="~aa"
+"set pm="~..LOASD"
+if has("win32")
+	let &bdir=vUserProfile."/tmp/vim"
+	let &dir=vUserProfile."/tmp/vim"
+else
+	set bdir=$HOME/tmp/vim
+	set dir=$HOME/tmp/vim
+end
+set bk
+set bsdir=buffer
+"set bsk=""
+set vb				" Visual Bell
+nmap <silent> <F2> :nohls <CR>
+nmap <F3> :!top -b<CR>
+
+color adaryn
+
+if has("gui_running")
+	colo darkblue
+
+	if has("unix")
+		set guifont=-*-fixed-bold-r-*-*-12-*-*-*-*-*-*-*
+	endif
+endif
+
+"set makeprg=ant\ -quiet\ -emacs
+
+" automatically give executable permissions if filename is *.sh 
+"au BufWritePost *.sh :!chmod a+x <afile> 
+" automatically insert "#!/bin/sh" line for *.sh files 
+"au BufEnter *.sh if getline(1) == "" | :call setline(1, "#!/bin/sh") | endif 
+" automatically give executable permissions if file begins with #!/bin/sh 
+"au BufWritePost * if getline(1) =~ "#!/bin/[a-z]*sh" | silent !chmod a+x <afile> | endif 
+
+" The plugin doesn't map it right
+nmap <silent> K <Plug>ManPageView gg
+
+" Map Keys For Multiple Windows
+nmap <c-s-j>  <c-w>j
+nmap <c-s-k>  <c-w>k
+nmap <c-s-h>  <c-w>h
+nmap <c-s-l>  <c-w>l
+nmap <c-s-o>  <c-w>o
+nmap <c-s-c>  <c-w>c
+"nmap <c-s-v>  <c-w>v
+"nmap <c-s-s>  <c-w>s
+
+" Quick Reloading and Editing of RC
+"nn ,s :source g:VIMFILES/vimrc<CR>
+"nn ,v :e g:VIMFILES/vimrc<CR>
+
+" Only do this part when compiled with support for autocommands. 
+if has("autocmd") 
+	" When editing a file, always jump to the last known cursor position. 
+	" Don't do it when the position is invalid or when inside an event handler 
+	" (happens when dropping a file on gvim). 
+	autocmd BufReadPost * |
+		if line("'\"") > 0 && line("'\"") <= line("$") |
+			exe "normal g`\"" |
+		endif 
+
+endif " has("autocmd")
+
+nmap ,d :cal FileBrowser()<CR>
+
+function! FileBrowser()
+
+if !has("perl")
+	echo "You must has(perl) to run this (and it must be threads enabled)"
+	return
+endif
+
+if has("win32")
+	let javaexe = "javaw"
+else
+	let javaexe = "java"
+endif
+
+perl<<EOF
+use Thread;
+use FileHandle;
+
+$path = VIM::Eval("g:VIMFILES") . "/filebrowser";
+$java = VIM::Eval("javaexe");
+
+VIM::Msg("Starting path='$path' java='$java'");
+
+new Thread(
+		sub
+		{
+			$f = new FileHandle("$java -classpath $path FileBrowser |")
+				or VIM::Msg("$!"), exit(1);
+
+			while($cmd = $f->getline())
+			{
+				VIM::DoCommand($cmd);
+			}
+
+			$f->close();
+		}
+	)->detach();
+EOF
+
+endfunction
+
+"""""""""""""""""""""""""""""""""""
+" ######  ####### ######  #       "
+" #     # #       #     # #       "
+" #     # #       #     # #       "
+" ######  #####   ######  #       "
+" #       #       #   #   #       "
+" #       #       #    #  #       "
+" #       ####### #     # ####### "
+"""""""""""""""""""""""""""""""""""
+
+" Insert header into new PERL files
+if has("autocmd")
+  autocmd BufNewFile  *.\(pl\|pm\|PL\)         call Perl_CommentTemplates('header')
+endif " has("autocmd")
+
+" perl-support.vim
+let g:Perl_AuthorName      = "Jess Balint"     
+let g:Perl_AuthorRef       = ""                         
+let g:Perl_Email           = "jbalint@improvedideas.com"            
+let g:Perl_Company         = "ImprovedIdeas"    
+let g:Perl_Project         = ""
+let g:Perl_CopyrightHolder = ""
+let g:Perl_LoadMenus       = "yes"
+
+" TODO: find out how to make this work
+map    <buffer>  <silent>  <S-F2>             :call Perl_perldoc_cursor()<CR><CR>
+
+let b:javagetset_getterTemplate =
+  \ "\n" .
+  \ "%modifiers% %type% %funcname%() { return %varname%; }"
+let b:javagetset_setterTemplate =
+  \ "\n" .
+  \ "%modifiers% void %funcname%(%type% %varname%) {\n" .
+  \ "    this.%varname% = %varname%;\n" .
+  \ "}"
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" #######     #      #####   #        ###   #####   ####### "
+"    #       # #    #     #  #         #   #     #     #    "
+"    #      #   #   #        #         #   #           #    "
+"    #     #     #  #  ####  #         #    #####      #    "
+"    #     #######  #     #  #         #         #     #    "
+"    #     #     #  #     #  #         #   #     #     #    "
+"    #     #     #   #####   #######  ###   #####      #    "
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let tlist_perl_settings='perl;p:packages;s:subroutines;d:POD'
+" TODO: in .ctags, allow stuff to be multi-line + add valuetypes
+let tlist_idl_settings='IDL;m:module;i:interface;e:exception;f:function;n:enum;t:typedef;s:struct;a:attribute'
+let tlist_xml_settings='xml;t:typeAlias;r:resultMap;u:update;d:delete;i:insert;s:select'
+nmap <silent> <F7> :TlistSync<CR>:TlistUpdate<CR>
+nmap <silent> <F8> :Tlist<CR>
+nmap <silent> <F8> :Tlist<CR>
+
+if has("win32")
+	let Tlist_Ctags_Cmd = VIMFILES . '/ctags.exe --options="%USERPROFILE%"\_ctags '
+endif
+
+if version > 600
+	finish
+
+	" From here down is all the defaults from SuSE 9.1 vim install
+	if &term =~ "xterm"
+		let myterm = "xterm"
+	else
+		let myterm =  &term
+	endif
+	let myterm = substitute(myterm, "cons[0-9][0-9].*$",  "linux", "")
+	let myterm = substitute(myterm, "vt1[0-9][0-9].*$",   "vt100", "")
+	let myterm = substitute(myterm, "vt2[0-9][0-9].*$",   "vt220", "")
+	let myterm = substitute(myterm, "\\([^-]*\\)[_-].*$", "\\1",   "")
+
+	" Here we define the keys of the NumLock in keyboard transmit mode of xterm
+	" which misses or hasn't activated Alt/NumLock Modifiers.  Often not defined
+	" within termcap/terminfo and we should map the character printed on the keys.
+	if myterm == "xterm" || myterm == "kvt" || myterm == "gnome"
+		" keys in insert/command mode.
+		map! <ESC>Oo  :
+		map! <ESC>Oj  *
+		map! <ESC>Om  -
+		map! <ESC>Ok  +
+		map! <ESC>Ol  ,
+		map! <ESC>OM  
+		map! <ESC>Ow  7
+		map! <ESC>Ox  8
+		map! <ESC>Oy  9
+		map! <ESC>Ot  4
+		map! <ESC>Ou  5
+		map! <ESC>Ov  6
+		map! <ESC>Oq  1
+		map! <ESC>Or  2
+		map! <ESC>Os  3
+		map! <ESC>Op  0
+		map! <ESC>On  .
+		" keys in normal mode
+		map <ESC>Oo  :
+		map <ESC>Oj  *
+		map <ESC>Om  -
+		map <ESC>Ok  +
+		map <ESC>Ol  ,
+		map <ESC>OM  
+		map <ESC>Ow  7
+		map <ESC>Ox  8
+		map <ESC>Oy  9
+		map <ESC>Ot  4
+		map <ESC>Ou  5
+		map <ESC>Ov  6
+		map <ESC>Oq  1
+		map <ESC>Or  2
+		map <ESC>Os  3
+		map <ESC>Op  0
+		map <ESC>On  .
+	endif
+
+	" xterm but without activated keyboard transmit mode
+	" and therefore not defined in termcap/terminfo.
+	if myterm == "xterm" || myterm == "kvt" || myterm == "gnome"
+		" keys in insert/command mode.
+		map! <Esc>[H  <Home>
+		map! <Esc>[F  <End>
+		" Home/End: older xterms do not fit termcap/terminfo.
+		map! <Esc>[1~ <Home>
+		map! <Esc>[4~ <End>
+		" Up/Down/Right/Left
+		map! <Esc>[A  <Up>
+		map! <Esc>[B  <Down>
+		map! <Esc>[C  <Right>
+		map! <Esc>[D  <Left>
+		" KP_5 (NumLock off)
+		map! <Esc>[E  <Insert>
+		" PageUp/PageDown
+		map <ESC>[5~ <PageUp>
+		map <ESC>[6~ <PageDown>
+		map <ESC>[5;2~ <PageUp>
+		map <ESC>[6;2~ <PageDown>
+		map <ESC>[5;5~ <PageUp>
+		map <ESC>[6;5~ <PageDown>
+		" keys in normal mode
+		map <ESC>[H  0
+		map <ESC>[F  $
+		" Home/End: older xterms do not fit termcap/terminfo.
+		map <ESC>[1~ 0
+		map <ESC>[4~ $
+		" Up/Down/Right/Left
+		map <ESC>[A  k
+		map <ESC>[B  j
+		map <ESC>[C  l
+		map <ESC>[D  h
+		" KP_5 (NumLock off)
+		map <ESC>[E  i
+		" PageUp/PageDown
+		map <ESC>[5~ 
+		map <ESC>[6~ 
+		map <ESC>[5;2~ 
+		map <ESC>[6;2~ 
+		map <ESC>[5;5~ 
+		map <ESC>[6;5~ 
+	endif
+
+	" xterm/kvt but with activated keyboard transmit mode.
+	" Sometimes not or wrong defined within termcap/terminfo.
+	if myterm == "xterm" || myterm == "kvt" || myterm == "gnome"
+		" keys in insert/command mode.
+		map! <Esc>OH <Home>
+		map! <Esc>OF <End>
+		map! <ESC>O2H <Home>
+		map! <ESC>O2F <End>
+		map! <ESC>O5H <Home>
+		map! <ESC>O5F <End>
+		" Cursor keys which works mostly
+		" map! <Esc>OA <Up>
+		" map! <Esc>OB <Down>
+		" map! <Esc>OC <Right>
+		" map! <Esc>OD <Left>
+		map! <Esc>[2;2~ <Insert>
+		map! <Esc>[3;2~ <Delete>
+		map! <Esc>[2;5~ <Insert>
+		map! <Esc>[3;5~ <Delete>
+		map! <Esc>O2A <PageUp>
+		map! <Esc>O2B <PageDown>
+		map! <Esc>O2C <S-Right>
+		map! <Esc>O2D <S-Left>
+		map! <Esc>O5A <PageUp>
+		map! <Esc>O5B <PageDown>
+		map! <Esc>O5C <S-Right>
+		map! <Esc>O5D <S-Left>
+		" KP_5 (NumLock off)
+		map! <Esc>OE <Insert>
+		" keys in normal mode
+		map <ESC>OH  0
+		map <ESC>OF  $
+		map <ESC>O2H  0
+		map <ESC>O2F  $
+		map <ESC>O5H  0
+		map <ESC>O5F  $
+		" Cursor keys which works mostly
+		" map <ESC>OA  k
+		" map <ESC>OB  j
+		" map <ESC>OD  h
+		" map <ESC>OC  l
+		map <Esc>[2;2~ i
+		map <Esc>[3;2~ x
+		map <Esc>[2;5~ i
+		map <Esc>[3;5~ x
+		map <ESC>O2A  ^B
+		map <ESC>O2B  ^F
+		map <ESC>O2D  b
+		map <ESC>O2C  w
+		map <ESC>O5A  ^B
+		map <ESC>O5B  ^F
+		map <ESC>O5D  b
+		map <ESC>O5C  w
+		" KP_5 (NumLock off)
+		map <ESC>OE  i
+	endif
+
+	if myterm == "linux"
+		" keys in insert/command mode.
+		map! <Esc>[G  <Insert>
+		" KP_5 (NumLock off)
+		" keys in normal mode
+		" KP_5 (NumLock off)
+		map <ESC>[G  i
+	endif
+
+	" This escape sequence is the well known ANSI sequence for
+	" Remove Character Under The Cursor (RCUTC[tm])
+	map! <Esc>[3~ <Delete>
+	map  <ESC>[3~    x
+endif
