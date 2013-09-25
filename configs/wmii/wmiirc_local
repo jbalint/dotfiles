@@ -1,19 +1,30 @@
+# this is a SHELL script...
 MODKEY=Mod4
 # Status Bar Info
 status() {
 	TOTALMEM=$(free | grep Mem: | gawk '{print $2}')
 	USEDMEM=$(free | grep buffers/cache | gawk '{print $3}')
+	#MEM="Mem: $(free | grep buffers/cache | gawk '{print $3/$TOTALMEM*100}' | perl -lpe's/(\...).*/$1/')%"
 	MEM="Mem: $(echo $USEDMEM / $TOTALMEM \* 100 | bc -l | perl -lpe's/\..*//')%"
 	WIFI="Wifi: $(iwconfig wlp3s0 | grep SSID | perl -lpe's/.*\"(.+)\".*/$1/') ($(iwconfig wlp3s0 | grep Quality | perl -lpe's/.*Quality=(.+?) .*/$1/'))"
 	BATT="Batt: $(acpi -b | perl -lpe's/.*?(\d+%).*/$1/')"
 	LOAD="$(uptime | perl -lpe's/.*average: //')"
 	DATE="$(date '+%c')"
+	HDFREE="HD: $(df -h /dev/sda1 | tail -1 | awk '{print $4}')"
 
-	STATUS="$MEM | $BATT | $LOAD | $DATE"
+	STATUS="$HDFREE | $MEM | $BATT | $LOAD | $DATE"
 	if [ `ip link show wlp3s0 | grep 'state UP' | wc -l` -eq 1 ] ; then
 		STATUS="$WIFI | $STATUS"
 	fi
 	echo -n " $STATUS "
 }
 
+wmiir write /colrules <<!
+/8/ -> 85+15
+!
+
+wmiir write /tagrules <<!
+/xbmc.bin/ -> 1+2+3+4+5+6+7+8+9
+/Pidgin:Pidgin/ -> 8
+!
 
