@@ -59,6 +59,8 @@
 
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 (add-to-list 'load-path "~/.emacs.d/lisp")
+(add-to-list 'load-path "~/.emacs.d/lisp/ecb")
+(require 'ecb)
 
 (unless (require 'el-get nil 'noerror)
   (with-current-buffer
@@ -73,10 +75,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
-;;;;;;;;;;;;;; '(org-agenda-files (quote ("~/Dropbox/important/org/essentia/parent_child_association_tool.org" "/home/jbalint/Dropbox/important/org/GTD.org" "/home/jbalint/Dropbox/important/org/aspen.org" "/home/jbalint/Dropbox/important/org/essentia.org" "/home/jbalint/Dropbox/important/org/mobile.org" "/home/jbalint/Dropbox/important/org/money.org" "/home/jbalint/Dropbox/important/org/music.org" "/home/jbalint/Dropbox/important/org/notes.org" "/home/jbalint/Dropbox/important/org/oracle.org" "/home/jbalint/Dropbox/important/org/personal.org" "/home/jbalint/Dropbox/important/org/oracle_work_log/OWL_2013_08_12.org" "/home/jbalint/Dropbox/important/org/oracle_work_log/OWL_2013_08_19.org" "/home/jbalint/Dropbox/important/org/oracle_work_log/OWL_2013_08_26.org" "/home/jbalint/Dropbox/important/org/oracle_work_log/OWL_2013_09_02.org")))
- '(tool-bar-mode nil)
+ '(ecb-options-version "2.40")
  '(menu-bar-mode nil)
- '(safe-local-variable-values (quote ((org-log-done . t) (eval load-theme (quote tango-dark)) (eval load-theme "wombat")))))
+ '(safe-local-variable-values (quote ((org-log-done . t) (eval load-theme (quote tango-dark)) (eval load-theme "wombat"))))
+ '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -84,7 +86,9 @@
  ;; If there is more than one, they won't work right.
  )
 
-;; Org-mode customizations
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Org-mode customizations ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (setq org-log-done t)
 (setq org-agent-file-regexp "*.org")
 (setq org-directory "~/Dropbox/important/org")
@@ -112,22 +116,9 @@
 (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
 (setq org-src-fontify-natively t)
 
-(require 'package)
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-
-(autoload 'wl "wl" "Wanderlust" t)
-(autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
-(autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
-
-(set-default-font "Fixed Medium Semi-Condensed 10")
-
-; use tab-width 8 for Oasis code
-(add-hook 'find-file-hook
-		  (lambda () (if (string-match "com/oasis.*\.java" (buffer-file-name))
-						 (setq tab-width 8))))
-(put 'erase-buffer 'disabled nil)
-
-;; BBDB (config from link in .wl)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; BBDB (config from link in .wl) ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'bbdb)
 (bbdb-initialize)
 (setq 
@@ -165,7 +156,25 @@
  '(( "From" . "no.?reply\\|DAEMON\\|daemon\\|facebookmail\\|twitter"))
 )
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (if (not window-system)
 	(progn
 	  (require 'xclip)
 	  (turn-on-xclip)))
+
+; use tab-width 8 for Oasis code
+(add-hook 'find-file-hook
+		  (lambda () (if (string-match "com/oasis.*\.java" (buffer-file-name))
+						 (setq tab-width 8))))
+(put 'erase-buffer 'disabled nil)
+
+(require 'package)
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+
+(autoload 'wl "wl" "Wanderlust" t)
+(autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
+(autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
+
+(set-default-font "Fixed Medium Semi-Condensed 10")
