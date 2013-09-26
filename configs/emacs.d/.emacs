@@ -123,7 +123,8 @@
 
 ; use tab-width 8 for Oasis code
 (add-hook 'find-file-hook
-		  (lambda () (if (string-match "com/oasis.*\.java" (buffer-file-name))
+		  (lambda () (if (or (string-match "com/oasis.*\.java" (buffer-file-name))
+							 (string-match "agora.*\.java" (buffer-file-name)))
 						 (setq tab-width 8))))
 (put 'erase-buffer 'disabled nil)
 
