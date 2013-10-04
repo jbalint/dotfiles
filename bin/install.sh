@@ -6,7 +6,14 @@ if [ ! -e bin/install.sh ] ; then
 fi
 
 for C in configs/* ; do
-    ln -s `pwd`/$C $HOME/.${C##*/}
+	DEST=$HOME/.${C##*/}
+	if [ ! -e "$DEST" ] ; then
+		ln -s `pwd`/$C $HOME/.${C##*/}
+	else
+		echo "$DEST already exists"
+	fi
 done
+
+# additional
 ln -s `pwd`/configs/emacs.d/.emacs $HOME/.emacs
 
