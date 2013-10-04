@@ -28,3 +28,4 @@ wmiir write /tagrules <<!
 /Pidgin:Pidgin/ -> 8
 !
 
+export PATH=/home/jbalint/bin:$PATH
