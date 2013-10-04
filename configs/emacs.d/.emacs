@@ -60,7 +60,8 @@
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 (add-to-list 'load-path "~/.emacs.d/lisp")
 (add-to-list 'load-path "~/.emacs.d/lisp/ecb")
-(require 'ecb)
+(add-to-list 'load-path "~/sw/xsb-src/XSB/etc")
+(require 'ecb nil t)
 
 (unless (require 'el-get nil 'noerror)
   (with-current-buffer
@@ -85,6 +86,31 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; XSB and Flora-2 configurations ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(autoload 'xsb-mode "prolog" "Major mode for editing XSB programs." t)
+(autoload 'prolog-mode "prolog" "Major mode for editing Prolog programs." t)
+(setq prolog-program-name "~/sw/xsb-src/XSB/bin/xsb")
+(setq auto-mode-alist (cons '("\\.P$" . xsb-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.fl[rih]$" . flora-mode) auto-mode-alist))
+(autoload 'flora-mode "flora" "Major mode for editing Flora-2 programs." t)
+(setq flora-program-name "~/sw/flora-src/flora2/runflora")
+
+;;;;;;;;;;;;;;;;;;;;;;;
+;; Window navigation ;;
+;;;;;;;;;;;;;;;;;;;;;;;
+(require 'windmove)
+(add-hook 'window-configuration-change-hook
+		  (lambda ()
+			(if (> 3 (count-windows))
+				(global-set-key (kbd "C-x o") 'other-window)
+			  (global-unset-key (kbd "C-x o"))
+			  (global-set-key (kbd "C-x o h") 'windmove-left)
+			  (global-set-key (kbd "C-x o k") 'windmove-up)
+			  (global-set-key (kbd "C-x o l") 'windmove-right)
+			  (global-set-key (kbd "C-x o j") 'windmove-down))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Org-mode customizations ;;
@@ -164,7 +190,7 @@
 	  (require 'xclip)
 	  (turn-on-xclip)))
 
-; use tab-width 8 for Oasis code
+; use tab-width 8 for Oasis, Agora code
 (add-hook 'find-file-hook
 		  (lambda () (if (or (string-match "com/oasis.*\.java" (buffer-file-name))
 							 (string-match "agora.*\.java" (buffer-file-name)))
@@ -179,3 +205,8 @@
 (autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
 
 (set-default-font "Fixed Medium Semi-Condensed 10")
+
+(add-hook 'c-mode-common-hook
+		  (lambda () (local-unset-key (kbd "C-c C-l"))))
+
+(require 'w3m-load)
