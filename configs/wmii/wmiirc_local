@@ -1,4 +1,7 @@
 # this is a SHELL script...
+
+export PATH=/home/jbalint/bin:$PATH
+
 MODKEY=Mod4
 # Status Bar Info
 status() {
@@ -28,4 +31,10 @@ wmiir write /tagrules <<!
 /Pidgin:Pidgin/ -> 8
 !
 
-export PATH=/home/jbalint/bin:$PATH
+WMII_FONT="xft:Inconsolata:pixelsize=14:antialias=true:autohint=true"
+# Colors tuples: "<text> <background> <border>"
+WMII_NORMCOLORS='#93a1a1 #002b36 #073642'
+WMII_FOCUSCOLORS='#93a1a1 #073642 #073642'
+WMII_BACKGROUND='#333333'
+
+WMII_TERM=st
