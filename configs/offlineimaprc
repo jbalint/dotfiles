@@ -16,5 +16,5 @@ remotehost = stbeehive.oracle.com
 remoteuser = jess.balint@oracle.com
 remotepassfile = ~/.oracle_sso_pw
 ssl = yes
-cert_fingerprint = eba5fe8ba4ea50ee94aca39f8512aafb02b22549
+cert_fingerprint = b6877aa6a4eb4cb2ea0edd0a1f5d08510245ea5d
 
