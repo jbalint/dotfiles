@@ -182,6 +182,38 @@
  '(( "From" . "no.?reply\\|DAEMON\\|daemon\\|facebookmail\\|twitter"))
 )
 
+;;;;;;;;;;;;;;;;;
+;; Oracle crap ;;
+;;;;;;;;;;;;;;;;;
+(defun oracle-elem-id (prefix)
+  "Get element id at point given prefix, e.g WL #1234"
+  (save-excursion
+	(unless (string-equal
+			 (downcase prefix)
+			 (downcase (buffer-substring (point) (min (buffer-size) (+ 2 (point))))))
+	  (skip-chars-backward (concat (downcase prefix) (upcase prefix) " #0123456789")))
+	(if (looking-at (concat prefix " *#\\([0-9]+\\)\\b"))
+		(match-string 1))))
+
+(setq oracle-elem-links-alist
+	  '(("rb" . "http://rb.no.oracle.com/rb/r/")
+		("wl" . "http://wl.no.oracle.com/?tid=")
+		;; http://clustra.no.oracle.com/orabugs/bug.php?id=
+		("bug" . "http://bugs.mysql.com/")))
+
+(defun oracle-elem-open ()
+  (interactive)
+  ;; find an element id
+  (let ((link-data
+		 (catch 'loop
+		   (dolist (elem-link oracle-elem-links-alist)
+			 (let ((e (oracle-elem-id (car elem-link))))
+			   (if e (throw 'loop (list e (cdr elem-link)))))))))
+	;; open it
+	(when link-data
+	  (setq link (concat (car (cdr link-data)) (car link-data)))
+	  (browse-url link))))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -210,3 +242,4 @@
 		  (lambda () (local-unset-key (kbd "C-c C-l"))))
 
 (require 'w3m-load)
+(put 'set-goal-column 'disabled nil)
