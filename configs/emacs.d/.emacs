@@ -190,16 +190,20 @@
   (save-excursion
 	(unless (string-equal
 			 (downcase prefix)
-			 (downcase (buffer-substring (point) (min (buffer-size) (+ 2 (point))))))
+			 (downcase (buffer-substring (point) (min (buffer-size) (+ (string-width prefix) (point))))))
 	  (skip-chars-backward (concat (downcase prefix) (upcase prefix) " #0123456789")))
 	(if (looking-at (concat prefix " *#\\([0-9]+\\)\\b"))
 		(match-string 1))))
 
+(defun oracle-mysql-bug-link (id)
+  (if (> (string-to-number id) 500000)
+	  (concat "http://clustra.no.oracle.com/orabugs/bug.php?id=" id)
+	(concat "http://bugs.mysql.com/" id)))
+
 (setq oracle-elem-links-alist
 	  '(("rb" . "http://rb.no.oracle.com/rb/r/")
 		("wl" . "http://wl.no.oracle.com/?tid=")
-		;; http://clustra.no.oracle.com/orabugs/bug.php?id=
-		("bug" . "http://bugs.mysql.com/")))
+		("bug" . oracle-mysql-bug-link)))
 
 (defun oracle-elem-open ()
   (interactive)
@@ -211,8 +215,12 @@
 			   (if e (throw 'loop (list e (cdr elem-link)))))))))
 	;; open it
 	(when link-data
-	  (setq link (concat (car (cdr link-data)) (car link-data)))
-	  (browse-url link))))
+	  (let ((id (car link-data))
+			(url-prefix-or-resolver (car (cdr link-data))))
+		(browse-url
+		 (if (stringp url-prefix-or-resolver)
+			 (concat url-prefix-or-resolver id)
+		   (funcall url-prefix-or-resolver id)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
