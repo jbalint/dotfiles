@@ -124,12 +124,19 @@
 (setq org-mobile-directory (concat org-directory "/MobileOrg"))
 (setq org-mobile-inbox-for-pull (concat org-directory "/mobile.org"))
 
-(add-hook 'org-mode-hook (lambda () (local-set-key "\C-ca" 'org-agenda)
+(add-hook 'org-mode-hook
+		  (lambda ()
+			(local-set-key "\C-ca" 'org-agenda)
+			(local-unset-key "\C-c\C-o")
+			(local-set-key "\C-c\C-o"
+						   (lambda () (interactive)
+							 (unless (oracle-elem-open)
+							   (org-open-at-point))))
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((ditaa . t))) ; http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-ditaa.html
-))
+			(org-babel-do-load-languages
+			 'org-babel-load-languages
+			 '((ditaa . t))) ; http://orgmode.org/worg/org-contrib/babel/languages/ob-doc-ditaa.html
+			))
 
 (setq org-todo-keywords
 	  '((sequence "TODO" "|" "DONE")
@@ -186,23 +193,27 @@
 ;; Oracle crap ;;
 ;;;;;;;;;;;;;;;;;
 (defun oracle-elem-id (prefix)
-  "Get element id at point given prefix, e.g WL #1234"
+  "Get element id at from element link point given prefix, e.g WL #1234, HAM-567"
   (save-excursion
 	(unless (string-equal
 			 (downcase prefix)
 			 (downcase (buffer-substring (point) (min (buffer-size) (+ (string-width prefix) (point))))))
-	  (skip-chars-backward (concat (downcase prefix) (upcase prefix) " #0123456789")))
-	(if (looking-at (concat prefix " *#\\([0-9]+\\)\\b"))
-		(match-string 1))))
+	  ;; these are done sequentially in hopes that we won't get BEFORE the elem link
+	  (skip-chars-backward "0123456789")
+	  (skip-chars-backward " #-")
+	  (skip-chars-backward (concat (downcase prefix) (upcase prefix))))
+	(if (looking-at (concat " *" prefix "\\( *#\\|-\\)\\([0-9]+\\)\\b"))
+		(match-string 2))))
 
 (defun oracle-mysql-bug-link (id)
   (if (> (string-to-number id) 500000)
 	  (concat "http://clustra.no.oracle.com/orabugs/bug.php?id=" id)
 	(concat "http://bugs.mysql.com/" id)))
 
-(setq oracle-elem-links-alist
+(setq oracle-elem-link-urls-alist
 	  '(("rb" . "http://rb.no.oracle.com/rb/r/")
 		("wl" . "http://wl.no.oracle.com/?tid=")
+		("ham" . "http://tyr41.no.oracle.com:48080/jira/browse/HAM-")
 		("bug" . oracle-mysql-bug-link)))
 
 (defun oracle-elem-open ()
@@ -210,9 +221,9 @@
   ;; find an element id
   (let ((link-data
 		 (catch 'loop
-		   (dolist (elem-link oracle-elem-links-alist)
-			 (let ((e (oracle-elem-id (car elem-link))))
-			   (if e (throw 'loop (list e (cdr elem-link)))))))))
+		   (dolist (elem-link-url oracle-elem-link-urls-alist)
+			 (let ((e (oracle-elem-id (car elem-link-url))))
+			   (if e (throw 'loop (list e (cdr elem-link-url)))))))))
 	;; open it
 	(when link-data
 	  (let ((id (car link-data))
