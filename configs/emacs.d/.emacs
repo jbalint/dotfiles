@@ -150,6 +150,79 @@
 (setq org-src-fontify-natively t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Org mode export to TREC format ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; boring, undecorated stuff
+(defun org-trec-bold (bold contents info)
+  contents)
+(defun org-trec-code (code contents info)
+  (org-element-property :value code))
+(defun org-trec-italic (italic contents info)
+  contents)
+(defun org-trec-link (link desc info)
+  desc)
+(defun org-trec-strike-through (strike-through contents info)
+  contents)
+(defun org-trec-underline (underline contents info)
+  contents)
+(defun org-trec-verbatim (verbatim contents info)
+  (org-element-property :value verbatim))
+
+;; other stuff
+(defun org-trec-headline (headline contents info)
+ ;(with-output-to-string (princ (org-element-property :title headline)))
+  (concat (org-export-data (org-element-property :title headline) info) "\n" contents
+		  ;;(with-output-to-string (princ (org-element-contents headline)))
+		  )
+  )
+
+(defun org-trec-item (item contents info)
+  contents)
+
+(defun org-trec-paragraph (paragraph contents info)
+  contents)
+
+(defun org-trec-plain-list (plain-list contents info)
+  contents)
+
+(defun org-trec-section (section contents info)
+  ;; TODO put this with the output
+  ;;(message (concat "Section category: " (org-export-get-category section info)))
+  contents)
+
+(defun org-trec-text (text info)
+  (message (concat "TEXT: " text))
+  text)
+
+;; c.f. org-export-registered-backends
+(when (require 'ox nil 'noerror)
+  (org-export-define-backend
+   'trec
+   '((bold . org-trec-bold)
+	 (code . org-trec-code)
+	 (headline . org-trec-headline)
+	 (italic . org-trec-italic)
+	 (item . org-trec-item)
+	 (link . org-trec-link)
+	 (paragraph . org-trec-paragraph)
+	 (plain-list . org-trec-plain-list)
+	 (section . org-trec-section)
+	 (text . org-trec-text)
+	 (strike-through . org-trec-strike-through)
+	 (underline . org-trec-underline)
+	 (verbatim . org-trec-verbatim)
+	 )
+   )
+)
+
+(defun org-trec-export ()
+  (interactive)
+  (let ((outbuf
+		 (org-export-to-buffer 'trec "*Org TREC Export*")))
+	(when org-export-show-temporary-export-buffer
+	  (switch-to-buffer-other-window outbuf))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; BBDB (config from link in .wl) ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'bbdb)
