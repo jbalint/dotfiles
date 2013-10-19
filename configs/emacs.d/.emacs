@@ -175,12 +175,35 @@
 )
 
 (defun org-trec-planning (planning contents info)
-  (with-output-to-string (princ (org-element-property :deadline planning))))
+  (message (with-output-to-string (princ (org-element-property :closed planning))))
+  (let ((deadline (org-element-property :deadline planning))
+		(scheduled (org-element-property :scheduled planning))
+		(closed (org-element-property :closed planning)))
+	;; TODO may be multiple, can't be contingent like this
+	(if deadline
+		(concat "Deadline: " (org-timestamp-to-date-string deadline))
+	  (if scheduled
+		  (concat "scheduled: " (org-timestamp-to-date-string scheduled))
+		(if closed
+			(concat "closed: " (org-timestamp-to-date-string closed)))))))
 
 (defun org-trec-section (section contents info)
   ;; TODO put this with the output
   ;;(message (concat "Section category: " (org-export-get-category section info)))
   contents)
+
+(defun org-timestamp-to-date-string (timestamp)
+  "Convert an Org mode timestamp object to a string with time if given. e.g. 2013-01-01 10:13"
+  (let ((date-part
+		 (mapconcat 'number-to-string
+					(org-element-property :year-start timestamp)
+					(org-element-property :month-start timestamp)
+					(org-element-property :day-start timestamp)))
+		(hour-part (org-element-property :hour-start timestamp)))
+	(if hour-part
+		(concat date-part " " (number-to-string hour-part) ":"
+				(number-to-string (org-element-property :minute-start timestamp)))
+	  date-part)))
 
 ;; http://orgmode.org/worg/dev/org-export-reference.html
 ;; c.f. org-export-registered-backends
