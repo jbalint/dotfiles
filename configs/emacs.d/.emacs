@@ -352,10 +352,14 @@
 (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
 (autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
 
-(set-default-font "Fixed Medium Semi-Condensed 10")
+;(set-default-font "Fixed Medium Semi-Condensed 10")
+(set-default-font "Inconsolata:pixelsize=14:antialias=true:autohint=true")
 
 (add-hook 'c-mode-common-hook
 		  (lambda () (local-unset-key (kbd "C-c C-l"))))
 
 (require 'w3m-load)
 (put 'set-goal-column 'disabled nil)
+
+(setq custom-theme-load-path '("/home/jbalint/sw/emacs-color-theme-solarized"))
+(load-theme 'solarized-dark t)
