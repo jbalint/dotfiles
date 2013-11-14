@@ -14,6 +14,3 @@ for C in configs/* ; do
 	fi
 done
 
-# additional
-ln -s `pwd`/configs/emacs.d/.emacs $HOME/.emacs
-
