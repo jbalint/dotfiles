@@ -386,3 +386,7 @@
 
 (setq custom-theme-load-path '("/home/jbalint/sw/emacs-color-theme-solarized"))
 (load-theme 'solarized-dark t)
+(put 'narrow-to-region 'disabled nil)
+
+(setq cedet-java-jdk-root "~/sw/jdk7")
+(setq semanticdb-javap-classpath '("~/sw/jdk7/jre/lib/rt.jar"))
