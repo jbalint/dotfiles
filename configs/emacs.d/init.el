@@ -78,7 +78,7 @@
  ;; If there is more than one, they won't work right.
  '(ecb-options-version "2.40")
  '(menu-bar-mode nil)
- '(safe-local-variable-values (quote ((org-log-done . t) (eval load-theme (quote tango-dark)) (eval load-theme "wombat"))))
+ '(safe-local-variable-values (quote ((tags-table-list quote ("/home/jbalint/sw/fabric-core-trunk/TAGS")) (org-log-done . t) (eval load-theme (quote tango-dark)) (eval load-theme "wombat"))))
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -119,7 +119,12 @@
 (setq org-agent-file-regexp "*.org")
 (setq org-directory "~/Dropbox/important/org")
 (setq org-default-notes-file (concat org-directory "/notes.org"))
-(setq org-agenda-files (list org-directory (concat org-directory "/oracle_work_log")))
+(setq org-agenda-files
+	  (list org-directory
+			(concat org-directory
+					"/oracle_work_log")
+			(concat org-directory
+					"/notes")))
 
 (setq org-mobile-directory (concat org-directory "/MobileOrg"))
 (setq org-mobile-inbox-for-pull (concat org-directory "/mobile.org"))
@@ -145,7 +150,8 @@
 
 ; http://orgmode.org/manual/Code-evaluation-security.html
 (defun my-org-confirm-babel-evaluate (lang body)
-  (not (string= lang "ditaa")))  ; don't ask for ditaa
+  (not (or (string= lang "ditaa")
+		   (string= lang "plantuml"))))  ; don't ask for ditaa
 (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
 (setq org-src-fontify-natively t)
 
@@ -390,3 +396,19 @@
 
 (setq cedet-java-jdk-root "~/sw/jdk7")
 (setq semanticdb-javap-classpath '("~/sw/jdk7/jre/lib/rt.jar"))
+
+(require 'reposition)
+(defun recenter-scroll-offset (&optional offset)
+  "Scroll the current window by recentering `offset' number of lines.
+
+A prefix argument can be used to scroll backwards or more than one."
+  (interactive "p")
+  (let* ((offset (if offset offset -1))
+		 (current-line (repos-count-screen-lines (window-start) (point))))
+	(recenter-top-bottom (- current-line offset))))
+
+(global-set-key (kbd "C-x n") 'recenter-scroll-offset)
+(global-set-key (kbd "C-x p") (lambda () (interactive) (recenter-scroll-offset -1)))
+(put 'upcase-region 'disabled nil)
+
+(setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
