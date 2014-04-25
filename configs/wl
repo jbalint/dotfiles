@@ -9,6 +9,8 @@
 ;; ##       ##     ## ##     ##  ##  ##       
 ;; ######## ##     ## ##     ## #### ######## 
 
+(require 'org-wl)
+
 ;; Config c.f.
 ;; http://emacs-fu.blogspot.com/2009/06/e-mail-with-wanderlust.html
 ;; http://emacs-fu.blogspot.com/2009/09/wanderlust-tips-and-tricks.html
@@ -28,26 +30,28 @@
 (setq
  elmo-maildir-folder-path "/home/jbalint/mutt_mail/OracleIMAP"
 
- wl-smtp-posting-server "stbeehive.oracle.com"
- wl-smtp-posting-port 465
- wl-smtp-posting-user "jess.balint@oracle.com"
- wl-smtp-connection-type 'ssl
- wl-smtp-authenticate-type "login"
-
- wl-from "Jess Balint <jess.balint@oracle.com>"
- wl-local-domain "oracle.com"
+ ;;wl-from "Jess Balint <jess.balint@oracle.com>"
 
  wl-auto-save-drafts-interval nil
- wl-draft-folder ".Drafts"
  wl-draft-enable-queuing nil
  wl-trash-folder ".Trash"
  wl-spam-folder ".Junk E-mail"
- wl-fcc ".Sent Items"
  wl-fcc-force-as-read t
  mime-edit-split-message nil
  wl-summary-width 150
  wl-draft-always-delete-myself t
 )
+(setq elmo-imap4-default-server "stbeehive.oracle.com")
+(setq elmo-imap4-default-stream-type 'ssl)
+(setq elmo-imap4-default-authenticate-type 'clear)
+(setq elmo-imap4-default-user "jess.balint@oracle.com")
+(setq elmo-imap4-default-port 993)
+;;(setq elmo-passwd-alist-file-name nil);; "~/.oracle_sso_pw")
+
+;; to calm stupid elmo warnings (c.f. wl-check-environment)
+(setq wl-message-id-domain "gmail.com")
+;; this one is used by wl-message-id-function
+(setq wl-from "jbalint@gmail.com")
 
 (require 'bbdb-wl)
 (bbdb-wl-setup)
@@ -64,3 +68,63 @@
 ;; (setq smtpmail-auth-credentials '(("stbeehive.oracle.com" 465 "jess.balint@oracle.com" "myPassW3rd....")))
 ;; (setq smtp-server "stbeehive.oracle.com")
 
+;; http://www.emacswiki.org/emacs/WlMultipleAccounts
+(setq wl-user-mail-address-list (quote ("jbalint@gmail.com" "jess.balint@oracle.com")))
+;; (setq wl-dispose-folder-alist
+;;       '(("^%.*company\\.com" . "%INBOX.Trash:\"myname@company.com\"/clear@mail.company.com")
+;;         ("^%.*gmail\\.com" . "%[Gmail]/Trash:myname/clear@imap.gmail.com:993!")
+;;         ))
+
+;; select correct email address when we _start_ writing a draft.
+(add-hook 'wl-mail-setup-hook 'wl-draft-config-exec)
+;; don't apply the templates when sending the draft otherwise 
+;; choosing another template with C-c C-j won't have any effect
+(remove-hook 'wl-draft-send-hook 'wl-draft-config-exec)
+
+;;is run when wl-draft-send-and-exit or wl-draft-send is invoked:
+;;(NOTE: "M-: wl-draft-parent-folder" => %INBOX:myname/clear@imap.gmail.com:993)
+(setq wl-draft-config-alist
+      '(((or
+		  (string-match "\\." wl-draft-parent-folder)
+		  (string-match "Oracle" wl-draft-parent-folder))
+         (template . "oracle")
+		 (wl-smtp-posting-server . "stbeehive.oracle.com")
+		 (wl-smtp-posting-port . 465)
+		 (wl-smtp-posting-user . "jess.balint@oracle.com")
+		 (wl-smtp-connection-type . 'ssl)
+		 (wl-smtp-authenticate-type . "login")
+         (wl-local-domain . "oracle.com")
+		 (wl-draft-folder . ".Drafts")
+		 ;;(wl-fcc . ".Sent Items")
+		 ("Fcc" . ".Sent Items")
+		 (wl-from . "jess.balint@oracle.com"))
+        ((string-match "gmail.com" wl-draft-parent-folder)
+         (template . "gmail")
+         (wl-smtp-posting-user . "jbalint")
+         (wl-smtp-posting-server . "smtp.gmail.com")
+         (wl-smtp-authenticate-type ."plain")
+         (wl-smtp-connection-type . 'starttls)
+         (wl-smtp-posting-port . 587)
+         (wl-local-domain . "gmail.com")
+         (wl-message-id-domain . "smtp.gmail.com"))))
+
+;;choose template with C-c C-j
+(setq wl-template-alist
+      '(("gmail"
+         (wl-from . "Jess Balint <jbalint@gmail.com>")
+         ("From" . wl-from))
+        ("oracle"
+         (wl-from . "Jess Balint <jess.balint@oracle.com>")
+         ("From" . wl-from))))
+
+;; Use different signature files based on From: address
+;; (setq signature-file-alist
+;;       `((("From" . "myname@company.com") . ,(expand-file-name "~/.emacs.d/signature.d/myname@company.com"))
+;; 		(("From" . "myname@gmail.com") . ,(expand-file-name "~/.emacs.d/signature.d/myname@gmail.com"))))
+
+;;Cycle through templates with arrow keys
+;;(define-key wl-template-mode-map (kbd "<right>") 'wl-template-next)
+;;(define-key wl-template-mode-map (kbd "<left>") 'wl-template-prev)
+
+;;default folder name auto completion:
+;;(setq wl-default-spec "%")

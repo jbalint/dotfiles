@@ -1,7 +1,7 @@
 # this is a SHELL script...
 
 export PATH=/home/jbalint/bin:$PATH
-
+unset GREP_OPTIONS
 MODKEY=Mod4
 # Status Bar Info
 status() {
@@ -24,6 +24,7 @@ status() {
 
 wmiir write /colrules <<!
 /8/ -> 85+15
+/1/ -> 80+20
 !
 
 wmiir write /tagrules <<!

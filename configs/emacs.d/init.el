@@ -76,8 +76,16 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-names-vector ["black" "red" "green" "yellow" "blue" "magenta" "cyan" "yellow"])
+ '(background-color nil)
+ '(background-mode dark)
+ '(cursor-color nil)
+ '(custom-safe-themes (quote ("fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" default)))
  '(ecb-options-version "2.40")
+ '(foreground-color nil)
  '(menu-bar-mode nil)
+ '(org-agenda-files nil)
+ '(org-modules (quote (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m org-wl)))
  '(safe-local-variable-values (quote ((tags-table-list quote ("/home/jbalint/sw/fabric-core-trunk/TAGS")) (org-log-done . t) (eval load-theme (quote tango-dark)) (eval load-theme "wombat"))))
  '(tool-bar-mode nil))
 (custom-set-faces
@@ -96,7 +104,8 @@
 (setq auto-mode-alist (cons '("\\.P$" . xsb-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.fl[rih]$" . flora-mode) auto-mode-alist))
 (autoload 'flora-mode "flora" "Major mode for editing Flora-2 programs." t)
-(setq flora-program-name "~/sw/flora-src/flora2/runflora")
+(setq flora-program-name "~/sw/flora2bundle-0.99.5/flora2/runflora")
+;(setq flora-program-name "~/sw/flora-src/flora2/runflora")
 
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;; Window navigation ;;
@@ -116,18 +125,21 @@
 ;; Org-mode customizations ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (setq org-log-done t)
-(setq org-agent-file-regexp "*.org")
+(setq org-agenda-file-regexp "\\`[^.].*\\.org\\'")
 (setq org-directory "~/Dropbox/important/org")
 (setq org-default-notes-file (concat org-directory "/notes.org"))
 (setq org-agenda-files
 	  (list org-directory
-			(concat org-directory
-					"/oracle_work_log")
-			(concat org-directory
-					"/notes")))
+			(concat org-directory "/essentia")
+			(concat org-directory "/notes")
+			(concat org-directory "/oracle")
+			(concat org-directory "/oracle_work_log")))
 
 (setq org-mobile-directory (concat org-directory "/MobileOrg"))
 (setq org-mobile-inbox-for-pull (concat org-directory "/mobile.org"))
+
+(setq org-default-notes-file (concat org-directory "/notes.org"))
+(define-key global-map "\C-cc" 'org-capture)
 
 (add-hook 'org-mode-hook
 		  (lambda ()
@@ -137,6 +149,8 @@
 						   (lambda () (interactive)
 							 (unless (oracle-elem-open)
 							   (org-open-at-point))))
+			(require 'ob-plantuml)
+			(flyspell-mode t)
 
 			(org-babel-do-load-languages
 			 'org-babel-load-languages
@@ -219,7 +233,8 @@
 (setq oracle-elem-link-urls-alist
 	  '(("rb" . "http://rb.no.oracle.com/rb/r/")
 		("wl" . "http://wl.no.oracle.com/?tid=")
-		("ham" . "http://tyr41.no.oracle.com:48080/jira/browse/HAM-")
+		;; ("ham" . "http://tyr41.no.oracle.com:48080/jira/browse/HAM-")
+		("ham" . "https://etools-jira.no.oracle.com:48443/jira/browse/HAM-")
 		("bug" . oracle-mysql-bug-link)))
 
 (defun oracle-elem-open ()
@@ -292,3 +307,48 @@ A prefix argument can be used to scroll backwards or more than one."
 (put 'upcase-region 'disabled nil)
 
 (setq org-plantuml-jar-path "/opt/plantuml/plantuml.jar")
+
+(global-unset-key (kbd "<f1>"))
+(global-set-key (kbd "<f1>") 'other-frame)
+
+;;;; need this here I guess
+;;;(defun org-defvaralias (new-alias base-variable &optional docstring)
+;;;  "Compatibility function for defvaralias.
+;;;Don't do the aliasing when `defvaralias' is not bound."
+;;;  (declare ((indent 1)))
+;;;  (when (fboundp 'defvaralias)
+;;;    (defvaralias new-alias base-variable docstring)))
+;;;(put 'org-defvaralias 'lisp-indent-function 1)
+
+(fset 'yes-or-no-p 'y-or-n-p)
+
+
+(setq org-agenda-custom-commands 
+      '(("c" "Desk Work" tags-todo "computer" ;; (1) (2) (3) (4)
+         ((org-agenda-files '("~/org/widgets.org" "~/org/clients.org")) ;; (5)
+          (org-agenda-sorting-strategy '(priority-up effort-down))) ;; (5) cont.
+         ("~/computer.html")) ;; (6)
+        ;; ...other commands here
+		("A" "Wedding - need addr" tags-todo "ADDR")
+		("x" "GTD Projects" tags-todo "project")
+		("y" nil ((tags "project")
+				  ))
+		 
+        ))
+
+(defun add-oracle-elem-open-binding ()
+  "Add the C-c C-o binding to open an Oracle element or fall back to opening a URL"
+  (local-set-key "\C-c\C-o"
+				 (lambda () (interactive)
+				   (unless (oracle-elem-open)
+					 (if (string= "No URL at point" (w3m-external-view-this-url))
+						 (browse-url-at-point))))))
+
+(add-hook 'wl-message-redisplay-hook 'add-oracle-elem-open-binding)
+
+(add-hook 'wl-summary-mode-hook 'add-oracle-elem-open-binding)
+
+(add-hook 'wl-mail-setup-hook
+		  (lambda () (interactive)
+			(add-oracle-elem-open-binding)
+			(flyspell-mode t)))

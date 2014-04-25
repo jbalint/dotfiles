@@ -7,6 +7,12 @@ set mbox_type=maildir
 set folder=$HOME/mutt_mail/OracleIMAP
 set spoolfile=+INBOX
 set header_cache=~/.cache/mutt
+mailboxes =dev-bugs
+mailboxes =dev-commits
+mailboxes =dev-private
+mailboxes =INBOX
+mailboxes =connectors
+mailboxes =followup
 
 set record = "+Sent Items"
 set my_pass = `cat $HOME/.oracle_sso_pw`
