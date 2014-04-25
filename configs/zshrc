@@ -1,11 +1,47 @@
-# ZSH configuration
+
+##############################################
+# Get this over with right away so I can override everything it does
+# Path to your oh-my-zsh configuration.
+ZSH=$HOME/.oh-my-zsh
+# Look in ~/.oh-my-zsh/themes/
+ZSH_THEME="simple"
+# Set to this to use case-sensitive completion
+# CASE_SENSITIVE="true"
+# Uncomment this to disable bi-weekly auto-update checks
+# DISABLE_AUTO_UPDATE="true"
+# Uncomment to change how often before auto-updates occur? (in days)
+# export UPDATE_ZSH_DAYS=13
+# Uncomment following line if you want to disable colors in ls
+# DISABLE_LS_COLORS="true"
+# Uncomment following line if you want to disable autosetting terminal title.
+DISABLE_AUTO_TITLE="true"
+# Uncomment following line if you want to disable command autocorrection
+# DISABLE_CORRECTION="true"
+# Uncomment following line if you want to disable marking untracked files under
+# VCS as dirty. This makes repository status check for large repositories much,
+# much faster.
+# DISABLE_UNTRACKED_FILES_DIRTY="true"
+# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
+# Example format: plugins=(rails git textmate ruby lighthouse)
+plugins=()
+source $ZSH/oh-my-zsh.sh
+# requires colors from oh-my-zsh
+export PROMPT='%{$fg[green]%}%~%{$fg_bold[blue]%}%% %{$reset_color%}'
+unsetopt sharehistory
+
+export GREP_OPTIONS=--color=auto
+
+#################################################3
+# *MY* ZSH configuration
 #
 # http://www.network-science.de/ascii/
 # style=banner
 
+
 ulimit -c unlimited
 
 # view images with `feh'
+alias feh="feh -Z -."
 
 #FANCY_IP=192.168.1.114
 FANCY_IP=24.241.225.93
@@ -19,6 +55,7 @@ export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/bi
 export JAVA5_HOME=~/sw/jdk5
 export JAVA6_HOME=~/sw/jdk6
 export JAVA7_HOME=~/sw/jdk7
+export JAVA8_HOME=~/sw/jdk1.8.0
 export LUA_HOME=~/sw/lua-5.2.2
 
 export MYSQL_HOME=~/sw/mysql-5.5.30-linux2.6-x86_64
@@ -29,6 +66,11 @@ export WINEPREFIX=/home/jbalint/wine_test1
 export WINEARCH=win32
 
 export LD_LIBRARY_PATH=~/sw/yellow-tree:~/lib
+export PKG_CONFIG_PATH=~/lib/pkgconfig
+
+LESSOPEN="|lesspipe.sh %s"; export LESSOPEN
+
+export LESS="-r -w -J"
 
 if [ "$JAVA_HOME" = "" ] ; then
 	export JAVA_HOME=$JAVA5_HOME
@@ -38,23 +80,26 @@ for X ( /opt/cisco/vpn/bin \
 	~/.local/bin \
 	~/sw/FoxitReader-1.1-release \
 	~/sw/apache-ant-1.9.2/bin \
-	~/sw/lunit-0.5 \
+	~/sw/lunit/extra \
+	~/sw/xsb-src/XSB/bin \
 	$JAVA_HOME/bin ) ; do
 	export PATH="$X:$PATH"
 done
 
 export EDITOR=vim
-export LUA_PATH="/home/jbalint/sw/yellow-tree/?.lua;/home/jbalint/sw/lunit-0.5/?.lua;;"
+export LUA_PATH="/home/jbalint/sw/yellow-tree/?.lua;/home/jbalint/sw/lunit/lua/?.lua;/home/jbalint/share/lua/5.2/?.lua;/home/jbalint/share/lua/5.2/?/init.lua;/home/jbalint/lib/share/?.lua;;"
+export LUA_CPATH="/home/jbalint/lib/lua/5.2/?.so;/home/jbalint/lib/lib/?.so;/home/jbalint/sw/banshee-sympatico/prototype-code/?.so"
 
 alias vi=vim
 alias rein=". ~/.zshrc"
 alias java5="export JAVA_HOME=$JAVA5_HOME ; rein"
 alias java6="export JAVA_HOME=$JAVA6_HOME ; rein"
 alias java7="export JAVA_HOME=$JAVA7_HOME ; rein"
+alias java8="export JAVA_HOME=$JAVA8_HOME ; rein"
 alias sibelius="cd '/home/jbalint/wine_test1/drive_c/Program Files/Sibelius Software/Sibelius 4' ; wine Sibelius"
 alias edrc="vi ~/.zshrc"
 alias reset_inotify="echo 9999 | sudo tee /proc/sys/fs/inotify/max_user_watches"
-alias dnsme="echo nameserver 127.0.0.1 | sudo tee /etc/resolv.conf"
+alias dnsme="echo '#@VPNC_GENERATED@\nnameserver 127.0.0.1' | sudo tee /etc/resolv.conf"
 alias screenshot="sleep 3s; import -window root screenshot.png"
 alias bzr-diff="bzr cdiff | less -r"
  
@@ -63,6 +108,34 @@ alias FETadvanced="wine ~/wine_test1/drive_c/Program\ Files/Functional\ Ear\ Tra
 
 alias facebook="chromium facebook.com"
 alias timidity="timidity -iA -R 1"
+
+alias yogurt=yaourt
+
+# weird program needs to be run from it's build dir
+#alias xsb="/home/jbalint/sw/xsb-src/XSB/bin/xsb"
+
+pts() {
+	basename `readlink /proc/self/fd/0`
+}
+
+# Show the top-level dirs in an archive
+dirs() {
+	if [[ $1 =~ .tar.gz$ || $1 =~ .tgz$ ]] ; then
+		gunzip -c "$1" | tar -tf - | sed 's/\/.*//' | uniq
+	elif [[ $1 =~ .tar.bz2$ || $1 =~ .tbz$ ]] ; then
+		bunzip2 -c "$1" | tar -tf - | sed 's/\/.*//' | uniq
+	elif [[ $1 =~ .zip$ ]] ; then
+		unzip -l $1 | \
+			egrep -v '(^---|^Archive|(Length\s+Date\s+Time)|         )' | \
+			perl -lpe's/\s+\d+\s+\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}\s+(.+?)\/.*$/$1/' | uniq
+	else
+		echo "Unknown archive type"
+	fi
+}
+
+ptsproc() {
+	ps auxw | grep pts/`pts`
+}
 
 xterm_title() {
 	echo "\033]2;$1\007"
@@ -151,6 +224,14 @@ mouse_invert() {
 	xmodmap -e "pointer = $BTNS"
 }
 
+touchpad_off() {
+	/usr/bin/synclient TouchpadOff=1
+}
+
+touchpad_on() {
+	/usr/bin/synclient TouchpadOff=0
+}
+
 ####################################
 ####################################
 ##                                ##
@@ -166,7 +247,11 @@ mouse_invert() {
 ####################################
 
 tv_on() {
-	xrandr --output HDMI1 --auto --mode 1366x768 --same-as LVDS1
+	xrandr --output HDMI1 --auto --mode 1366x768 --same-as HDMI2
+}
+
+tv_right() {
+	xrandr --output HDMI1 --mode 1920x1080 --right-of HDMI2
 }
 
 tv_off() {
@@ -175,12 +260,12 @@ tv_off() {
 
 monitor_on() {
 	#xrandr --output HDMI1 --auto --mode 1680x1050 --same-as LVDS1
-	xrandr --output HDMI1 --auto --mode 1680x1050 --right-of LVDS1
+	xrandr --output HDMI2 --auto --mode 1680x1050 --right-of LVDS1
 	echo "Remember to invert mouse buttons"
 }
 
 monitor_off() {
-	xrandr --output HDMI1 --off
+	xrandr --output HDMI2 --off
 }
 
 laptop_on() {
@@ -202,7 +287,7 @@ laptop_off() {
 #}
 
 run-xbmc() {
-	PULSE_SINK=alsa_output.pci-0000_00_1b.0.hdmi-stereo xbmc
+	PULSE_SINK=alsa_output.pci-0000_00_1b.0.hdmi-stereo setsid xbmc
 }
 
 # xrandr --output VGA1 --auto --output HDMI1 --auto --right-of VGA1
@@ -224,8 +309,17 @@ run-xbmc() {
 ####################################
 ####################################
 
-alias pa-hdmi="pacmd set-card-profile alsa_card.pci-0000_00_1b.0 output:hdmi-stereo+input:analog-stereo"
-alias pa-analog="pacmd set-card-profile alsa_card.pci-0000_00_1b.0 output:analog-stereo+input:analog-stereo"
+# using multi-sink profile now, c.f. config file
+#alias pa-hdmi="pacmd set-card-profile alsa_card.pci-0000_00_1b.0 output:hdmi-stereo+input:analog-stereo"
+#alias pa-analog="pacmd set-card-profile alsa_card.pci-0000_00_1b.0 output:analog-stereo+input:analog-stereo"
+
+PA_CARD_INTERNAL="alsa_card.pci-0000_00_1b.0"
+
+alias pa-multi="pacmd set-card-profile $PA_CARD_INTERNAL multi"
+
+alias pa-hdmi="pacmd set-default-sink alsa_output.pci-0000_00_1b.0.hdmi-stereo"
+alias pa-analog="pacmd set-default-sink alsa_output.pci-0000_00_1b.0.analog-stereo"
+
 
 pa-internal() {
 	pacmd set-default-sink alsa_output.pci-0000_00_1b.0.analog-stereo
@@ -236,6 +330,9 @@ pa-h4() {
 	pacmd set-default-sink alsa_output.usb-ZOOM_Corporation_H4-00-H4.analog-stereo
 	pacmd set-default-source alsa_input.usb-ZOOM_Corporation_H4-00-H4.analog-stereo
 }
+
+alias pa-sinks="pacmd list-sinks | grep '^\s*name\|\s*index'"
+alias pa-sources="pacmd list-sources | grep '^\s*name\|\s*index'"
 
 ################################################
 # The following lines were added by compinstall
@@ -263,7 +360,7 @@ stty start undef
 # sudo rmmod e1000e
 # sudo systemctl suspend
 
-install_aur() {
+aur_install() {
 	cd ~/aur && \
 	tar -zxvf ~/Downloads/$1.tar.gz && \
 	cd $1 && \
@@ -340,6 +437,7 @@ wmii-find() {
 
 # List all wmii clients including their labels and tags
 wmii-list() {
+	unset GREP_OPTIONS
 	wmiir ls /client | grep \^0x | wmii-print-client $1
 }
 
@@ -365,9 +463,28 @@ wmii-view-tag() {
 	wmiir xwrite /ctl view $1
 }
 
+wmii-kill() {
+	wmiir xwrite /client/$1/ctl kill
+}
+
+wmii-z() {
+	wmiir read /tag/sel/index | grep '^~' | grep -v 'xbmc.bin' | awk '{print $2}' | while read i ; do wmiir xwrite /tag/sel/ctl send $i 1 ; done
+}
 # wmiir xwrite /tag/1/ctl select client 0xc146b3
 
 set -o emacs
 
 # dbus-monitor "path='/im/pidgin/purple/PurpleObject',interface='im.pidgin.purple.PurpleInterface',member='ReceivedChatMsg'"
 
+setopt interactivecomments
+
+
+# Wireshark isn't affect by scroll wheel
+# https://bugs.archlinux.org/task/35348
+export GDK_CORE_DEVICE_EVENTS=1
+
+whitenoise() { setsid vlc ~/.jdownloader/downloads/Celestial*.tmp }
+
+ws_fab() { sudo tshark -O xml,http -i lo -f "port 32274" }
+
+# egrep -v '(torrent|guestbook|mediawiki|OPTIONS|POST|HEAD)' access_log | less
