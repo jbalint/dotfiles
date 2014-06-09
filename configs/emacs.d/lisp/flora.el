@@ -17,7 +17,7 @@
 
 ;;
 ;; Put
-;;   (setq auto-mode-alist (cons '("\\.fl[rih]$" . flora-mode) auto-mode-alist))
+;;   (setq auto-mode-alist (cons '("\\(\\.flr$\\|\\.ergo$\\)" . flora-mode) auto-mode-alist))
 ;;   (autoload 'flora-mode "flora" "Major mode for editing Flora-2 programs." t)
 
 ;;; Code:
@@ -99,14 +99,24 @@
 ;; If font-lock is not installed, there should be no problem
 
 (make-face 'flora-font-lock-system-face)
+(copy-face 'default 'flora-font-lock-system-face)
+(make-face-bold 'flora-font-lock-system-face)
+(set-face-foreground 'flora-font-lock-system-face "violet")
+;;------------------
 (make-face 'flora-font-lock-arrow-face)
 (copy-face 'default 'flora-font-lock-arrow-face)
 (set-face-foreground 'flora-font-lock-arrow-face "Maroon")
-(copy-face 'default 'flora-font-lock-system-face)
-(set-face-foreground 'flora-font-lock-system-face "violet")
-(make-face-bold 'flora-font-lock-system-face)
 (make-face-bold 'flora-font-lock-arrow-face)
-
+;;--------------------------
+(make-face 'flora-font-lock-signature-face)
+;;(copy-face 'default 'flora-font-lock-signature-face)
+(set-face-foreground 'flora-font-lock-signature-face "green")
+(make-face-bold 'flora-font-lock-signature-face)
+;;-----------------------------------------
+(make-face 'flora-font-lock-bold-keyword-face)
+(copy-face 'font-lock-keyword-face 'flora-font-lock-bold-keyword-face)
+(make-face-bold 'flora-font-lock-bold-keyword-face)
+;;-----------------------------------------
 (make-face 'flora-font-lock-query-face)
 (set-face-foreground 'flora-font-lock-query-face "darkgreen")
 
@@ -116,22 +126,34 @@
 
 (defconst flora-font-lock-keywords
    (list
-    '("\\(\\(flora\\)? +\\?-\\|:-\\|\\.[ \t\n]*$\\)"
+    '("\\(\\(flora\\)? +\\?-\\|:-\\|-:\\|\\.[ \t\n]*$\\)"
       1 'flora-font-lock-query-face)
-    '("\\(\\*?->\\|\\*?->\\|\\*?=>\\|*?->->\\|\\*?=>\\)"
-      1 'flora-font-lock-arrow-face)
     ;; for objects
     '("\\([A-Za-z0-9_][A-Za-z0-9_!.]*\\) *\\["
-      1 'font-lock-variable-name-face)
-    '("\\b\\(\\\+\\|naf\\|avg\\|max\\|min\\|sum\\|count\\|setof\\|bagof\\|insert\\|delete\\|b?t_?insert\\|b?t_?delete\\|insertall\\|b?t_?insertall\\|deleteall\\|b?t_?deleteall\\|erase\\|eraseall\\|b?t_?erase\\|b?t_?eraseall\\|insertrule_?[az]?\\|if\\|then\\|else\\|while\\|do\\|until\\|unless\\|p2h\\|semantics\||setsemantics\\|udf\\|caller\\|newoid\\|fl[A-Z][a-zA-Z]*\\)\\b"
-      1 'font-lock-keyword-face)
-    '("\\(:\\||\\)" 
       1 'font-lock-type-face)
+    ;; for constants
+    '("[^A-Za-z0-9_]\\([0-9]+\\(.[0-9]+\\|[eE][-+]?[0-9]+\\)?\\)[^A-Za-z0-9_]"
+      1 'font-lock-constant-face)
+    ;; for variables
+    '("\\(\\?\\([A-Za-z_]+[A-Za-z0-9_]*\\)?\\)"
+      1 'font-lock-variable-name-face)
+    '("\\b\\(\\\+\\|avg\\|max\\|min\\|sum\\|count\\|setof\\|bagof\\|insert\\|delete\\|b?t_?insert\\|b?t_?delete\\|insertall\\|b?t_?insertall\\|deleteall\\|b?t_?deleteall\\|erase\\|eraseall\\|b?t_?erase\\|b?t_?eraseall\\|insertrule_?[az]?\\|deleterule\\|\\[a-z]+\\|p2h\\|semantics\||setsemantics\\|udf\\|caller\\|newoid\\|test\\|catch\\|clause\\|must\\|wish\\|exists?\\|forall\\|newmodule\\|erasemodule\\|udf\\|t?enable\\|t?disable\\|fl[A-Z][a-zA-Z]*\\)\\b"
+      1 'font-lock-keyword-face)
+    '("\\(\\\\[A-Za-z]+\\)"
+      1 'font-lock-keyword-face)
+    '("\\(@!\\|@\\|@@\\)"
+      1 'flora-font-lock-bold-keyword-face)
+    '("\\(->\\|=>\\|->->\\|=>\\|-->\\)"
+      1 'flora-font-lock-arrow-face)
+    '("\\(:\\|[^[(]|[^])]\\)" 
+      1 'font-lock-type-face)
+    '("\\(\\[|\\||\\]\\|(|\\||)\\)"
+      1 'flora-font-lock-signature-face)
     '("\\(\\[\\|\\]\\|{\\|}\\)"
       1 'bold)
     (list (format "\\b\\(%s\\|^#[a-z]\\)\\b" flora-directives-regexp)
 	  1 '(quote flora-font-lock-system-face))
-    '("\\(\\b[A-Za-z0-9_]+\\b *\\((\\b[^)]+\\b)\\)?\\)[ \t\n]*\\((.*)[ \t\C-m]*\\)?\\*?[---=]>"
+    '("\\(\\b[A-Za-z0-9_]+\\b *\\((\\b[^)]+\\b)\\)?\\)[ \t\n]*\\((.*)[ \t\C-m]*\\)?[---=]>"
       1 'font-lock-function-name-face)
     )
   "Additional expressions to highlight in flora mode.")
@@ -552,7 +574,7 @@ The region must be created in advance."
     (save-excursion
       (process-send-string
        flora-process-name 
-       (format " _load('%s' >> %s).\n" tmpfile-name (if module module "main"))
+       (format " load{'%s' >> %s}.\n" tmpfile-name (if module module "main"))
        ))
     (show-flora-buffer)
     ))
@@ -600,7 +622,7 @@ Does not offer to save files."
     (run-flora-background)
     (process-send-string
      flora-process-name
-     (format "_load('%s' >> %s).\n" file (if module module "main")))
+     (format "load{'%s' >> %s}.\n" file (if module module "main")))
     (show-flora-buffer)))
 
 (defun flora-load-file-to-module (module)
