@@ -29,7 +29,7 @@ source $ZSH/oh-my-zsh.sh
 export PROMPT='%{$fg[green]%}%~%{$fg_bold[blue]%}%% %{$reset_color%}'
 unsetopt sharehistory
 
-export GREP_OPTIONS=--color=auto
+#export GREP_OPTIONS=--color=auto
 
 #################################################3
 # *MY* ZSH configuration
@@ -55,15 +55,15 @@ export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/bi
 export JAVA5_HOME=~/sw/jdk5
 export JAVA6_HOME=~/sw/jdk6
 export JAVA7_HOME=~/sw/jdk7
-export JAVA8_HOME=~/sw/jdk1.8.0
-export LUA_HOME=~/sw/lua-5.2.2
+export JAVA8_HOME=~/sw/jdk8
+#export LUA_HOME=~/sw/lua-5.2.2
 
-export MYSQL_HOME=~/sw/mysql-5.5.30-linux2.6-x86_64
+#export MYSQL_HOME=~/sw/mysql-5.5.30-linux2.6-x86_64
 
-export OPCODEDIR=/usr/lib/csound/plugins
-export CSSTRNGS=/usr/share/locale
-export WINEPREFIX=/home/jbalint/wine_test1
-export WINEARCH=win32
+#export OPCODEDIR=/usr/lib/csound/plugins
+#export CSSTRNGS=/usr/share/locale
+#export WINEPREFIX=/home/jbalint/wine_test1
+#export WINEARCH=win32
 
 export LD_LIBRARY_PATH=~/sw/yellow-tree:~/lib
 export PKG_CONFIG_PATH=~/lib/pkgconfig
@@ -73,7 +73,7 @@ LESSOPEN="|lesspipe.sh %s"; export LESSOPEN
 export LESS="-r -w -J"
 
 if [ "$JAVA_HOME" = "" ] ; then
-	export JAVA_HOME=$JAVA5_HOME
+	export JAVA_HOME=$JAVA8_HOME
 fi
 for X ( /opt/cisco/vpn/bin \
 	~/bin \
@@ -368,7 +368,8 @@ aur_install() {
 	sudo pacman -U ${1}*.pkg.tar.xz
 }
 
-source ~/perl5/perlbrew/etc/bashrc
+# from perlbrew when I was using it on the old `rook' setup
+#source ~/perl5/perlbrew/etc/bashrc
 
 # wmii-print-client - Print details about a client given a client id
 # arguments:
@@ -488,3 +489,9 @@ whitenoise() { setsid vlc ~/.jdownloader/downloads/Celestial*.tmp }
 ws_fab() { sudo tshark -O xml,http -i lo -f "port 32274" }
 
 # egrep -v '(torrent|guestbook|mediawiki|OPTIONS|POST|HEAD)' access_log | less
+
+MAILDIR=/home/jbalint/mutt_mail/OracleIMAP
+
+oragit() {
+	git config user.email jess.balint@oracle.com
+}

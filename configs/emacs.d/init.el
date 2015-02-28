@@ -1,6 +1,3 @@
-; Put this in the main .emacs
-; (load "~/.emacs.d/.emacs")
-
 (require 'font-lock)
 (require 'cc-mode)
 (setq global-font-lock-mode t
@@ -60,7 +57,6 @@
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 (add-to-list 'load-path "~/.emacs.d/lisp")
 (add-to-list 'load-path "~/.emacs.d/lisp/ecb")
-(add-to-list 'load-path "~/sw/xsb-src/XSB/etc")
 (require 'ecb nil t)
 
 (unless (require 'el-get nil 'noerror)
@@ -76,18 +72,43 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector ["black" "red" "green" "yellow" "blue" "magenta" "cyan" "yellow"])
+ '(ansi-color-names-vector
+   ["black" "red" "green" "yellow" "blue" "magenta" "cyan" "yellow"])
  '(background-color nil)
  '(background-mode dark)
+ '(browse-url-browser-function 'browse-url-xdg-open)
  '(cursor-color nil)
- '(custom-safe-themes (quote ("fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" default)))
+ '(custom-safe-themes
+   (quote
+	("fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" default)))
  '(ecb-options-version "2.40")
  '(foreground-color nil)
  '(menu-bar-mode nil)
+ '(notmuch-saved-searches
+   (quote
+	((:name "i2 - IMPORTANT inbox" :query "tab:i2" :key "i")
+	 (:name "inbox" :query "tag:inbox")
+	 (:name "unread" :query "tag:unread" :key "u")
+	 (:name "flagged" :query "tag:flagged" :key "f")
+	 (:name "sent" :query "tag:sent" :key "t")
+	 (:name "drafts" :query "tag:draft" :key "d")
+	 (:name "all mail" :query "*" :key "a"))))
  '(org-agenda-files nil)
- '(org-modules (quote (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m org-wl)))
- '(safe-local-variable-values (quote ((tags-table-list quote ("/home/jbalint/sw/fabric-core-trunk/TAGS")) (org-log-done . t) (eval load-theme (quote tango-dark)) (eval load-theme "wombat"))))
- '(tool-bar-mode nil))
+ '(org-modules
+   (quote
+	(org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m org-wl)))
+ '(safe-local-variable-values
+   (quote
+	((tags-table-list quote
+					  ("/home/jbalint/sw/fabric-core-trunk/TAGS"))
+	 (org-log-done . t)
+	 (eval load-theme
+		   (quote tango-dark))
+	 (eval load-theme "wombat"))))
+ '(send-mail-function (quote smtpmail-send-it))
+ '(smtpmail-smtp-server "stbeehive.oracle.com")
+ '(smtpmail-smtp-service 465)
+ '(smtpmail-stream-type (quote ssl)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -98,6 +119,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; XSB and Flora-2 configurations ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(add-to-list 'load-path "~/sw/xsb-src/XSB/etc")
 (autoload 'xsb-mode "prolog" "Major mode for editing XSB programs." t)
 (autoload 'prolog-mode "prolog" "Major mode for editing Prolog programs." t)
 (setq prolog-program-name "~/sw/xsb-src/XSB/bin/xsb")
@@ -167,6 +189,7 @@
   (not (or (string= lang "ditaa")
 		   (string= lang "plantuml"))))  ; don't ask for ditaa
 (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
+(setq org-confirm-babel-evaluate nil)
 (setq org-src-fontify-natively t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -255,8 +278,7 @@
 		   (funcall url-prefix-or-resolver id)))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Note: this requires existence of xclip binary
 (if (not window-system)
 	(progn
 	  (require 'xclip)
@@ -285,12 +307,12 @@
 (require 'w3m-load)
 (put 'set-goal-column 'disabled nil)
 
-(setq custom-theme-load-path '("/home/jbalint/sw/emacs-color-theme-solarized"))
+(setq custom-theme-load-path '("/home/jbalint/sw/emacs-sw/emacs-color-theme-solarized"))
 (load-theme 'solarized-dark t)
 (put 'narrow-to-region 'disabled nil)
 
-(setq cedet-java-jdk-root "~/sw/jdk7")
-(setq semanticdb-javap-classpath '("~/sw/jdk7/jre/lib/rt.jar"))
+(setq cedet-java-jdk-root "~/sw/jdk8")
+(setq semanticdb-javap-classpath '("~/sw/jdk8/jre/lib/rt.jar"))
 
 (require 'reposition)
 (defun recenter-scroll-offset (&optional offset)
@@ -352,3 +374,29 @@ A prefix argument can be used to scroll backwards or more than one."
 		  (lambda () (interactive)
 			(add-oracle-elem-open-binding)
 			(flyspell-mode t)))
+
+;;;;;;;;;;;;
+;; ledger ;;
+;;;;;;;;;;;;
+(autoload 'ledger-mode "ledger-mode" "A major mode for Ledger" t)
+(add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
+
+;;;;;;;;;;;;;
+;; notmuch ;;
+;;;;;;;;;;;;;
+(autoload 'notmuch "notmuch" "notmuch mail" t)
+(require 'notmuch)
+(setq notmuch-show-relative-dates nil)
+(define-key notmuch-show-mode-map "d"
+  (lambda ()
+	(interactive)
+	(notmuch-show-tag '("+deleted"))))
+(define-key notmuch-search-mode-map "d"
+  (lambda ()
+	(interactive)
+	(notmuch-search-tag '("+deleted"))))
+
+;;;;;;;;;;;;;;;;;
+;; ESS (for R) ;;
+;;;;;;;;;;;;;;;;;
+(require 'ess-site)

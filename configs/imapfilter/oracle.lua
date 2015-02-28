@@ -13,7 +13,7 @@ oracle = IMAP {
     server = 'stbeehive.oracle.com',
     username = 'jess.balint@oracle.com',
     password = io.open("/home/jbalint/.oracle_sso_pw"):read("*l"),
-    ssl = 'ssl3',
+    ssl = 'tls1',
 }
 
 -----------------

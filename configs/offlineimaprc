@@ -4,7 +4,9 @@ accounts = Work
 [Account Work]
 localrepository = Local
 remoterepository = Remote
-presynchook = /usr/bin/imapfilter -vc ~/.imapfilter/oracle.lua
+presynchook = /usr/bin/imapfilter -vc ~/.imapfilter/oracle.lua && notmuch search --output=files tag:deleted | tr '\n' '\0' | xargs -0 rm -v
+postsynchook = notmuch new && logger -t notmuch "index updated"
+status_backend = sqlite
 
 [Repository Local]
 type = Maildir
@@ -16,5 +18,6 @@ remotehost = stbeehive.oracle.com
 remoteuser = jess.balint@oracle.com
 remotepassfile = ~/.oracle_sso_pw
 ssl = yes
-cert_fingerprint = b6877aa6a4eb4cb2ea0edd0a1f5d08510245ea5d
+#cert_fingerprint = b6877aa6a4eb4cb2ea0edd0a1f5d08510245ea5d # replaced at reinstall 2015-02-21
+cert_fingerprint = 49546ad1007e2b45f1c3ba80a849a79f62ecf544
 
