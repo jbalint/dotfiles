@@ -75,13 +75,10 @@ export LESS="-r -w -J"
 if [ "$JAVA_HOME" = "" ] ; then
 	export JAVA_HOME=$JAVA8_HOME
 fi
-for X ( /opt/cisco/vpn/bin \
+for X ( \
 	~/bin \
 	~/.local/bin \
-	~/sw/FoxitReader-1.1-release \
-	~/sw/apache-ant-1.9.2/bin \
-	~/sw/lunit/extra \
-	~/sw/xsb-src/XSB/bin \
+	~/.cabal/bin \
 	$JAVA_HOME/bin ) ; do
 	export PATH="$X:$PATH"
 done
@@ -96,23 +93,15 @@ alias java5="export JAVA_HOME=$JAVA5_HOME ; rein"
 alias java6="export JAVA_HOME=$JAVA6_HOME ; rein"
 alias java7="export JAVA_HOME=$JAVA7_HOME ; rein"
 alias java8="export JAVA_HOME=$JAVA8_HOME ; rein"
-alias sibelius="cd '/home/jbalint/wine_test1/drive_c/Program Files/Sibelius Software/Sibelius 4' ; wine Sibelius"
+alias java9="export JAVA_HOME=$JAVA9_HOME ; rein"
 alias edrc="vi ~/.zshrc"
 alias reset_inotify="echo 9999 | sudo tee /proc/sys/fs/inotify/max_user_watches"
 alias dnsme="echo '#@VPNC_GENERATED@\nnameserver 127.0.0.1' | sudo tee /etc/resolv.conf"
+alias dnsreset="echo 'nameserver 192.168.1.1' | sudo tee /etc/resolv.conf"
 alias screenshot="sleep 3s; import -window root screenshot.png"
-alias bzr-diff="bzr cdiff | less -r"
- 
-alias FETbasic="wine ~/wine_test1/drive_c/Program\ Files/Functional\ Ear\ Trainer\ -\ Basic/FunctionalEarTrainer.exe"
-alias FETadvanced="wine ~/wine_test1/drive_c/Program\ Files/Functional\ Ear\ Trainer\ -\ Advanced/FET_advanced.exe"
 
 alias facebook="chromium facebook.com"
 alias timidity="timidity -iA -R 1"
-
-alias yogurt=yaourt
-
-# weird program needs to be run from it's build dir
-#alias xsb="/home/jbalint/sw/xsb-src/XSB/bin/xsb"
 
 pts() {
 	basename `readlink /proc/self/fd/0`
@@ -199,23 +188,6 @@ gstack() {
 	gdb -batch -ex "thread apply all bt full" -p $1
 }
 
-# Setup a route to 'fancy' at home for web (port 8023)
-# requires local DNS to fancy to LAN_IP
-route_fancy() {
-	sudo iptables -t nat -F
-	sudo iptables -t nat -A OUTPUT -d $LAN_IP -p tcp -m tcp --dport 80 -j DNAT --to-destination $FANCY_IP:8023
-}
-
-mount_fancy() {
-	if [ "$FANCY_CIFS_PW" = "" ] ; then
-		echo "Please set FANCY_CIFS_PW"
-		return
-	fi
-	sudo mount -t cifs '//fancy/K$'             /mnt/fancy/K        -o "user=Administrator,password=$FANCY_CIFS_PW"
-	sudo mount -t cifs '//fancy/D$'             /mnt/fancy/D        -o "user=Administrator,password=$FANCY_CIFS_PW"
-	sudo mount -t cifs '//fancy/D$/DL/Torrents' /mnt/fancy/Torrents -o "user=Administrator,password=$FANCY_CIFS_PW"
-}
-
 mouse_invert() {
 	BTNS="1 2 3"
 	if [ "$1" = "t" ] ; then
@@ -276,63 +248,9 @@ laptop_off() {
 	xrandr --output LVDS1 --off
 }
 
-#xbmc-tv() {
-#	tv_on
-#	laptop_off
-#	pa-hdmi
-#	xbmc
-#	tv_off
-#	laptop_on
-#	pa-analog
-#}
-
 run-xbmc() {
-	PULSE_SINK=alsa_output.pci-0000_00_1b.0.hdmi-stereo setsid xbmc
+	PULSE_SINK=alsa_output.pci-0000_00_1b.0.hdmi-stereo setsid kodi
 }
-
-# xrandr --output VGA1 --auto --output HDMI1 --auto --right-of VGA1
-# xrandr --output LVDS1 --auto --output HDMI1 --auto
-# xrandr --output LVDS1 --mode 1366x768 --auto --output HDMI1 --mode 1366x768 --auto
-# xrandr --output LVDS1 --mode 1366x768 --auto --output HDMI1 --mode 1680x1050 --right-of LVDS1
-
-####################################
-####################################
-##                                ##
-##    #                           ##
-##   # #   #    # #####  #  ####  ##
-##  #   #  #    # #    # # #    # ##
-## #     # #    # #    # # #    # ##
-## ####### #    # #    # # #    # ##
-## #     # #    # #    # # #    # ##
-## #     #  ####  #####  #  ####  ##
-##                                ##
-####################################
-####################################
-
-# using multi-sink profile now, c.f. config file
-#alias pa-hdmi="pacmd set-card-profile alsa_card.pci-0000_00_1b.0 output:hdmi-stereo+input:analog-stereo"
-#alias pa-analog="pacmd set-card-profile alsa_card.pci-0000_00_1b.0 output:analog-stereo+input:analog-stereo"
-
-PA_CARD_INTERNAL="alsa_card.pci-0000_00_1b.0"
-
-alias pa-multi="pacmd set-card-profile $PA_CARD_INTERNAL multi"
-
-alias pa-hdmi="pacmd set-default-sink alsa_output.pci-0000_00_1b.0.hdmi-stereo"
-alias pa-analog="pacmd set-default-sink alsa_output.pci-0000_00_1b.0.analog-stereo"
-
-
-pa-internal() {
-	pacmd set-default-sink alsa_output.pci-0000_00_1b.0.analog-stereo
-	pacmd set-default-source alsa_input.pci-0000_00_1b.0.analog-stereo
-}
-
-pa-h4() {
-	pacmd set-default-sink alsa_output.usb-ZOOM_Corporation_H4-00-H4.analog-stereo
-	pacmd set-default-source alsa_input.usb-ZOOM_Corporation_H4-00-H4.analog-stereo
-}
-
-alias pa-sinks="pacmd list-sinks | grep '^\s*name\|\s*index'"
-alias pa-sources="pacmd list-sources | grep '^\s*name\|\s*index'"
 
 ################################################
 # The following lines were added by compinstall
@@ -495,3 +413,15 @@ MAILDIR=/home/jbalint/mutt_mail/OracleIMAP
 oragit() {
 	git config user.email jess.balint@oracle.com
 }
+
+git-log-graph() {
+	git log --pretty=oneline --graph
+}
+
+cj-j8() {
+	perl -pi.bak -e's/(java version \&quot;)1\.7/${1}1\.8/g' build.xml
+}
+
+alias redshift="redshift -m randr:crtc=DP2"
+alias bldec="xbacklight -dec 10 ; xbacklight"
+alias blinc="xbacklight -inc 10 ; xbacklight"

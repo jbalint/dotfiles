@@ -10,5 +10,5 @@
 	pager = less
 
 [status]
-	showUntrackedFiles = no
+#	showUntrackedFiles = no
 

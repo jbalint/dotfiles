@@ -1,0 +1,35 @@
+#! /bin/sh
+
+bspc config border_width        1
+bspc config window_gap          0
+
+bspc config split_ratio         0.52
+bspc config borderless_monocle  true
+bspc config gapless_monocle     true
+bspc config focus_by_distance   true
+
+bspc monitor -d I II III IV V VI VII VIII IX X
+bspc config top_padding 14
+
+bspc monitor HDMI1 -d Kodi
+bspc config -m HDMI1 border_width 0
+# this helps prevent Kodi from causing the screen rendering issues
+bspc config -m HDMI1 top_padding 1
+
+bspc rule -a Gimp desktop=^8 follow=on floating=on
+bspc rule -a Chromium desktop=^2
+bspc rule -a mplayer2 floating=on
+bspc rule -a Kupfer.py focus=on
+bspc rule -a Screenkey manage=off
+bspc rule -a Kodi desktop=Kodi
+
+# for Java apps showing up blank
+wmname LG3D
+export _JAVA_AWT_WM_NONREPARENTING=1
+
+# http://www.reddit.com/r/unixporn/comments/1tsox7/bspwm_cursor_is_an_x/
+# Use normal cursor
+xsetroot -cursor_name left_ptr
+
+xset s off
+xset -dpms

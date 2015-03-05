@@ -76,7 +76,7 @@
    ["black" "red" "green" "yellow" "blue" "magenta" "cyan" "yellow"])
  '(background-color nil)
  '(background-mode dark)
- '(browse-url-browser-function 'browse-url-xdg-open)
+ '(browse-url-browser-function (quote browse-url-xdg-open))
  '(cursor-color nil)
  '(custom-safe-themes
    (quote
@@ -291,6 +291,46 @@
 						 (setq tab-width 8))))
 (put 'erase-buffer 'disabled nil)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; MySQL Connector/J code style settings ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(add-hook 'find-file-hook
+		  (lambda nil (unless (not (string-match "/cj" (buffer-file-name)))
+						(auto-fill-mode 1)
+						(setq indent-tabs-mode nil
+							  fill-column 160)
+						;; c.f. `c-offsets-alist'
+						(c-set-offset 'arglist-cont '++)
+						(c-set-offset 'arglist-cont-nonempty '++)
+						(c-set-offset 'arglist-intro '++)
+						(c-set-offset 'func-decl-cont '++)
+						(c-set-offset 'inher-cont '++)
+						(c-set-offset 'member-init-cont '++)
+						(c-set-offset 'statement-cont '++))))
+;; let's `fill-paragraph' work nicely with source code
+(require 'cc-mode)
+(require 'fillcode)
+(add-hook 'java-mode-hook
+		  (lambda nil (unless (not (string-match "/cj" (buffer-file-name)))
+						(require 'fillcode)
+						(fillcode-mode 1))))
+;; tweak this a little bit, order MATTERS
+;; check default value for explanations
+(setq fillcode-fill-points
+  (list
+   "<<[^<]\\|>>[^>]"
+   "&&[^&]\\|||[^|]"
+   (concat "[<>!=]=[^=]\\|\\s-<\\s-\\|\\s->\\s-")
+   (concat "/[^=]\\|\\s-\\*\\s-\\|\\s--\\s-\\|\\s-\\+[^+=]")
+   "[|~^][^&|=]"
+
+   ";[^;]"
+   ",[^,]"
+
+   "[([][^]})({[]"
+   "\\s-{[^({[]"
+   ))
+
 (require 'package)
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
 
@@ -307,8 +347,6 @@
 (require 'w3m-load)
 (put 'set-goal-column 'disabled nil)
 
-(setq custom-theme-load-path '("/home/jbalint/sw/emacs-sw/emacs-color-theme-solarized"))
-(load-theme 'solarized-dark t)
 (put 'narrow-to-region 'disabled nil)
 
 (setq cedet-java-jdk-root "~/sw/jdk8")
@@ -395,8 +433,49 @@ A prefix argument can be used to scroll backwards or more than one."
   (lambda ()
 	(interactive)
 	(notmuch-search-tag '("+deleted"))))
+(defun mail-to-cj ()
+  "Draft a new message to C/J folks."
+  (interactive)
+  (notmuch-mua-mail "Alexander Soklakov <alexander.soklakov@oracle.com>, Filipe Silva <filipe.silva@oracle.com>"
+					""
+					'(("Cc" . "JDBC Reviewers <MYSQL-CONNECTORS-JAVA_GRP@oracle.com>"))))
 
 ;;;;;;;;;;;;;;;;;
 ;; ESS (for R) ;;
 ;;;;;;;;;;;;;;;;;
 (require 'ess-site)
+
+;;;;;;;;;;;;;;;;;;;;;
+;; Solarized theme ;;
+;;;;;;;;;;;;;;;;;;;;;
+;; https://github.com/sellout/emacs-color-theme-solarized
+;; https://github.com/sellout/emacs-color-theme-solarized/issues/142
+(setq custom-theme-load-path '("/home/jbalint/sw/emacs-sw/emacs-color-theme-solarized"))
+(set-terminal-parameter nil 'background-mode 'dark)
+(load-theme 'solarized t)
+
+;;;;;;;;;;;;;
+;; Haskell ;;
+;;;;;;;;;;;;;
+(load "haskell-mode-autoloads")
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+(defun haskell-eval ()
+  (interactive)
+  (let ((sym (haskell-ident-at-point)))
+	(message (inferior-haskell-get-result sym))))
+(add-hook 'haskell-mode-hook
+		  (lambda ()
+			(local-set-key (kbd "C-c C-c") 'haskell-eval)))
+
+;;;;;;;;;;;;;;
+;; Markdown ;;
+;;;;;;;;;;;;;;
+(autoload 'markdown-mode "markdown-mode" "Markdown mode" t)
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;
+;; Protocol Buffers ;;
+;;;;;;;;;;;;;;;;;;;;;;
+(require 'protobuf-mode)
+(add-to-list 'auto-mode-alist '("\\.proto$" . protobuf-mode))
