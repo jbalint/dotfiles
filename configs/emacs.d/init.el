@@ -93,7 +93,6 @@
 	 (:name "sent" :query "tag:sent" :key "t")
 	 (:name "drafts" :query "tag:draft" :key "d")
 	 (:name "all mail" :query "*" :key "a"))))
- '(org-agenda-files nil)
  '(org-modules
    (quote
 	(org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m org-wl)))
@@ -108,7 +107,10 @@
  '(send-mail-function (quote smtpmail-send-it))
  '(smtpmail-smtp-server "stbeehive.oracle.com")
  '(smtpmail-smtp-service 465)
- '(smtpmail-stream-type (quote ssl)))
+ '(smtpmail-stream-type (quote ssl))
+ '(tool-bar-mode nil)
+ '(scroll-bar-mode nil)
+ '(default-input-method 'kannada-jessscript))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -173,6 +175,7 @@
 							   (org-open-at-point))))
 			(require 'ob-plantuml)
 			(flyspell-mode t)
+			(auto-fill-mode t)
 
 			(org-babel-do-load-languages
 			 'org-babel-load-languages
@@ -294,26 +297,32 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MySQL Connector/J code style settings ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(let ((file-name (if (buffer-file-name) (buffer-file-name) "")))
+  file-name)
 (add-hook 'find-file-hook
-		  (lambda nil (unless (not (string-match "/cj" (buffer-file-name)))
-						(auto-fill-mode 1)
-						(setq indent-tabs-mode nil
-							  fill-column 160)
-						;; c.f. `c-offsets-alist'
-						(c-set-offset 'arglist-cont '++)
-						(c-set-offset 'arglist-cont-nonempty '++)
-						(c-set-offset 'arglist-intro '++)
-						(c-set-offset 'func-decl-cont '++)
-						(c-set-offset 'inher-cont '++)
-						(c-set-offset 'member-init-cont '++)
-						(c-set-offset 'statement-cont '++))))
+		  (lambda nil
+			(let ((file-name (if (buffer-file-name) (buffer-file-name) "")))
+			  (unless (not (string-match "/cj" file-name))
+				(auto-fill-mode 1)
+				(setq indent-tabs-mode nil
+					  fill-column 160)
+				;; c.f. `c-offsets-alist'
+				(c-set-offset 'arglist-cont '++)
+				(c-set-offset 'arglist-cont-nonempty '++)
+				(c-set-offset 'arglist-intro '++)
+				(c-set-offset 'func-decl-cont '++)
+				(c-set-offset 'inher-cont '++)
+				(c-set-offset 'member-init-cont '++)
+				(c-set-offset 'statement-cont '++)))))
 ;; let's `fill-paragraph' work nicely with source code
 (require 'cc-mode)
 (require 'fillcode)
 (add-hook 'java-mode-hook
-		  (lambda nil (unless (not (string-match "/cj" (buffer-file-name)))
-						(require 'fillcode)
-						(fillcode-mode 1))))
+		  (lambda nil
+			(let ((file-name (if (buffer-file-name) (buffer-file-name) "")))
+			  (unless (not (string-match "/cj" file-name))
+				(require 'fillcode)
+				(fillcode-mode 1)))))
 ;; tweak this a little bit, order MATTERS
 ;; check default value for explanations
 (setq fillcode-fill-points
@@ -385,7 +394,7 @@ A prefix argument can be used to scroll backwards or more than one."
 
 (setq org-agenda-custom-commands 
       '(("c" "Desk Work" tags-todo "computer" ;; (1) (2) (3) (4)
-         ((org-agenda-files '("~/org/widgets.org" "~/org/clients.org")) ;; (5)
+         (;;(org-agenda-files '("~/org/widgets.org" "~/org/clients.org")) ;; (5)
           (org-agenda-sorting-strategy '(priority-up effort-down))) ;; (5) cont.
          ("~/computer.html")) ;; (6)
         ;; ...other commands here
@@ -479,3 +488,91 @@ A prefix argument can be used to scroll backwards or more than one."
 ;;;;;;;;;;;;;;;;;;;;;;
 (require 'protobuf-mode)
 (add-to-list 'auto-mode-alist '("\\.proto$" . protobuf-mode))
+
+;;;;;;;;;;;;;
+;; Kannada ;;
+;;;;;;;;;;;;;
+;; this is a real hack. lots of stuff copied from indian.el. not sure how it's supposed to work
+(progn
+  (require 'quail)
+  (require 'indian)
+  (require 'ind-util)
+										;(quail-activate)
+  ;; this is my modified version of the kannada input method. The "e" vowel is mapped wrong to z and w. I guess this base-table has them backwards in whatever file `indian-knd-base-table' is defined in. i swapped them here and made my own version and it works
+  (setq my-indian-knd-base-table
+		'(
+		  (;; VOWELS
+		   (?ಅ nil) (?ಆ ?ಾ) (?ಇ ?ಿ) (?ಈ ?ೀ) (?ಉ ?ು) (?ಊ ?ೂ)
+		   (?ಋ ?ೃ) (?ಌ nil) nil (?ಎ ?ೆ) (?ಏ ?ೇ) (?ಐ ?ೈ)
+		   nil (?ಓ ?ೋ) (?ಒ ?ೊ) (?ಔ ?ೌ) (?ೠ ?ೄ) (?ೡ nil))
+		  (;; CONSONANTS
+		   ?ಕ ?ಖ ?ಗ ?ಘ ?ಙ                  ;; GUTTRULS
+			  ?ಚ ?ಛ ?ಜ ?ಝ ?ಞ                  ;; PALATALS
+			  ?ಟ ?ಠ ?ಡ ?ಢ ?ಣ                  ;; CEREBRALS
+			  ?ತ ?ಥ ?ದ ?ಧ ?ನ nil              ;; DENTALS
+			  ?ಪ ?ಫ ?ಬ ?ಭ ?ಮ                  ;; LABIALS
+			  ?ಯ ?ರ ?ಱ ?ಲ ?ಳ nil ?ವ          ;; SEMIVOWELS
+			  ?ಶ ?ಷ ?ಸ ?ಹ                    ;; SIBILANTS
+			  nil nil nil nil nil nil ?ೞ nil      ;; NUKTAS
+			  "ಜ್ಞ" "ಕ್ಷ")
+		  (;; Misc Symbols
+		   nil ?ಂ ?ಃ nil ?್ nil nil)
+		  (;; Digits
+		   ?೦ ?೧ ?೨ ?೩ ?೪ ?೫ ?೬ ?೭ ?೮ ?೯)
+		  (;; Inscript-extra (4)  (#, $, ^, *, ])
+		   "್ರ" "ರ್" "ತ್ರ" "ಶ್ರ" nil)))
+
+
+
+  (quail-define-package "kannada-jessscript" "Kannada" "KndJ" t "Kannada keyboard Inscript")
+
+  (defun quail-define-inscript-package (char-tables key-tables pkgname lang
+													title docstring)
+	(funcall 'quail-define-package pkgname lang title nil docstring
+			 nil nil nil t nil nil nil nil)
+	(let (char-table key-table char key)
+	  (while (and char-tables key-tables)
+		(setq char-table  (car char-tables)
+			  char-tables (cdr char-tables)
+			  key-table   (car key-tables)
+			  key-tables  (cdr key-tables))
+		(while (and char-table key-table)
+		  (setq char       (car char-table)
+				char-table (cdr char-table)
+				key        (car key-table)
+				key-table  (cdr key-table))
+		  (if (and (consp char) (consp key))
+			  (setq char-table (append char char-table)
+					key-table  (append key  key-table))
+			(if (and key char)
+				(quail-defrule
+				 (if (characterp key) (char-to-string key) key)
+				 (if (stringp char)   (vector char) char))))))))
+
+  (defvar inscript-dev-keytable
+	'(
+	  (;; VOWELS  (18)
+	   (?D nil) (?E ?e) (?F ?f) (?R ?r) (?G ?g) (?T ?t)
+	   (?+ ?=) ("F]" "f]") (?! ?@) (?Z ?z) (?S ?s) (?W ?w)
+	   (?| ?\\) (?~ ?`) (?A ?a) (?Q ?q) ("+]" "=]") ("R]" "r]"))
+	  (;; CONSONANTS (42)
+	   ?k ?K ?i ?I ?U                ;; GRUTTALS
+		  ?\; ?: ?p ?P ?}               ;; PALATALS
+		  ?' ?\" ?\[ ?{ ?C              ;; CEREBRALS
+		  ?l ?L ?o ?O ?v ?V             ;; DENTALS
+		  ?h ?H ?y ?Y ?c                ;; LABIALS
+		  ?/ ?j ?J ?n ?N "N]" ?b        ;; SEMIVOWELS
+		  ?M ?< ?m ?u                   ;; SIBILANTS
+		  "k]" "K]" "i]" "p]" "[]" "{]" "H]" "/]" ;; NUKTAS
+		  ?% ?&)
+	  (;; Misc Symbols (7)
+	   ?X ?x ?_ ">]" ?d "X]" ?>)
+	  (;; Digits
+	   ?0 ?1 ?2 ?3 ?4 ?5 ?6 ?7 ?8 ?9)
+	  (;; Inscripts
+	   ?# ?$ ?^ ?* ?\])))
+
+  (quail-define-inscript-package
+   my-indian-knd-base-table inscript-dev-keytable
+   "kannada-jessscript" "Kannada" "KndJ"
+   "Kannada keyboard Inscript."))

@@ -425,3 +425,5 @@ cj-j8() {
 alias redshift="redshift -m randr:crtc=DP2"
 alias bldec="xbacklight -dec 10 ; xbacklight"
 alias blinc="xbacklight -inc 10 ; xbacklight"
+alias bl0="xbacklight = 0"
+alias bl100="xbacklight = 100"

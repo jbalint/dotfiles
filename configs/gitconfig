@@ -12,3 +12,5 @@
 [status]
 #	showUntrackedFiles = no
 
+[push]
+	default = simple
