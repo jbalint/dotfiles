@@ -1,0 +1,29 @@
+-- xmobar-load-average is from: https://github.com/andreivolt/xmonad-config/blob/master/xmobar-load-average
+Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
+       , borderColor = "black"
+       , border = TopB
+       , bgColor = "black"
+       , fgColor = "grey"
+       , position = Top
+       , lowerOnStart = True
+       , persistent = False
+       , hideOnStart = False
+       , overrideRedirect = False
+       , commands = [ Run Weather "KMSN" ["-t","<station>: <tempF>F","-L","18","-H","25","--normal","green","--high","red","--low","lightblue"] 36000
+	   	 		  	, Run Wireless "wlp3s0" ["--template","<essid> <quality>"] 100
+                    --, Run Network "eth0" ["-L","0","-H","32","--normal","green","--high","red"] 10
+                    --, Run Network "eth1" ["-L","0","-H","32","--normal","green","--high","red"] 10
+                    , Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
+                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+                    --, Run Swap [] 10
+                    , Run Com "uname" ["-s","-r"] "" 36000
+					, Run Battery ["--template","<left>% (<timeleft>)","-L","50","-H","75","-h","#A6E22E","-n","grey","-l","#F92672"] 100
+    		    --, Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
+    		    , Run Date "%Y-%m-%d %H:%M:%S %a" "date" 10
+				, Run Com "/home/jbalint/sw/dotfiles/manual/kodi_shortstat.sh" [] "kodi" 50
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       --, template = "%cpu% | %memory% | %xbmc_status% }{ <fc=#ee9a00>%date%</fc>| %KMSN% | %uname%"
+       , template = "%cpu% | %memory% | %xmobar-load-average% | %wlp3s0wi% | %battery% | %kodi% }{ <fc=#ee9a00>%date%</fc> | %KMSN% | %uname%"
+       }
