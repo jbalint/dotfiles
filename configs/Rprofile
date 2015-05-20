@@ -1,0 +1,2 @@
+options(repos=structure(c(CRAN="http://cran.wustl.edu/")))
+option(error=recover)
