@@ -81,12 +81,14 @@
  '(custom-safe-themes
    (quote
 	("fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" default)))
+ '(default-input-method (quote kannada-jessscript))
  '(ecb-options-version "2.40")
  '(foreground-color nil)
  '(menu-bar-mode nil)
  '(notmuch-saved-searches
    (quote
-	((:name "i2 - IMPORTANT inbox" :query "tab:i2" :key "i")
+	((:name "followup" :query "folder:followup")
+	 (:name "inboxtwo" :query "tab:i2")
 	 (:name "inbox" :query "tag:inbox")
 	 (:name "unread" :query "tag:unread" :key "u")
 	 (:name "flagged" :query "tag:flagged" :key "f")
@@ -104,13 +106,15 @@
 	 (eval load-theme
 		   (quote tango-dark))
 	 (eval load-theme "wombat"))))
+ '(scroll-bar-mode nil)
  '(send-mail-function (quote smtpmail-send-it))
  '(smtpmail-smtp-server "stbeehive.oracle.com")
  '(smtpmail-smtp-service 465)
  '(smtpmail-stream-type (quote ssl))
  '(tool-bar-mode nil)
- '(scroll-bar-mode nil)
- '(default-input-method 'kannada-jessscript))
+ '(user-full-name "Jess Balint")
+ '(user-mail-address "jess.balint@oracle.com")
+ '(message-citation-line-function 'message-insert-formatted-citation-line))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -261,7 +265,8 @@
 		("wl" . "http://wl.no.oracle.com/?tid=")
 		;; ("ham" . "http://tyr41.no.oracle.com:48080/jira/browse/HAM-")
 		("ham" . "https://etools-jira.no.oracle.com:48443/jira/browse/HAM-")
-		("bug" . oracle-mysql-bug-link)))
+		("bug" . oracle-mysql-bug-link)
+		("mysqlconnj" . "https://jira.oraclecorp.com/jira/browse/MYSQLCONNJ-")))
 
 (defun oracle-elem-open ()
   (interactive)
@@ -275,6 +280,7 @@
 	(when link-data
 	  (let ((id (car link-data))
 			(url-prefix-or-resolver (car (cdr link-data))))
+		(message "Oracle opening %s" id)
 		(browse-url
 		 (if (stringp url-prefix-or-resolver)
 			 (concat url-prefix-or-resolver id)
@@ -313,14 +319,16 @@
 				(c-set-offset 'func-decl-cont '++)
 				(c-set-offset 'inher-cont '++)
 				(c-set-offset 'member-init-cont '++)
-				(c-set-offset 'statement-cont '++)))))
+				(c-set-offset 'statement-cont '++)
+				(c-set-offset 'case-label '+)))))
 ;; let's `fill-paragraph' work nicely with source code
 (require 'cc-mode)
 (require 'fillcode)
 (add-hook 'java-mode-hook
 		  (lambda nil
 			(let ((file-name (if (buffer-file-name) (buffer-file-name) "")))
-			  (unless (not (string-match "/cj" file-name))
+			  (when (string-match "/cj.*\.java" file-name)
+				(flycheck-mode)
 				(require 'fillcode)
 				(fillcode-mode 1)))))
 ;; tweak this a little bit, order MATTERS
@@ -342,6 +350,7 @@
 
 (require 'package)
 (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 
 (autoload 'wl "wl" "Wanderlust" t)
 (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
@@ -405,13 +414,19 @@ A prefix argument can be used to scroll backwards or more than one."
 		 
         ))
 
+;; TODO make this nicer
 (defun add-oracle-elem-open-binding ()
+  (interactive)
   "Add the C-c C-o binding to open an Oracle element or fall back to opening a URL"
   (local-set-key "\C-c\C-o"
 				 (lambda () (interactive)
-				   (unless (oracle-elem-open)
-					 (if (string= "No URL at point" (w3m-external-view-this-url))
-						 (browse-url-at-point))))))
+				   ;; try org link FIRST
+				   (condition-case nil ;; could check the `major-mode' here
+					   (org-open-at-point)
+					 ;; fallback if `org-open-at-point' fails
+					 (error (unless (oracle-elem-open)
+							  (if (string= "No URL at point" (w3m-external-view-this-url))
+								  (browse-url-at-point))))))))
 
 (add-hook 'wl-message-redisplay-hook 'add-oracle-elem-open-binding)
 
@@ -442,6 +457,8 @@ A prefix argument can be used to scroll backwards or more than one."
   (lambda ()
 	(interactive)
 	(notmuch-search-tag '("+deleted"))))
+(add-hook 'notmuch-search-hook 'add-oracle-elem-open-binding)
+
 (defun mail-to-cj ()
   "Draft a new message to C/J folks."
   (interactive)
@@ -474,7 +491,10 @@ A prefix argument can be used to scroll backwards or more than one."
 	(message (inferior-haskell-get-result sym))))
 (add-hook 'haskell-mode-hook
 		  (lambda ()
-			(local-set-key (kbd "C-c C-c") 'haskell-eval)))
+			(local-set-key (kbd "C-c C-c") 'haskell-eval)
+			(local-set-key (kbd "C-c RET")
+						   (lambda () (interactive)
+							 (inferior-haskell-get-result "main")))))
 
 ;;;;;;;;;;;;;;
 ;; Markdown ;;
@@ -489,6 +509,25 @@ A prefix argument can be used to scroll backwards or more than one."
 (require 'protobuf-mode)
 (add-to-list 'auto-mode-alist '("\\.proto$" . protobuf-mode))
 
+;;;;;;;;;;;
+;; OCaml ;;
+;;;;;;;;;;;
+(add-to-list 'auto-mode-alist '("\\.ml[iylp]?\\'" . tuareg-mode))
+(autoload 'tuareg-mode "tuareg" "Major mode for editing Caml code" t)
+;(autoload 'ocamldebug "ocamldebug" "Run the Caml debugger" t)
+
+;;;;;;;;;;;;;;;;;;;
+;; Flycheck Java ;;
+;;;;;;;;;;;;;;;;;;;
+;; using my branch because the other one doesn't work with project settings
+;; requires package "dash" and "s"
+(add-to-list 'load-path "/home/jbalint/sw/emacs-sw/flycheck-java")
+(setq flycheck-java-ecj-jar-path "/home/jbalint/sw/java-sw/ecj-4.4.2.jar")
+;; have to do this after init....
+(add-hook 'after-init-hook (lambda ()
+							 (require 'flycheck)
+							 (require 'flycheck-java)))
+
 ;;;;;;;;;;;;;
 ;; Kannada ;;
 ;;;;;;;;;;;;;
@@ -499,12 +538,14 @@ A prefix argument can be used to scroll backwards or more than one."
   (require 'ind-util)
 										;(quail-activate)
   ;; this is my modified version of the kannada input method. The "e" vowel is mapped wrong to z and w. I guess this base-table has them backwards in whatever file `indian-knd-base-table' is defined in. i swapped them here and made my own version and it works
+
+  ;; o's are switched too
   (setq my-indian-knd-base-table
 		'(
 		  (;; VOWELS
 		   (?ಅ nil) (?ಆ ?ಾ) (?ಇ ?ಿ) (?ಈ ?ೀ) (?ಉ ?ು) (?ಊ ?ೂ)
 		   (?ಋ ?ೃ) (?ಌ nil) nil (?ಎ ?ೆ) (?ಏ ?ೇ) (?ಐ ?ೈ)
-		   nil (?ಓ ?ೋ) (?ಒ ?ೊ) (?ಔ ?ೌ) (?ೠ ?ೄ) (?ೡ nil))
+		   nil (?ಒ ?ೊ) (?ಓ ?ೋ) (?ಔ ?ೌ) (?ೠ ?ೄ) (?ೡ nil))
 		  (;; CONSONANTS
 		   ?ಕ ?ಖ ?ಗ ?ಘ ?ಙ                  ;; GUTTRULS
 			  ?ಚ ?ಛ ?ಜ ?ಝ ?ಞ                  ;; PALATALS
