@@ -218,6 +218,22 @@ touchpad_on() {
 ####################################
 ####################################
 
+tvmon() {
+	if [[ `xrandr | grep 'VGA1 connected 1080x1920' | wc -l` == 1 ]] ; then
+		echo "switch to TV"
+		xrandr --output VGA1 --off
+		xrandr --output HDMI1 --auto --right-of DP2
+		bspc desktop -f Kodi
+		bspc desktop -f last
+	else
+		echo "switch to monitor"
+		xrandr --output HDMI1 --off
+		xrandr --output VGA1 --auto --right-of DP2 --rotate left
+		bspc desktop -f jI
+		bspc desktop -f last
+	fi
+}
+
 tv_on() {
 	xrandr --output HDMI1 --auto --mode 1366x768 --same-as HDMI2
 }
@@ -419,7 +435,7 @@ git-log-graph() {
 }
 
 cj-j8() {
-	perl -pi.bak -e's/(java version \&quot;)1\.7/${1}1\.8/g' build.xml
+	perl -pi.bak -e's/(java version \&quot;)1\.\d/${1}1\.8/g' build.xml
 }
 
 alias redshift="redshift -m randr:crtc=DP2"

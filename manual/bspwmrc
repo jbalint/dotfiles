@@ -8,13 +8,25 @@ bspc config borderless_monocle  true
 bspc config gapless_monocle     true
 bspc config focus_by_distance   true
 
-bspc monitor -d I II III IV V VI VII VIII IX X
 bspc config top_padding 14
 
-bspc monitor HDMI1 -d Kodi
-bspc config -m HDMI1 border_width 0
-# this helps prevent Kodi from causing the screen rendering issues
-bspc config -m HDMI1 top_padding 1
+# changed this from nothing to HDMI1 (was DP2) for temporary with new Dell monitor
+#bspc monitor HDMI1-A -d I II III IV V VI VII VIII IX X
+bspc monitor -d I II III IV V VI VII VIII IX X
+
+# bspc config -m HDMI1-A top_padding 14
+# bspc config -m HDMI1-B top_padding 14
+# bspc config -m HDMI1-A border_width 1
+# bspc config -m HDMI1-B border_width 1
+# bspc config -m HDMI1-A window_gap 0
+# bspc config -m HDMI1-B window_gap 0
+
+#bspc monitor HDMI1 -d Kodi jI jII jIII
+
+# setup non-primary monitors
+bspc config -m DP2 top_padding 0
+bspc config -m DP2 window_gap 0
+bspc config -m HDMI1-B window_gap 0
 
 bspc rule -a Gimp desktop=^8 follow=on floating=on
 bspc rule -a Chromium desktop=^2

@@ -34,4 +34,11 @@ FILE=${FILE%%[. ][Dd][Vv][Dd][Rr][Ii][Pp]*}
 FILE=${FILE%%[. ][Bb][Rr][Rr][Ii][Pp]*}
 FILE=${FILE%%[. ]INTERNAL*}
 
-echo "$FILE" $PERCENT $CUR_H $CUR_M $CUR_S $TOT_H $TOT_M $TOT_S | awk '{printf "%s (%02d%%)", $1, $2}'
+echo -n "[$FILE]"
+if [ "$TOT_H" = "0" ] ; then
+	# print without hours
+	echo $PERCENT $CUR_M $CUR_S $TOT_M $TOT_S | awk '{printf " (%d%%) %02d:%02d/%02d:%02d\n", $1, $2, $3, $4, $5}'
+else
+	echo $PERCENT $CUR_H $CUR_M $CUR_S $TOT_H $TOT_M $TOT_S | awk '{printf " (%d%%) %02d:%02d:%02d/%02d:%02d:%02d\n", $1, $2, $3, $4, $5, $6, $7}'
+fi
+

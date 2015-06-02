@@ -14,13 +14,47 @@ fi
 xrdb -merge $HOME/.Xresources
 
 # Newest setup as of 2015-02-13 with new LG Monitor on DisplayPort (showing as DP2)
-/usr/bin/xrandr --output LVDS1 --off
 #/usr/bin/xrandr --output DP2 --primary --mode 2560x1080 --output LVDS1 --off
-/usr/bin/xrandr --output DP2 --primary --mode 2560x1080 --output LVDS1 --off --output HDMI1 --mode 1920x1080 --right-of DP2
+
+xrandr --output LVDS1 --off
+xrandr --output VGA1 --off
+xrandr --output DP2 --off
+xrandr --output HDMI1 --off
+
+# latest two setups 2015-05-22
+# Laptop screen only (on the go)
+#xrandr --output LVDS1 --primary --auto
+# Two screens at desk (workstation)
+xrandr --output HDMI1 --primary --auto
+xrandr --output DP2 --auto --left-of HDMI1 --pos 1080x520 --rotate left
+
+## xrandr --output LVDS1 --primary --auto
+## xrandr --output HDMI1 --mode 1920x1080 --rate 60.0 --right-of LVDS1
+## xrandr --output DP2 --mode 1920x1080 --rate 60.0 --right-of HDMI
+
+# temp setup while TV is off (Morgan is gone 2015-05-02)
+# Dell on DP2, LG on HDMI1
+# Also requires desktop change coordination on bspwmrc
+#xrandr --output HDMI1 --primary --mode 2560x1080
+#xrandr --output DP2 --mode 1920x1080 --left-of HDMI1 --rotate left
+# reposition the main monitor (calibrated by hand)
+#xrandr --output HDMI1 --pos 1080x520
+
+# LG Widescreen
+#xrandr --output DP2 --primary --mode 2560x1080
+# TV
+#xrandr --output HDMI1 --mode 1920x1080 --right-of DP2
+# Dell
+#xrandr --output VGA1 --mode 1920x1080 --left-of DP2
 #redshift -m randr:crtc=DP2 &
+#redshift -m randr:crtc=LVDS1 &
+redshift &
 
 xset s off
 xset -dpms
+
+# for the kensington mac mouse after mine broke 2015-04-19
+#xset m 3/1 0
 
 setxkbmap -option ctrl:nocaps
 
@@ -28,5 +62,7 @@ sxhkd &
 # Conky places a significant load on Xorg, not sure why
 #conky &
 xmobar &
-st &
-exec bspwm
+#st &
+exec /home/jbalint/sw/bspwm/bspwm 2>&1 >> /tmp/bsp.log
+#exec /usr/bin/bspwm 2>&1 >> /tmp/bsp.log
+#exec bspwm
