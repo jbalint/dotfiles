@@ -3,3 +3,5 @@ options(repos=structure(c(CRAN="http://cran.wustl.edu/")))
 options(keep.source=TRUE)
 options(keep.source.pkgs=TRUE)
 options(show.error.locations=TRUE)
+
+options(width=250) # about my current max on wide screen

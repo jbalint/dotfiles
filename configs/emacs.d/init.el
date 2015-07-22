@@ -85,6 +85,7 @@
  '(ecb-options-version "2.40")
  '(foreground-color nil)
  '(menu-bar-mode nil)
+ '(message-citation-line-function (quote message-insert-formatted-citation-line))
  '(notmuch-saved-searches
    (quote
 	((:name "followup" :query "folder:followup")
@@ -95,6 +96,7 @@
 	 (:name "sent" :query "tag:sent" :key "t")
 	 (:name "drafts" :query "tag:draft" :key "d")
 	 (:name "all mail" :query "*" :key "a"))))
+ '(org-capture-templates (quote (("" "hi" entry (file "~/org/notes.org") ""))))
  '(org-modules
    (quote
 	(org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m org-wl)))
@@ -113,8 +115,7 @@
  '(smtpmail-stream-type (quote ssl))
  '(tool-bar-mode nil)
  '(user-full-name "Jess Balint")
- '(user-mail-address "jess.balint@oracle.com")
- '(message-citation-line-function 'message-insert-formatted-citation-line))
+ '(user-mail-address "jess.balint@oracle.com"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -249,11 +250,13 @@
 			 (downcase prefix)
 			 (downcase (buffer-substring (point) (min (buffer-size) (+ (string-width prefix) (point))))))
 	  ;; these are done sequentially in hopes that we won't get BEFORE the elem link
-	  (skip-chars-backward "0123456789")
+	  ;; including "-" due to "3-" for SR # prefix
+	  (skip-chars-backward "0123456789-")
 	  (skip-chars-backward " #-")
 	  (skip-chars-backward (concat (downcase prefix) (upcase prefix))))
-	(if (looking-at (concat " *" prefix "\\( *#\\|-\\)\\([0-9]+\\)\\b"))
-		(match-string 2))))
+	;; include optional "3-" for SR # prefix
+	(if (looking-at (concat " *" prefix "\\( *#\\|-\\)\\(3-\\)?\\([0-9]+\\)\\b"))
+		(concat (match-string 2) (match-string 3)))))
 
 (defun oracle-mysql-bug-link (id)
   (if (> (string-to-number id) 500000)
@@ -266,7 +269,9 @@
 		;; ("ham" . "http://tyr41.no.oracle.com:48080/jira/browse/HAM-")
 		("ham" . "https://etools-jira.no.oracle.com:48443/jira/browse/HAM-")
 		("bug" . oracle-mysql-bug-link)
-		("mysqlconnj" . "https://jira.oraclecorp.com/jira/browse/MYSQLCONNJ-")))
+		("mysqlconnj" . "https://jira.oraclecorp.com/jira/browse/MYSQLCONNJ-")
+		("myc" . "https://jira.oraclecorp.com/jira/browse/MYC-")
+		("sr" . "https://mosemp.us.oracle.com/mosspui/src/sr/viewer/index.html#/")))
 
 (defun oracle-elem-open ()
   (interactive)

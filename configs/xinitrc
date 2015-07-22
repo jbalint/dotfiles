@@ -23,10 +23,10 @@ xrandr --output HDMI1 --off
 
 # latest two setups 2015-05-22
 # Laptop screen only (on the go)
-#xrandr --output LVDS1 --primary --auto
+xrandr --output LVDS1 --primary --auto
 # Two screens at desk (workstation)
-xrandr --output HDMI1 --primary --auto
-xrandr --output DP2 --auto --left-of HDMI1 --pos 1080x520 --rotate left
+#xrandr --output HDMI1 --primary --auto
+#xrandr --output DP2 --auto --left-of HDMI1 --pos 1080x520 --rotate left
 
 ## xrandr --output LVDS1 --primary --auto
 ## xrandr --output HDMI1 --mode 1920x1080 --rate 60.0 --right-of LVDS1

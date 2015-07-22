@@ -443,3 +443,14 @@ alias bldec="xbacklight -dec 10 ; xbacklight"
 alias blinc="xbacklight -inc 10 ; xbacklight"
 alias bl0="xbacklight = 0"
 alias bl100="xbacklight = 100"
+
+# http://stackoverflow.com/questions/424071/list-all-the-files-for-a-commit-in-git
+alias git-files-changed="git diff-tree --no-commit-id --name-only -r HEAD"
+
+# quickest way to install? :)
+alias gradle='/home/jbalint/sw/java-sw/gradle-2.5/bin/gradle'
+export GRADLE_OPTS=-Dorg.gradle.daemon=true
+
+export SPHINXBUILD=sphinx-build2
+
+export BS_HOME=/home/jbalint/sw/banshee-sympatico
