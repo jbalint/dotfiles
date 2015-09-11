@@ -1,0 +1,32 @@
+IMAPAccount oracle
+Host stbeehive.oracle.com
+User jess.balint@oracle.com
+PassCmd "cat ~/.oracle_sso_pw"
+# Use SSL
+SSLType IMAPS
+# The following line should work. If get certificate errors, uncomment the two following lines and read the "Troubleshooting" section.
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+#CertificateFile ~/.cert/imap.gmail.com.pem
+#CertificateFile ~/.cert/Equifax_Secure_CA.pem
+
+IMAPStore oracle-remote
+Account oracle
+
+MaildirStore oracle-local
+# The trailing "/" is important
+Path ~/mail/oracle/
+Inbox ~/mail/oracle/INBOX/
+#SubFolders Verbatim
+
+Channel oracle
+Master :oracle-remote:
+Slave :oracle-local:
+# Exclude everything under the internal [Gmail] folder, except the interesting folders
+#Patterns * ![Gmail]* "[Gmail]/Sent Mail" "[Gmail]/Starred" "[Gmail]/All Mail"
+# Or include everything
+Patterns *
+# Automatically create missing mailboxes, both locally and on the server
+Create Both
+# Save the synchronization state files in the relevant directory
+SyncState *
+Expunge Both

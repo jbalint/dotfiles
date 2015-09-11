@@ -8,6 +8,7 @@
 	branch = auto
 [core]
 	pager = less
+	excludesFile = "somewhere"
 
 [status]
 #	showUntrackedFiles = no

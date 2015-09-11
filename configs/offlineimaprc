@@ -4,7 +4,8 @@ accounts = Work
 [Account Work]
 localrepository = Local
 remoterepository = Remote
-presynchook = /usr/bin/imapfilter -vc ~/.imapfilter/oracle.lua && notmuch search --output=files tag:deleted | tr '\n' '\0' | xargs -0 rm -v
+#presynchook = /usr/bin/imapfilter -vc ~/.imapfilter/oracle.lua && notmuch search --output=files tag:deleted | tr '\n' '\0' | xargs -0 rm -v
+presynchook = notmuch search --output=files tag:deleted | tr '\n' '\0' | xargs -0 rm -v
 postsynchook = notmuch new && logger -t notmuch "index updated"
 status_backend = sqlite
 

@@ -57,6 +57,7 @@
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 (add-to-list 'load-path "~/.emacs.d/lisp")
 (add-to-list 'load-path "~/.emacs.d/lisp/ecb")
+(add-to-list 'load-path "~/aur/ledger-git/src/ledger/lisp")
 (require 'ecb nil t)
 
 (unless (require 'el-get nil 'noerror)
@@ -102,7 +103,12 @@
 	(org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m org-wl)))
  '(safe-local-variable-values
    (quote
-	((tags-table-list quote
+	((eval progn
+		   (require
+			(quote color-theme))
+		   (color-theme-initialize)
+		   (color-theme-aalto-light))
+	 (tags-table-list quote
 					  ("/home/jbalint/sw/fabric-core-trunk/TAGS"))
 	 (org-log-done . t)
 	 (eval load-theme
@@ -133,22 +139,23 @@
 (setq auto-mode-alist (cons '("\\.P$" . xsb-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.fl[rih]$" . flora-mode) auto-mode-alist))
 (autoload 'flora-mode "flora" "Major mode for editing Flora-2 programs." t)
-(setq flora-program-name "~/sw/flora2bundle-0.99.5/flora2/runflora")
-;(setq flora-program-name "~/sw/flora-src/flora2/runflora")
+(setq flora-program-name "~/sw/flora-git-svn/flora2/runflora")
 
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;; Window navigation ;;
 ;;;;;;;;;;;;;;;;;;;;;;;
+(global-set-key (kbd "M-p") 'ace-window)
 (require 'windmove)
-(add-hook 'window-configuration-change-hook
-		  (lambda ()
-			(if (> 3 (count-windows))
-				(global-set-key (kbd "C-x o") 'other-window)
-			  (global-unset-key (kbd "C-x o"))
-			  (global-set-key (kbd "C-x o h") 'windmove-left)
-			  (global-set-key (kbd "C-x o k") 'windmove-up)
-			  (global-set-key (kbd "C-x o l") 'windmove-right)
-			  (global-set-key (kbd "C-x o j") 'windmove-down))))
+;; (add-hook 'window-configuration-change-hook
+;; 		  (lambda ()
+;; 			(if (> 3 (count-windows))
+;; 				(global-set-key (kbd "C-x o") 'other-window)
+;; 			  (global-unset-key (kbd "C-x o"))
+;; 			  (global-set-key (kbd "C-x o h") 'windmove-left)
+;; 			  (global-set-key (kbd "C-x o k") 'windmove-up)
+;; 			  (global-set-key (kbd "C-x o l") 'windmove-right)
+;; 			  (global-set-key (kbd "C-x o j") 'windmove-down))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Org-mode customizations ;;
@@ -271,6 +278,8 @@
 		("bug" . oracle-mysql-bug-link)
 		("mysqlconnj" . "https://jira.oraclecorp.com/jira/browse/MYSQLCONNJ-")
 		("myc" . "https://jira.oraclecorp.com/jira/browse/MYC-")
+		("my" . "https://jira.oraclecorp.com/jira/browse/MY-")
+		("myp" . "https://jira.oraclecorp.com/jira/browse/MYP-")
 		("sr" . "https://mosemp.us.oracle.com/mosspui/src/sr/viewer/index.html#/")))
 
 (defun oracle-elem-open ()
@@ -326,7 +335,7 @@
 				(c-set-offset 'member-init-cont '++)
 				(c-set-offset 'statement-cont '++)
 				(c-set-offset 'case-label '+)))))
-;; let's `fill-paragraph' work nicely with source code
+;; lets `fill-paragraph' work nicely with source code
 (require 'cc-mode)
 (require 'fillcode)
 (add-hook 'java-mode-hook
@@ -490,13 +499,23 @@ A prefix argument can be used to scroll backwards or more than one."
 ;;;;;;;;;;;;;
 (load "haskell-mode-autoloads")
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+
 (defun haskell-eval ()
   (interactive)
   (let ((sym (haskell-ident-at-point)))
-	(message (inferior-haskell-get-result sym))))
+	(message "%s" (inferior-haskell-get-result sym))))
+
+(defun haskell-find ()
+  "TODO needs a better name"
+  (interactive)
+  (let ((sym (haskell-ident-at-point)))
+	(message "%s" (haskell-process-hoogle-ident sym))))
+
 (add-hook 'haskell-mode-hook
 		  (lambda ()
 			(local-set-key (kbd "C-c C-c") 'haskell-eval)
+			(local-set-key (kbd "C-c C-f") 'haskell-find)
 			(local-set-key (kbd "C-c RET")
 						   (lambda () (interactive)
 							 (inferior-haskell-get-result "main")))))
