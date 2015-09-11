@@ -6,6 +6,7 @@ ulimit -c unlimited
 setopt interactivecomments
 
 export HOSTNAME=$(hostname)
+export RPROMPT="%{$fg[blue]%}$HOSTNAME %F%T%f%{$reset_color%}"
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/bin/core_perl
 export JAVA5_HOME=~/sw/jdk5
 export JAVA6_HOME=~/sw/jdk6
@@ -37,6 +38,7 @@ for X ( \
 	~/bin \
 	~/.local/bin \
 	~/.cabal/bin \
+	~/sw/emacs-sw/cask/bin \
 	$JAVA_HOME/bin ) ; do
 	export PATH="$X:$PATH"
 done
@@ -160,5 +162,4 @@ HISTFILE=~/.histfile
 HISTSIZE=10000
 SAVEHIST=10000
 setopt appendhistory autocd extendedglob nomatch
-bindkey -v
 # End of lines configured by zsh-newuser-install

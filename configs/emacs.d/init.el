@@ -481,7 +481,7 @@ A prefix argument can be used to scroll backwards or more than one."
 ;;;;;;;;;;;;;;;;;
 ;; ESS (for R) ;;
 ;;;;;;;;;;;;;;;;;
-(require 'ess-site)
+;;(require 'ess-site)
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Solarized theme ;;
