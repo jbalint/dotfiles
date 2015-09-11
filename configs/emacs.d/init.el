@@ -1,3 +1,5 @@
+;; Install Cask/Pallet packages first
+
 (require 'font-lock)
 (require 'cc-mode)
 (setq global-font-lock-mode t
@@ -361,10 +363,6 @@
    "[([][^]})({[]"
    "\\s-{[^({[]"
    ))
-
-(require 'package)
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 
 (autoload 'wl "wl" "Wanderlust" t)
 (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
