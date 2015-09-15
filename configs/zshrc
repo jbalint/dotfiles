@@ -43,6 +43,11 @@ for X ( \
 	export PATH="$X:$PATH"
 done
 
+if [ -d /home/jbalint/sw/basho-otp-17 ] ; then
+	export PATH="/home/jbalint/sw/basho-otp-17/inst/bin:$PATH"
+	export LD_LIBRARY_PATH="/home/jbalint/sw/basho-otp-17/inst/lib:$LD_LIBRARY_PATH"
+fi
+
 alias vi=vim
 alias rein=". ~/.zshrc"
 alias java5="export JAVA_HOME=$JAVA5_HOME ; rein"
