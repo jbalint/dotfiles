@@ -1,4 +1,8 @@
 ;; Install Cask/Pallet packages first
+(require 'cask "/home/jbalint/sw/emacs-sw/cask/cask.el")
+(cask-initialize)
+(require 'pallet)
+(pallet-mode t)
 
 (require 'font-lock)
 (require 'cc-mode)
