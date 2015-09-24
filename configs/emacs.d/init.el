@@ -13,36 +13,8 @@
 	  gdb-many-windows 1
 	  gdb-use-separate-io-buffer 1)
 
-; MySQL C conventions from
-; http://forge.mysql.com/wiki/MySQL_Internals_Coding_Guidelines
-(c-add-style "MySQL"
-	     '("K&R"
-	       (c-basic-offset . 2)
-	       (c-comment-only-line-offset . 0)
-	       (c-offsets-alist . ((statement-block-intro . +)
-				   (knr-argdecl-intro . 0)
-				   (substatement-open . 0)
-				   (label . -)
-				   (statement-cont . +)
-				   (arglist-intro . c-lineup-arglist-intro-after-paren)
-				   (arglist-close . c-lineup-arglist)
-				   ))
-	       ))
-
-(defun mysql-c-mode ()
-  (c-mode)
-  (c-set-style "MySQL")
-  (setq tab-width 8)
-  (setq indent-tabs-mode nil)
-  (setq comment-column 48))
-
-; match C:\Work\odbc\odbc51_wk etc on Windows and ~/Desktop/Work/odbc on Unix
-(setq auto-mode-alist (cons '("/Work/odbc" . mysql-c-mode) auto-mode-alist)
-      backup-directory-alist (cons '("." . "~/.emacs.d/backup") nil)
-      ;;      default-tab-width 4
-      display-time-day-and-date t
-      inhibit-startup-message t
-      )
+(setq c-default-style "linux"
+	  c-basic-offset 4)
 
 (column-number-mode 1)
 (iswitchb-mode 1)
@@ -73,6 +45,9 @@
     (goto-char (point-max))
     (eval-print-last-sexp)))
 
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+(autoload 'ibuffer "ibuffer" "List buffers." t)
+
 (el-get 'sync)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -87,7 +62,7 @@
  '(cursor-color nil)
  '(custom-safe-themes
    (quote
-	("fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" default)))
+	("8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" default)))
  '(default-input-method (quote kannada-jessscript))
  '(ecb-options-version "2.40")
  '(foreground-color nil)
@@ -492,9 +467,9 @@ A prefix argument can be used to scroll backwards or more than one."
 ;;;;;;;;;;;;;;;;;;;;;
 ;; https://github.com/sellout/emacs-color-theme-solarized
 ;; https://github.com/sellout/emacs-color-theme-solarized/issues/142
-(setq custom-theme-load-path '("/home/jbalint/sw/emacs-sw/emacs-color-theme-solarized"))
+;;(setq custom-theme-load-path '("/home/jbalint/sw/emacs-sw/emacs-color-theme-solarized"))
 (set-terminal-parameter nil 'background-mode 'dark)
-(load-theme 'solarized t)
+;;(load-theme 'solarized t)
 
 ;;;;;;;;;;;;;
 ;; Haskell ;;
@@ -553,6 +528,18 @@ A prefix argument can be used to scroll backwards or more than one."
 (add-hook 'after-init-hook (lambda ()
 							 (require 'flycheck)
 							 (require 'flycheck-java)))
+
+;;;;;;;;;;;
+;; Idris ;;
+;;;;;;;;;;;
+(setq idris-interpreter-path "/home/jbalint/sw/idris/.cabal-sandbox/bin/idris")
+(setq idris-repl-prompt-style 'long) ;; to prevent lambda chars on terminal, c.f. idris-repl.el
+
+;;;;;;;;;;;;
+;; Erlang ;;
+;;;;;;;;;;;;
+(add-hook 'erlang-mode-hook
+		  (lambda () (setq indent-tabs-mode nil)))
 
 ;;;;;;;;;;;;;
 ;; Kannada ;;

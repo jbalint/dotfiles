@@ -72,7 +72,7 @@ alias feh="feh -Z -."
 alias git-files-changed="git diff-tree --no-commit-id --name-only -r HEAD"
 # lazy way to install
 alias gradle='/home/jbalint/sw/java-sw/gradle-2.6/bin/gradle'
-alias rebar3='/home/jbalint/sw/rebar3/rebar3'
+alias rebar3='/home/jbalint/sw/riak-sw/rebar3/rebar3'
 
 ptsproc() { ps auxw | grep pts/`pts` }
 pts() {	basename `readlink /proc/self/fd/0` } # same as tty command
