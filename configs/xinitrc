@@ -29,6 +29,7 @@ else
 	echo "Using laptop screen" >> /tmp/xinit
 	# Laptop screen only (on the go)
 	xrandr --output LVDS1 --primary --auto
+	xrandr --output HDMI1 --auto --right-of LVDS1
 fi
 
 redshift &

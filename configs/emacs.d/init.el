@@ -16,11 +16,22 @@
 (setq c-default-style "linux"
 	  c-basic-offset 4)
 
+;;(add-to-list 'auto-save-file-name-transforms '("\\(.*\\)" "~/tmp/emacs/\\1" t))
+(setq auto-save-file-name-transforms `((".*" "~/tmp/emacs" t)))
+
+(setq backup-directory-alist (cons '("." . "~/tmp/emacs") nil)
+      ;;      default-tab-width 4
+      display-time-day-and-date t
+      inhibit-startup-message t
+      )
+
 (column-number-mode 1)
 (iswitchb-mode 1)
 (show-paren-mode 1)
 (transient-mark-mode 1)
 (display-time)
+
+(setq fill-column 119)
 
 (load "~/.emacs.d/gud-yt.el")
 (load (concat "~/.emacs.d/host-" system-name) 1)
@@ -261,8 +272,8 @@
 		("myc" . "https://jira.oraclecorp.com/jira/browse/MYC-")
 		("my" . "https://jira.oraclecorp.com/jira/browse/MY-")
 		("myp" . "https://jira.oraclecorp.com/jira/browse/MYP-")
-		("sr" . "https://mosemp.us.oracle.com/mosspui/src/sr/viewer/index.html#/")))
-
+		;; ("sr" . "https://mosemp.us.oracle.com/mosspui/src/sr/viewer/index.html#/")
+        ("sr" . "https://mosemp.us.oracle.com/mosspui/src/sr/viewer/index.html#/")))
 (defun oracle-elem-open ()
   (interactive)
   ;; find an element id
@@ -449,6 +460,10 @@ A prefix argument can be used to scroll backwards or more than one."
 	(interactive)
 	(notmuch-search-tag '("+deleted"))))
 (add-hook 'notmuch-search-hook 'add-oracle-elem-open-binding)
+(add-hook 'notmuch-show-hook
+		  (lambda () (interactive)
+			(add-oracle-elem-open-binding)
+			(flyspell-mode t)))
 
 (defun mail-to-cj ()
   "Draft a new message to C/J folks."
