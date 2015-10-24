@@ -40,6 +40,20 @@ if [ "$JAVA_HOME" = "" ] ; then
 	export JAVA_HOME=$JAVA8_HOME
 fi
 
+if [ "$HOSTNAME" = "tagore" ] ; then
+	export PATH=${PATH}:/opt/cuda/bin
+	. /home/jbalint/sw/torch/install/bin/torch-activate
+	# # these are all cuda-convnet2 variables (not sure if they are
+	# # interpreted the same in other libraries)
+	# export CUDA_INSTALL_PATH=/opt/cuda
+	# export CUDA_BIN_PATH=/opt/cuda/bin
+	# export CUDA_LIB_PATH=/opt/cuda/lib
+	# export CUDA_INC_PATH=/opt/cuda/include
+	# export CUDA_SDK_PATH=/opt/cuda/samples
+	# export PYTHON_INCLUDE_PATH=/usr/include/python2.7
+	# export NUMPY_INCLUDE_PATH=/usr/include/python2.7/numpy
+fi
+
 for X ( \
 	~/bin \
 	~/.local/bin \
@@ -78,7 +92,7 @@ alias feh="feh -Z -."
 # http://stackoverflow.com/questions/424071/list-all-the-files-for-a-commit-in-git
 alias git-files-changed="git diff-tree --no-commit-id --name-only -r HEAD"
 # lazy way to install
-alias gradle='/home/jbalint/sw/java-sw/gradle-2.6/bin/gradle'
+alias gradle='/home/jbalint/sw/java-sw/gradle-2.7/bin/gradle'
 alias rebar3='/home/jbalint/sw/erlang-sw/rebar3/rebar3'
 
 ptsproc() { ps auxw | grep pts/`pts` }

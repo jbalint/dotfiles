@@ -132,7 +132,7 @@
 (setq auto-mode-alist (cons '("\\.P$" . xsb-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.fl[rih]$" . flora-mode) auto-mode-alist))
 (autoload 'flora-mode "flora" "Major mode for editing Flora-2 programs." t)
-(setq flora-program-name "~/sw/flora-git-svn/flora2/runflora")
+(setq flora-program-name "~/sw/flora-src/flora2/runflora")
 
 ;;;;;;;;;;;;;;;;;;;;;;;
 ;; Window navigation ;;
