@@ -24,6 +24,7 @@
 (depends-on "hydra")
 (depends-on "idris-mode")
 (depends-on "let-alist")
+(depends-on "lua-mode")
 (depends-on "magit")
 (depends-on "magit-popup")
 (depends-on "package-build")
