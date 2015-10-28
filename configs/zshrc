@@ -6,7 +6,13 @@ ulimit -c unlimited
 setopt interactivecomments
 
 export HOSTNAME=$(hostname)
-export RPROMPT="%{$fg[blue]%}$HOSTNAME %F%T%f%{$reset_color%}"
+
+if [[ "$INSIDE_EMACS" = "" ]] ; then
+	export RPROMPT="%{$fg[blue]%}$HOSTNAME %F%T%f%{$reset_color%}"
+else
+	export RPROMTP=""
+fi
+
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/bin/core_perl
 export JAVA5_HOME=~/sw/jdk5
 export JAVA6_HOME=~/sw/jdk6
@@ -66,13 +72,14 @@ alias redshift="redshift -m randr:crtc=DP2"
 alias bldec="xbacklight -dec 10 ; xbacklight"
 alias blinc="xbacklight -inc 10 ; xbacklight"
 alias bl0="xbacklight = 0"
+alias bl10="xbacklight = 10"
 alias bl100="xbacklight = 100"
 alias feh="feh -Z -."
 # http://stackoverflow.com/questions/424071/list-all-the-files-for-a-commit-in-git
 alias git-files-changed="git diff-tree --no-commit-id --name-only -r HEAD"
 # lazy way to install
 alias gradle='/home/jbalint/sw/java-sw/gradle-2.6/bin/gradle'
-alias rebar3='/home/jbalint/sw/riak-sw/rebar3/rebar3'
+alias rebar3='/home/jbalint/sw/erlang-sw/rebar3/rebar3'
 
 ptsproc() { ps auxw | grep pts/`pts` }
 pts() {	basename `readlink /proc/self/fd/0` } # same as tty command

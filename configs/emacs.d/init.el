@@ -88,7 +88,8 @@
 	 (:name "flagged" :query "tag:flagged" :key "f")
 	 (:name "sent" :query "tag:sent" :key "t")
 	 (:name "drafts" :query "tag:draft" :key "d")
-	 (:name "all mail" :query "*" :key "a"))))
+	 (:name "all mail" :query "*" :key "a")
+	 (:name "folder:INBOX" :query "folder:INBOX"))))
  '(org-capture-templates (quote (("" "hi" entry (file "~/org/notes.org") ""))))
  '(org-modules
    (quote
@@ -555,6 +556,12 @@ A prefix argument can be used to scroll backwards or more than one."
 ;;;;;;;;;;;;
 (add-hook 'erlang-mode-hook
 		  (lambda () (setq indent-tabs-mode nil)))
+
+;; Projectile
+
+(projectile-global-mode)
+(setq projectile-completion-system 'helm)
+(helm-projectile-on)
 
 ;;;;;;;;;;;;;
 ;; Kannada ;;

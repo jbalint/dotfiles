@@ -22,14 +22,17 @@ xrandr --output HDMI1 --off
 # TODO this if condition is not working correctly
 if true ; then #`xrandr | grep 'HDMI1 connected'` ; then
 	echo "Starting with monitors" >> /tmp/xinit
+	# being weird after update on 2015-10-16, not init'ing HDMI1 and sleep fixes it
+	sleep 20
+	xrandr >> /tmp/xinit
 	# Two screens at desk (workstation)
 	xrandr --output HDMI1 --primary --auto
 	xrandr --output DP2 --auto --left-of HDMI1 --pos 1080x520 --rotate left
 else
 	echo "Using laptop screen" >> /tmp/xinit
 	# Laptop screen only (on the go)
-	xrandr --output LVDS1 --primary --auto
-	xrandr --output HDMI1 --auto --right-of LVDS1
+	#xrandr --output LVDS1 --primary --mode 1366x768
+	#xrandr --output HDMI1 --auto --right-of LVDS1
 fi
 
 redshift &
