@@ -562,6 +562,11 @@ A prefix argument can be used to scroll backwards or more than one."
 (projectile-global-mode)
 (setq projectile-completion-system 'helm)
 (helm-projectile-on)
+;; Erlang/rebar3
+(add-to-list 'projectile-globally-ignored-directories "_build")
+;; Java
+(add-to-list 'projectile-globally-ignored-directories "build")
+(add-to-list 'projectile-globally-ignored-directories "gradle-build")
 
 ;;;;;;;;;;;;;
 ;; Kannada ;;
