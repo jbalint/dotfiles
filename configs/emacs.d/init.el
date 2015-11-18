@@ -7,7 +7,6 @@
 (require 'font-lock)
 (require 'cc-mode)
 (setq global-font-lock-mode t
-      iswitchb-default-method 'samewindow
       font-lock-maximum-decoration t
       indent-tabs-mode nil
 	  gdb-many-windows 1
@@ -15,6 +14,8 @@
 
 (setq c-default-style "linux"
 	  c-basic-offset 4)
+
+(ido-mode t)
 
 ;;(add-to-list 'auto-save-file-name-transforms '("\\(.*\\)" "~/tmp/emacs/\\1" t))
 (setq auto-save-file-name-transforms `((".*" "~/tmp/emacs" t)))
@@ -26,7 +27,6 @@
       )
 
 (column-number-mode 1)
-(iswitchb-mode 1)
 (show-paren-mode 1)
 (transient-mark-mode 1)
 (display-time)
@@ -476,7 +476,7 @@ A prefix argument can be used to scroll backwards or more than one."
 ;;;;;;;;;;;;;;;;;
 ;; ESS (for R) ;;
 ;;;;;;;;;;;;;;;;;
-;;(require 'ess-site)
+(require 'ess-site)
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Solarized theme ;;
