@@ -13,9 +13,9 @@
 
 (require 'font-lock)
 (require 'cc-mode)
+(setq-default indent-tabs-mode nil)
 (setq global-font-lock-mode t
       font-lock-maximum-decoration t
-      indent-tabs-mode nil
 	  gdb-many-windows 1
 	  gdb-use-separate-io-buffer 1)
 
