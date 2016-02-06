@@ -225,8 +225,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; BBDB (config from link in .wl) ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'bbdb-loaddefs)
 (require 'bbdb)
-(bbdb-initialize)
+(bbdb-initialize 'gnus 'message)
+(bbdb-mua-auto-update-init 'gnus 'message)
+(add-to-list 'bbdb-mua-mode-alist '(notmuch notmuch-message-mode))
+
+(require 'bbdb)
+(bbdb-initialize 'message)
 (setq 
  bbdb-offer-save 1                        ;; 1 means save-without-asking
 
