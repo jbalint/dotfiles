@@ -488,6 +488,10 @@ A prefix argument can be used to scroll backwards or more than one."
 		  (lambda () (interactive)
 			(add-oracle-elem-open-binding)
 			(flyspell-mode t)))
+(add-hook 'notmuch-message-mode-hook
+		  (lambda () (interactive)
+			(add-oracle-elem-open-binding)
+			(flyspell-mode t)))
 
 (defun mail-to-cj ()
   "Draft a new message to C/J folks."
