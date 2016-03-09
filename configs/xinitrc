@@ -15,23 +15,28 @@ xrdb -merge $HOME/.Xresources
 
 xrandr --output LVDS1 --off
 xrandr --output VGA1 --off
-xrandr --output DP2 --off
+#xrandr --output DP2 --off
 xrandr --output HDMI1 --off
 
 # latest two setups 2015-05-22
 # TODO this if condition is not working correctly
-if true ; then #`xrandr | grep 'HDMI1 connected'` ; then
+if false ; then #`xrandr | grep 'HDMI1 connected'` ; then
 	echo "Starting with monitors" >> /tmp/xinit
 	# being weird after update on 2015-10-16, not init'ing HDMI1 and sleep fixes it
-	sleep 20
+	#sleep 30
 	xrandr >> /tmp/xinit
 	# Two screens at desk (workstation)
-	xrandr --output HDMI1 --primary --auto
-	xrandr --output DP2 --auto --left-of HDMI1 --pos 1080x520 --rotate left
+	#xrandr --output HDMI1 --primary --auto
+	#xrandr --output DP2 --auto --left-of HDMI1 --pos 1080x520 --rotate left
+	xrandr --output LVDS1 --off
+	#xrandr --output DP2 --mode 2560x1080
+	#sleep 20
+	xrandr >> /tmp/xinit
+	xrandr --output DP2 --mode 2560x1080
 else
 	echo "Using laptop screen" >> /tmp/xinit
 	# Laptop screen only (on the go)
-	#xrandr --output LVDS1 --primary --mode 1366x768
+	xrandr --output LVDS1 --primary --mode 1366x768
 	#xrandr --output HDMI1 --auto --right-of LVDS1
 fi
 
@@ -44,6 +49,9 @@ xset -dpms
 #xset m 3/1 0
 
 setxkbmap -option ctrl:nocaps
+
+# Disable inertial scrolling [RUKH-7]
+xinput --set-prop --type=float "SynPS/2 Synaptics TouchPad" "Synaptics Coasting Speed" 0 0
 
 sxhkd &
 # Conky places a significant load on Xorg, not sure why

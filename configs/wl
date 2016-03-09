@@ -9,7 +9,7 @@
 ;; ##       ##     ## ##     ##  ##  ##       
 ;; ######## ##     ## ##     ## #### ######## 
 
-(require 'org-wl)
+;;(require 'org-wl)
 
 ;; Config c.f.
 ;; http://emacs-fu.blogspot.com/2009/06/e-mail-with-wanderlust.html
@@ -53,8 +53,8 @@
 ;; this one is used by wl-message-id-function
 (setq wl-from "jbalint@gmail.com")
 
-(require 'bbdb-wl)
-(bbdb-wl-setup)
+;;(require 'bbdb-wl)
+;;(bbdb-wl-setup)
 
 ;; (setq 
 ;;   bbdb-wl-folder-regexp    ;; get addresses only from these folders

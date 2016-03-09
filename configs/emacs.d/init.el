@@ -1,4 +1,11 @@
 ;; Install Cask/Pallet packages first
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (require 'cask "/home/jbalint/sw/emacs-sw/cask/cask.el")
 (cask-initialize)
 (require 'pallet)
@@ -43,23 +50,25 @@
 
 (setq default-tab-width 4)
 
-(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+;;;;;(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
+(add-to-list 'load-path "~/sw/emacs-gargoyle")
 (add-to-list 'load-path "~/.emacs.d/lisp")
 (add-to-list 'load-path "~/.emacs.d/lisp/ecb")
 (add-to-list 'load-path "~/aur/ledger-git/src/ledger/lisp")
+(add-to-list 'load-path "/usr/share/emacs/site-lisp")
 (require 'ecb nil t)
 
-(unless (require 'el-get nil 'noerror)
-  (with-current-buffer
-      (url-retrieve-synchronously
-       "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
-    (goto-char (point-max))
-    (eval-print-last-sexp)))
+;; (unless (require 'el-get nil 'noerror)
+;;   (with-current-buffer
+;;       (url-retrieve-synchronously
+;;        "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
+;;     (goto-char (point-max))
+;;     (eval-print-last-sexp)))
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (autoload 'ibuffer "ibuffer" "List buffers." t)
 
-(el-get 'sync)
+;;;(el-get 'sync)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -199,6 +208,19 @@
 (setq org-confirm-babel-evaluate 'my-org-confirm-babel-evaluate)
 (setq org-confirm-babel-evaluate nil)
 (setq org-src-fontify-natively t)
+
+
+(defun my-display-buffer-in-side-window (a b)
+  (message "DISPLAYING ORG AGENDA WINDOW PROPERLY")
+  (display-buffer-in-side-window a b))
+
+(progn
+  (setq display-buffer-alist nil)
+  (add-to-list 'display-buffer-alist
+			   (cons (rx "*Org Agenda")
+					 (cons 'display-buffer-in-side-window
+						   '((side . right)
+							 (window-width 0.5))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; BBDB (config from link in .wl) ;;
@@ -418,6 +440,7 @@ A prefix argument can be used to scroll backwards or more than one."
         ))
 
 ;; TODO make this nicer
+;; TODO need `shr-browse-url' here? (when in notmuch HTML emails)
 (defun add-oracle-elem-open-binding ()
   (interactive)
   "Add the C-c C-o binding to open an Oracle element or fall back to opening a URL"
@@ -558,7 +581,7 @@ A prefix argument can be used to scroll backwards or more than one."
 		  (lambda () (setq indent-tabs-mode nil)))
 
 ;; Projectile
-
+(require 'projectile)
 (projectile-global-mode)
 (setq projectile-completion-system 'helm)
 (helm-projectile-on)
@@ -567,6 +590,12 @@ A prefix argument can be used to scroll backwards or more than one."
 ;; Java
 (add-to-list 'projectile-globally-ignored-directories "build")
 (add-to-list 'projectile-globally-ignored-directories "gradle-build")
+
+;;;;;;;;;;;;;;;;;;
+;; PDF Renaming ;;
+;;;;;;;;;;;;;;;;;;
+(add-to-list 'load-path "/home/jbalint/sw/emacs-sw/pdf_renaming")
+(require 'pdf-renaming-mode)
 
 ;;;;;;;;;;;;;
 ;; Kannada ;;
@@ -657,3 +686,10 @@ A prefix argument can be used to scroll backwards or more than one."
    my-indian-knd-base-table inscript-dev-keytable
    "kannada-jessscript" "Kannada" "KndJ"
    "Kannada keyboard Inscript."))
+
+;; Misc ;;
+
+(defun notabs ()
+  "Change the current buffer to use spaces instead of tabs"
+  (interactive)
+  (setq indent-tabs-mode nil))

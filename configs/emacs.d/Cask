@@ -4,7 +4,9 @@
 
 (depends-on "ace-window")
 (depends-on "avy")
+(depends-on "bbdb")
 (depends-on "cask")
+(depends-on "cider")
 (depends-on "color-theme-solarized")
 (depends-on "dash")
 (depends-on "edts")
@@ -36,4 +38,7 @@
 (depends-on "s")
 (depends-on "shut-up")
 (depends-on "solarized-theme")
+(depends-on "sparql-mode")
+(depends-on "w3m")
+(depends-on "wanderlust")
 (depends-on "with-editor")
