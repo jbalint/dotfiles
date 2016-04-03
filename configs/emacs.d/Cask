@@ -9,6 +9,7 @@
 (depends-on "cider")
 (depends-on "color-theme-solarized")
 (depends-on "dash")
+(depends-on "e2wm")
 (depends-on "edts")
 (depends-on "epl")
 (depends-on "erlang")
