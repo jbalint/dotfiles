@@ -607,6 +607,27 @@ A prefix argument can be used to scroll backwards or more than one."
 (add-to-list 'load-path "/home/jbalint/sw/emacs-sw/pdf_renaming")
 (require 'pdf-renaming-mode)
 
+;;;;;;;;;;;
+;; Scala ;;
+;;;;;;;;;;;
+;; (use-package ensime
+;; 			 :commands ensime ensime-mode)
+;; (add-hook 'scala-mode-hook 'ensime-mode)
+
+;;;;;;;;;;;;
+;; SPARQL ;;
+;;;;;;;;;;;;
+
+;;(sparql-set-base-url "http://admin:admin@localhost:5820/jora1/query")
+;;(sparql-set-format "text/csv")
+
+;;;;;;;;
+;; N3 ;;
+;;;;;;;;
+(require 'n3-mode) ;; locally in .emacs.d/lisp/
+(add-to-list 'auto-mode-alist '("\\.ttl\\'" . n3-mode))
+(add-to-list 'auto-mode-alist '("\\.n3\\'" . n3-mode))
+
 ;;;;;;;;;;;;;
 ;; Kannada ;;
 ;;;;;;;;;;;;;
