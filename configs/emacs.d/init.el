@@ -6,7 +6,8 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
-(require 'cask "/home/jbalint/sw/emacs-sw/cask/cask.el")
+;;(require 'cask "/home/jbalint/sw/emacs-sw/cask/cask.el")
+(require 'cask)
 (cask-initialize)
 (require 'pallet)
 (pallet-mode t)
@@ -590,8 +591,13 @@ A prefix argument can be used to scroll backwards or more than one."
 (add-hook 'erlang-mode-hook
 		  (lambda () (setq indent-tabs-mode nil)))
 
-;; Projectile
+;;;;;;;;;;;;;;;;
+;; Projectile ;;
+;;;;;;;;;;;;;;;;
+;; you must set helm-projectile-fuzzy-match to nil before loading helm-projectile
+(setq helm-projectile-fuzzy-match nil)
 (require 'projectile)
+(require 'helm-projectile)
 (projectile-global-mode)
 (setq projectile-completion-system 'helm)
 (helm-projectile-on)
@@ -599,7 +605,6 @@ A prefix argument can be used to scroll backwards or more than one."
 (add-to-list 'projectile-globally-ignored-directories "_build")
 ;; Java
 (add-to-list 'projectile-globally-ignored-directories "build")
-(add-to-list 'projectile-globally-ignored-directories "gradle-build")
 
 ;;;;;;;;;;;;;;;;;;
 ;; PDF Renaming ;;
@@ -724,3 +729,11 @@ A prefix argument can be used to scroll backwards or more than one."
   "Change the current buffer to use spaces instead of tabs"
   (interactive)
   (setq indent-tabs-mode nil))
+
+(when (>= emacs-major-version 24)
+  (require 'package)
+  (add-to-list
+   'package-archives
+   '("melpa" . "http://melpa.org/packages/")
+   t)
+  (package-initialize))
