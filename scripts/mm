@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Switch the mouse and keyboard
+mm() {
+    local ENABLED DISABLED # relative to DISPLAY=0, if ENABLED=1 then we set it enabled on DISPLAY=:0
+    if [[ `DISPLAY=:0 xinput --list-props 11 | awk '/Device Enabled/ {print $4}'` == "1" ]] ; then
+        ENABLED=0
+        DISABLED=1
+    else
+        ENABLED=1
+        DISABLED=0
+    fi
+
+    # apply to all relevant devices
+    xinput --list | egrep 'daskeyboard|Razer|Lenovo' | perl -lne'/id=(\d+)/;print$1' | while read i ; do
+        DISPLAY=:$ENABLED xinput set-int-prop $i "Device Enabled" 8 0
+        DISPLAY=:$DISABLED xinput set-int-prop $i "Device Enabled" 8 1
+    done
+}
+
+mm
