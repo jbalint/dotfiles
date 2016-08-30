@@ -41,7 +41,7 @@ if [ "$JAVA_HOME" = "" ] ; then
 fi
 
 if [ "$HOSTNAME" = "tagore" ] ; then
-	export PATH=${PATH}:/opt/cuda/bin
+	export PATH=${PATH}:/opt/cuda/bin:/home/jbalint/sw/java-sw/stardog-bin/bin:/home/jbalint/.gem/ruby/2.3.0/bin
 	. /home/jbalint/sw/torch/install/bin/torch-activate
 	# # these are all cuda-convnet2 variables (not sure if they are
 	# # interpreted the same in other libraries)
@@ -52,6 +52,7 @@ if [ "$HOSTNAME" = "tagore" ] ; then
 	# export CUDA_SDK_PATH=/opt/cuda/samples
 	# export PYTHON_INCLUDE_PATH=/usr/include/python2.7
 	# export NUMPY_INCLUDE_PATH=/usr/include/python2.7/numpy
+	export STARDOG_HOME=/home/jbalint/stardog-home
 fi
 
 if [ "$HOSTNAME" = "camus" ] ; then
@@ -95,10 +96,8 @@ alias bl100="xbacklight = 100"
 alias feh="feh -Z -."
 # http://stackoverflow.com/questions/424071/list-all-the-files-for-a-commit-in-git
 alias git-files-changed="git diff-tree --no-commit-id --name-only -r HEAD"
-# lazy way to install
-alias gradle='/home/jbalint/sw/java-sw/gradle-2.13/bin/gradle'
 alias rebar3='/home/jbalint/sw/erlang-sw/rebar3/rebar3'
-
+alias startx2="xrandr --output DP1 --auto --primary --output DP2 --rotate left --auto --left-of DP1 --pos 0x-500"
 
 ptsproc() { ps auxw | grep pts/`pts` }
 pts() {	basename `readlink /proc/self/fd/0` } # same as tty command
@@ -106,6 +105,7 @@ xterm_title() { echo "\033]2;$1\007" }
 Ts() { tmux new-session -s "$1" }
 Tl() { tmux list-sessions }
 Tr() { tmux attach-session -t "$1" }
+Td() { tmux detach-client -s "$1" }
 touchpad_off() { synclient TouchpadOff=1 }
 touchpad_on() { synclient TouchpadOff=0 }
 laptop_on() { xrandr --output LVDS1 --auto --mode 1366x768 }
@@ -196,5 +196,3 @@ SAVEHIST=10000
 setopt appendhistory autocd extendedglob nomatch
 # End of lines configured by zsh-newuser-install
 
-
-. /home/jbalint/sw/torch/install/bin/torch-activate
