@@ -51,7 +51,6 @@
 (add-to-list 'load-path "~/sw/emacs-gargoyle")
 (add-to-list 'load-path "~/.emacs.d/lisp")
 (add-to-list 'load-path "~/.emacs.d/lisp/ecb")
-(add-to-list 'load-path "~/aur/ledger-git/src/ledger/lisp")
 (add-to-list 'load-path "/usr/share/emacs/site-lisp")
 (require 'ecb nil t)
 
