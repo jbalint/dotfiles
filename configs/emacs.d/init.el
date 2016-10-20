@@ -128,6 +128,20 @@
  ;; If there is more than one, they won't work right.
  )
 
+;;;;;;;;;;
+;; Helm ;;
+;;;;;;;;;;
+(require 'helm-config)
+(helm-mode 1)
+;; List of times to show in helm-world-time
+(setq display-time-world-list '(("America/Chicago" "Madison")
+                                ("Europe/Berlin" "Heidelberg")
+                                ("America/New_York" "DC")
+                                ("Europe/Moscow" "Moscow")
+                                ("Pacific/Honolulu" "Hawaii")
+                                ("UTC" "UTC")
+                                ))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; XSB and Flora-2 configurations ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
