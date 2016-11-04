@@ -81,8 +81,12 @@ super + Return
 	st
 
 super + space
-	dmenu_run
+	mm
 
 # make sxhkd reload its configuration files:
 super + Escape
 	pkill -USR1 -x sxhkd
+
+# Percy
+super + n
+    emacsclient -c -s /tmp/emacs1000/percy -F '((name . "percy"))' --eval '(percy-anything)'

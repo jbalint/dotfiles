@@ -42,3 +42,6 @@ xsetroot -cursor_name left_ptr
 
 xset s off
 xset -dpms
+
+# Percy
+bspc rule -a Emacs:percy state=floating
