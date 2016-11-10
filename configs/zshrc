@@ -55,16 +55,15 @@ if [ "$HOSTNAME" = "tagore" ] ; then
 	export STARDOG_HOME=/home/jbalint/stardog-home
 fi
 
-if [ "$HOSTNAME" = "camus" ] ; then
-	export PATH=${PATH}:/home/jbalint/.cask/bin
-fi
 
 for X ( \
 	~/bin \
 	~/.local/bin \
 	~/.cabal/bin \
 	~/sw/emacs-sw/cask/bin \
-	$JAVA_HOME/bin ) ; do
+	$BS_HOME/bin \
+	$JAVA_HOME/bin \
+	~/.cask/bin ) ; do
 	export PATH="$X:$PATH"
 done
 
