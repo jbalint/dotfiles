@@ -53,7 +53,9 @@ setxkbmap -option ctrl:nocaps
 # Disable inertial scrolling [RUKH-7]
 xinput --set-prop --type=float "SynPS/2 Synaptics TouchPad" "Synaptics Coasting Speed" 0 0
 # Disable touchpad while typing [SYS-52]
-syndaemon -i 1 -t -k
+syndaemon -i 1 -t -k &
+
+synclient TapButton1=1 TapButton2=3 TapButton3=2
 
 sxhkd &
 # Conky places a significant load on Xorg, not sure why
