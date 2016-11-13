@@ -78,7 +78,7 @@
  '(cursor-color nil)
  '(custom-safe-themes
    (quote
-	("8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" default)))
+    ("8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" default)))
  '(default-input-method (quote kannada-jessscript))
  '(ecb-options-version "2.40")
  '(foreground-color nil)
@@ -86,32 +86,32 @@
  '(message-citation-line-function (quote message-insert-formatted-citation-line))
  '(notmuch-saved-searches
    (quote
-	((:name "followup" :query "folder:followup")
-	 (:name "inboxtwo" :query "tab:i2")
-	 (:name "inbox" :query "tag:inbox")
-	 (:name "unread" :query "tag:unread" :key "u")
-	 (:name "flagged" :query "tag:flagged" :key "f")
-	 (:name "sent" :query "tag:sent" :key "t")
-	 (:name "drafts" :query "tag:draft" :key "d")
-	 (:name "all mail" :query "*" :key "a")
-	 (:name "folder:INBOX" :query "folder:INBOX"))))
+    ((:name "followup" :query "folder:followup")
+     (:name "inboxtwo" :query "tab:i2")
+     (:name "inbox" :query "tag:inbox")
+     (:name "unread" :query "tag:unread" :key "u")
+     (:name "flagged" :query "tag:flagged" :key "f")
+     (:name "sent" :query "tag:sent" :key "t")
+     (:name "drafts" :query "tag:draft" :key "d")
+     (:name "all mail" :query "*" :key "a")
+     (:name "folder:INBOX" :query "folder:INBOX"))))
  '(org-capture-templates (quote (("" "hi" entry (file "~/org/notes.org") ""))))
  '(org-modules
    (quote
-	(org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m org-wl)))
+    (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m org-wl)))
  '(safe-local-variable-values
    (quote
-	((eval progn
-		   (require
-			(quote color-theme))
-		   (color-theme-initialize)
-		   (color-theme-aalto-light))
-	 (tags-table-list quote
-					  ("/home/jbalint/sw/fabric-core-trunk/TAGS"))
-	 (org-log-done . t)
-	 (eval load-theme
-		   (quote tango-dark))
-	 (eval load-theme "wombat"))))
+    ((eval progn
+           (require
+            (quote color-theme))
+           (color-theme-initialize)
+           (color-theme-aalto-light))
+     (tags-table-list quote
+                      ("/home/jbalint/sw/fabric-core-trunk/TAGS"))
+     (org-log-done . t)
+     (eval load-theme
+           (quote tango-dark))
+     (eval load-theme "wombat"))))
  '(scroll-bar-mode nil)
  '(send-mail-function (quote smtpmail-send-it))
  '(smtpmail-smtp-server "stbeehive.oracle.com")
