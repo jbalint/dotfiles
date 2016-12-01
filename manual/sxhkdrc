@@ -89,4 +89,4 @@ super + Escape
 
 # Percy
 super + n
-    emacsclient -c -s /tmp/emacs1000/percy -F '((name . "percy"))' --eval '(percy-anything)'
+    percy-client
