@@ -641,6 +641,11 @@ A prefix argument can be used to scroll backwards or more than one."
 (add-to-list 'auto-mode-alist '("\\.ttl\\'" . n3-mode))
 (add-to-list 'auto-mode-alist '("\\.n3\\'" . n3-mode))
 
+;;;;;;;;;;;;;;;
+;; Bookmarks ;;
+;;;;;;;;;;;;;;;
+(setq bookmark-default-file "~/.emacs.bmk")
+
 ;;;;;;;;;;;;;
 ;; Kannada ;;
 ;;;;;;;;;;;;;
