@@ -1,6 +1,5 @@
 ;; Install Cask/Pallet packages first
 
-;;(require 'cask "/home/jbalint/sw/emacs-sw/cask/cask.el")
 (require 'cask "/home/jbalint/.cask/cask.el")
 (cask-initialize)
 (require 'pallet)
@@ -140,6 +139,7 @@
                                 ("Pacific/Honolulu" "Hawaii")
                                 ("UTC" "UTC")
                                 ))
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; XSB and Flora-2 configurations ;;
@@ -403,7 +403,6 @@
 (add-hook 'c-mode-common-hook
 		  (lambda () (local-unset-key (kbd "C-c C-l"))))
 
-(require 'w3m-load)
 (put 'set-goal-column 'disabled nil)
 
 (put 'narrow-to-region 'disabled nil)
@@ -519,7 +518,7 @@ A prefix argument can be used to scroll backwards or more than one."
 ;;;;;;;;;;;;;;;;;
 ;; ESS (for R) ;;
 ;;;;;;;;;;;;;;;;;
-(require 'ess-site)
+;;(require 'ess-site)
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;; Solarized theme ;;
@@ -632,7 +631,7 @@ A prefix argument can be used to scroll backwards or more than one."
 ;; SPARQL ;;
 ;;;;;;;;;;;;
 
-;;(sparql-set-base-url "http://admin:admin@localhost:5820/jora1/query")
+;;(sparql-set-base-url "http://localhost:5820/jora1/query")
 ;;(sparql-set-format "text/csv")
 
 ;;;;;;;;
