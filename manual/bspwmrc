@@ -43,5 +43,7 @@ xsetroot -cursor_name left_ptr
 xset s off
 xset -dpms
 
+bspc config click_to_focus true
+
 # Percy
 bspc rule -a Emacs:percy state=floating
