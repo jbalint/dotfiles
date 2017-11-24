@@ -71,8 +71,8 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["black" "red" "green" "yellow" "blue" "magenta" "cyan" "yellow"])
- '(background-color nil)
- '(background-mode dark)
+ ;;'(background-color nil)
+ ;;'(background-mode dark)
  '(browse-url-browser-function (quote browse-url-xdg-open))
  '(cursor-color nil)
  '(custom-safe-themes
@@ -100,28 +100,14 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m org-wl)))
  '(package-selected-packages
    (quote
-    (ggtags wanderlust w3m sparql-mode solarized-theme rust-mode rudel paredit pallet markdown-mode magit lua-mode lispy ledger-mode idris-mode helm-projectile helm-ag groovy-mode flymake-easy flycheck-haskell find-file-in-project ess ensime emacs-eclim edts e2wm color-theme-solarized cider bbdb)))
+    (company-racer racer graphql-mode racket-mode haskell-mode cmake-mode calfw ggtags wanderlust w3m sparql-mode solarized-theme rust-mode rudel paredit pallet markdown-mode magit lua-mode lispy ledger-mode idris-mode helm-projectile helm-ag groovy-mode flymake-easy flycheck-haskell find-file-in-project ess ensime emacs-eclim edts e2wm color-theme-solarized cider bbdb)))
  '(safe-local-variable-values
    (quote
-    ((eval progn
-           (require
-            (quote color-theme))
-           (color-theme-initialize)
-           (color-theme-aalto-light))
-     (tags-table-list quote
-                      ("/home/jbalint/sw/fabric-core-trunk/TAGS"))
-     (org-log-done . t)
-     (eval load-theme
-           (quote tango-dark))
-     (eval load-theme "wombat"))))
+    ((org-log-done . t))))
  '(scroll-bar-mode nil)
- '(send-mail-function (quote smtpmail-send-it))
- '(smtpmail-smtp-server "stbeehive.oracle.com")
- '(smtpmail-smtp-service 465)
- '(smtpmail-stream-type (quote ssl))
  '(tool-bar-mode nil)
  '(user-full-name "Jess Balint")
- '(user-mail-address "jess.balint@oracle.com"))
+ '(user-mail-address "jbalint@gmail.com"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -512,13 +498,6 @@ A prefix argument can be used to scroll backwards or more than one."
 			(add-oracle-elem-open-binding)
 			(flyspell-mode t)))
 
-(defun mail-to-cj ()
-  "Draft a new message to C/J folks."
-  (interactive)
-  (notmuch-mua-mail "Alexander Soklakov <alexander.soklakov@oracle.com>, Filipe Silva <filipe.silva@oracle.com>"
-					""
-					'(("Cc" . "JDBC Reviewers <MYSQL-CONNECTORS-JAVA_GRP@oracle.com>"))))
-
 ;;;;;;;;;;;;;;;;;
 ;; ESS (for R) ;;
 ;;;;;;;;;;;;;;;;;
@@ -530,7 +509,7 @@ A prefix argument can be used to scroll backwards or more than one."
 ;; https://github.com/sellout/emacs-color-theme-solarized
 ;; https://github.com/sellout/emacs-color-theme-solarized/issues/142
 ;;(setq custom-theme-load-path '("/home/jbalint/sw/emacs-sw/emacs-color-theme-solarized"))
-(set-terminal-parameter nil 'background-mode 'dark)
+;;(set-terminal-parameter nil 'background-mode 'dark)
 ;;(load-theme 'solarized t)
 
 ;;;;;;;;;;;;;
@@ -650,6 +629,17 @@ A prefix argument can be used to scroll backwards or more than one."
 ;;;;;;;;;;;;;;;
 (setq bookmark-default-file "~/.emacs.bmk")
 
+;;;;;;;;;;
+;; Rust ;;
+;;;;;;;;;;
+(add-hook 'rust-mode-hook #'racer-mode)
+(add-hook 'racer-mode-hook #'eldoc-mode)
+(add-hook 'racer-mode-hook #'company-mode)
+
+(require 'rust-mode)
+(define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
+(setq company-tooltip-align-annotations t)
+
 ;;;;;;;;;;;;;
 ;; Kannada ;;
 ;;;;;;;;;;;;;
@@ -742,6 +732,10 @@ A prefix argument can be used to scroll backwards or more than one."
 
 ;; Misc ;;
 
+;; use my normal colors in shell mode
+;; c.f. https://stackoverflow.com/questions/25819034/colors-in-emacs-shell-prompt
+(set-face-attribute 'comint-highlight-prompt nil :inherit nil)
+
 (defun notabs ()
   "Change the current buffer to use spaces instead of tabs"
   (interactive)
@@ -754,3 +748,4 @@ A prefix argument can be used to scroll backwards or more than one."
    '("melpa" . "http://melpa.org/packages/")
    t)
   (package-initialize))
+(put 'downcase-region 'disabled nil)
