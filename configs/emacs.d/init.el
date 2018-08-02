@@ -161,6 +161,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Org-mode customizations ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(setq org-clock-into-drawer nil) ; [SYS-107]
 (setq org-log-done t)
 (setq org-agenda-file-regexp "\\`[^.].*\\.org\\'")
 (setq org-directory "~/Dropbox/important/org")

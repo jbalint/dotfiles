@@ -29,7 +29,7 @@ if which lesspipe.sh >& /dev/null ; then
 	LESSOPEN="|lesspipe.sh %s"; export LESSOPEN
 fi
 export LESS="-r -w -J"
-export GRADLE_OPTS=-Dorg.gradle.daemon=true
+export GRADLE_OPTS="-Dbs.svc=gradle -Dorg.gradle.daemon=true"
 export SPHINXBUILD=sphinx-build2
 export BS_HOME=/home/jbalint/sw/banshee-sympatico
 export EDITOR=vim
@@ -42,6 +42,7 @@ fi
 
 if [ "$HOSTNAME" = "tagore" ] ; then
 	export PATH=${PATH}:/opt/cuda/bin:/home/jbalint/sw/java-sw/stardog-bin/bin:/home/jbalint/.gem/ruby/2.3.0/bin
+	export PATH=${PATH}:$HOME/sw/postgres-9.6.1-jess/bin
 	. /home/jbalint/sw/torch/install/bin/torch-activate
 	# # these are all cuda-convnet2 variables (not sure if they are
 	# # interpreted the same in other libraries)
@@ -53,6 +54,7 @@ if [ "$HOSTNAME" = "tagore" ] ; then
 	# export PYTHON_INCLUDE_PATH=/usr/include/python2.7
 	# export NUMPY_INCLUDE_PATH=/usr/include/python2.7/numpy
 	export STARDOG_HOME=/home/jbalint/stardog-home
+	export STARDOG_JAVA_ARGS="-Dbs.svc=STARDOG -Xmx2g -Xms2g -XX:MaxDirectMemorySize=1g"
 fi
 
 
