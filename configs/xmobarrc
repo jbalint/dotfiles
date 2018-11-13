@@ -21,9 +21,11 @@ Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
     		    --, Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
     		    , Run Date "%Y-%m-%d %H:%M:%S %a" "date" 10
 				, Run Com "/home/jbalint/sw/dotfiles/manual/kodi_shortstat.sh" [] "kodi" 50
+				, Run Com "/home/jbalint/sw/java-sw/nightscout-virtual-graph/latest_bg.sh" [] "latestBG" 50
+                                , Run DynNetwork [] 30
                     ]
        , sepChar = "%"
        , alignSep = "}{"
        --, template = "%cpu% | %memory% | %xbmc_status% }{ <fc=#ee9a00>%date%</fc>| %KMSN% | %uname%"
-       , template = "%cpu% | %memory% | %xmobar-load-average% | %wlp3s0wi% | %battery% | %kodi% }{ <fc=#ee9a00>%date%</fc> | %KMSN% | %uname%"
+       , template = "%cpu% | %memory% | %xmobar-load-average% | %wlp3s0wi% | %battery% | %kodi% | %dynnetwork% | %latestBG% }{ <fc=#ee9a00>%date%</fc> | %KMSN% | %uname%"
        }
