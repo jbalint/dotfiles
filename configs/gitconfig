@@ -28,3 +28,5 @@
 	autoStash = true
 [pull]
 	rebase = true
+[help]
+	autocorrect = 0
