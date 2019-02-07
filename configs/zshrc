@@ -10,7 +10,7 @@ export HOSTNAME=$(hostname)
 if [[ "$INSIDE_EMACS" = "" ]] ; then
 	export RPROMPT="%{$fg[blue]%}$HOSTNAME %F%T%f%{$reset_color%}"
 else
-	export RPROMTP=""
+	export RPROMPT=""
 fi
 
 export PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/bin/core_perl
@@ -29,12 +29,15 @@ if which lesspipe.sh >& /dev/null ; then
 	LESSOPEN="|lesspipe.sh %s"; export LESSOPEN
 fi
 export LESS="-r -w -J"
+export PAGER=less
 export GRADLE_OPTS="-Dbs.svc=gradle -Dorg.gradle.daemon=true"
 export SPHINXBUILD=sphinx-build2
 export BS_HOME=/home/jbalint/sw/banshee-sympatico
 export EDITOR=vim
 export LUA_PATH="/home/jbalint/sw/yellow-tree/?.lua;/home/jbalint/sw/lunit/lua/?.lua;/home/jbalint/share/lua/5.2/?.lua;/home/jbalint/share/lua/5.2/?/init.lua;/home/jbalint/lib/share/?.lua;;"
 export LUA_CPATH="/home/jbalint/lib/lua/5.2/?.so;/home/jbalint/lib/lib/?.so;/home/jbalint/sw/banshee-sympatico/prototype-code/?.so"
+export RUST_BACKTRACE=1
+cat ~/.artifactory_credentials| while read i ; do eval "export $i"; done
 
 if [ "$JAVA_HOME" = "" ] ; then
 	export JAVA_HOME=$JAVA8_HOME
@@ -43,6 +46,7 @@ fi
 if [ "$HOSTNAME" = "tagore" ] ; then
 	export PATH=${PATH}:/opt/cuda/bin:/home/jbalint/sw/java-sw/stardog-bin/bin:/home/jbalint/.gem/ruby/2.3.0/bin
 	export PATH=${PATH}:$HOME/sw/postgres-9.6.1-jess/bin
+	export PATH=${PATH}:$HOME/.cargo/bin
 	. /home/jbalint/sw/torch/install/bin/torch-activate
 	# # these are all cuda-convnet2 variables (not sure if they are
 	# # interpreted the same in other libraries)
@@ -54,7 +58,9 @@ if [ "$HOSTNAME" = "tagore" ] ; then
 	# export PYTHON_INCLUDE_PATH=/usr/include/python2.7
 	# export NUMPY_INCLUDE_PATH=/usr/include/python2.7/numpy
 	export STARDOG_HOME=/home/jbalint/stardog-home
-	export STARDOG_JAVA_ARGS="-Dbs.svc=STARDOG -Xmx2g -Xms2g -XX:MaxDirectMemorySize=1g"
+	export STARDOG_EXT=/home/jbalint/stardog-home/ext_jars
+	export PGDATA=/home/jbalint/pg-cluster
+	export STARDOG_SERVER_JAVA_ARGS="-Dbs.svc=STARDOG -Xmx2g -Xms2g -XX:MaxDirectMemorySize=1g -Djava.io.tmpdir=$STARDOG_HOME/TMP -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:NativeMemoryTracking=summary"
 fi
 
 
@@ -68,11 +74,6 @@ for X ( \
 	~/.cask/bin ) ; do
 	export PATH="$X:$PATH"
 done
-
-if [ -d /home/jbalint/sw/basho-otp-17 ] ; then
-	export PATH="/home/jbalint/sw/basho-otp-17/inst/bin:$PATH"
-	export LD_LIBRARY_PATH="/home/jbalint/sw/basho-otp-17/inst/lib:$LD_LIBRARY_PATH"
-fi
 
 alias vi=vim
 alias rein=". ~/.zshrc"
@@ -88,7 +89,6 @@ alias dnsreset="echo 'nameserver 192.168.1.1' | sudo tee /etc/resolv.conf"
 alias screenshot="sleep 3s; import -window root screenshot.png"
 alias facebook="chromium facebook.com"
 alias timidity="timidity -iA -R 1"
-alias redshift="redshift -m randr:crtc=DP2"
 alias bldec="xbacklight -dec 10 ; xbacklight"
 alias blinc="xbacklight -inc 10 ; xbacklight"
 alias bl0="xbacklight = 0"
@@ -98,7 +98,10 @@ alias feh="feh -Z -."
 # http://stackoverflow.com/questions/424071/list-all-the-files-for-a-commit-in-git
 alias git-files-changed="git diff-tree --no-commit-id --name-only -r HEAD"
 alias rebar3='/home/jbalint/sw/erlang-sw/rebar3/rebar3'
-alias startx2="xrandr --output DP1 --auto --primary --output DP2 --rotate left --auto --left-of DP1 --pos 0x-500"
+alias ncc='setxkbmap -option ctrl:nocaps'
+# Thanks. https://unix.stackexchange.com/a/187256/178680
+alias urldecode='sed "s@+@ @g;s@%@\\\\x@g" | xargs -0 printf "%b"'
+alias usage='du -Psx * | sort -n'
 
 ptsproc() { ps auxw | grep pts/`pts` }
 pts() {	basename `readlink /proc/self/fd/0` } # same as tty command
@@ -111,11 +114,7 @@ touchpad_off() { synclient TouchpadOff=1 }
 touchpad_on() { synclient TouchpadOff=0 }
 laptop_on() { xrandr --output LVDS1 --auto --mode 1366x768 }
 laptop_off() { xrandr --output LVDS1 --off }
-ws_fab() { sudo tshark -O xml,http -i lo -f "port 32274" }
-whitenoise() { setsid vlc ~/.jdownloader/downloads/Celestial*.tmp }
-oragit() { git config user.email jess.balint@oracle.com }
 git-log-graph() { git log --pretty=oneline --graph }
-cj-j8() { perl -pi.bak -e's/(java version \&quot;)1\.\d/${1}1\.8/g' build.xml }
 gstack() { gdb -batch -ex "thread apply all bt full" -p $1 }
 mailsync() { notmuch search --format=text0 --output=files tag:deleted | xargs -0 --no-run-if-empty rm && mbsync -a && notmuch new }
 
@@ -172,6 +171,22 @@ aur_install() { # Install a downloaded AUR package
 	cd $1 && \
 	makepkg -s && \
 	sudo pacman -U ${1}*.pkg.tar.xz
+}
+
+grep_gradle() {
+    SEARCH=$1
+    find . -name '*.gradle' | while read i ; do
+	if grep $SEARCH $i > /dev/null ; then
+            echo ">>> Found in $i <<<"
+            grep $SEARCH $i
+        fi
+    done
+}
+
+diffdir() {
+    (cd $1 ; find . | sort > /tmp/diffdir_a.txt)
+    (cd $2 ; find . | sort > /tmp/diffdir_b.txt)
+    diff -W 300 -y /tmp/diffdir_a.txt /tmp/diffdir_b.txt | egrep '(<|>)'
 }
 
 # Prevent C-s and C-q from sending term codes (Needed for rtorrent)
