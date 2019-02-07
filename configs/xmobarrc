@@ -21,7 +21,7 @@ Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
     		    --, Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
     		    , Run Date "%Y-%m-%d %H:%M:%S %a" "date" 10
 				, Run Com "/home/jbalint/sw/dotfiles/manual/kodi_shortstat.sh" [] "kodi" 50
-				, Run Com "/home/jbalint/sw/java-sw/nightscout-virtual-graph/latest_bg.sh" [] "latestBG" 50
+				, Run Com "/home/jbalint/sw/java-sw/nightscout-virtual-graph/latest_bg.sh" [] "latestBG" 3000
                                 , Run DynNetwork [] 30
                     ]
        , sepChar = "%"
