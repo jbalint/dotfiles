@@ -13,7 +13,7 @@ fi
 
 xrdb -merge $HOME/.Xresources
 
-redshift &
+redshift -v -b 0.9:0.8 -t 6000K:3000K -l "48.08:-89.38" &
 
 xset s off
 xset -dpms
@@ -29,6 +29,8 @@ xinput --set-prop --type=float "SynPS/2 Synaptics TouchPad" "Synaptics Coasting 
 syndaemon -i 1 -t -k &
 
 synclient TapButton1=1 TapButton2=3 TapButton3=2
+
+xrandr --output DP-2 --auto --left-of DP-1
 
 sxhkd &
 # Conky places a significant load on Xorg, not sure why
