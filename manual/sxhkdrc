@@ -88,8 +88,16 @@ super + Escape
 super + n
     percy-client
 
-XF86Messenger
+AudioRaiseVolume
+	bspc desktop -l next
+
+# sxhkd removes the XF86 prefix
+# c.f. /usr/include/X11/XF86keysym.h
+Messenger
 	xdotool windowactivate --sync `xdotool search chromium | head -1` && xdotool key --clearmodifiers ctrl+1
+
+#super + x
+#	bspc desktop -f ^4
 
 XF86WWW
 	bspc desktop -f ^4
