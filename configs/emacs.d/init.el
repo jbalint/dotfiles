@@ -71,8 +71,6 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["black" "red" "green" "yellow" "blue" "magenta" "cyan" "yellow"])
- ;;'(background-color nil)
- ;;'(background-mode dark)
  '(browse-url-browser-function (quote browse-url-xdg-open))
  '(cursor-color nil)
  '(custom-safe-themes
@@ -100,10 +98,8 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m org-wl)))
  '(package-selected-packages
    (quote
-    (company-racer racer graphql-mode racket-mode haskell-mode cmake-mode calfw ggtags wanderlust w3m sparql-mode solarized-theme rust-mode rudel paredit pallet markdown-mode magit lua-mode lispy ledger-mode idris-mode helm-projectile helm-ag groovy-mode flymake-easy flycheck-haskell find-file-in-project ess ensime emacs-eclim edts e2wm color-theme-solarized cider bbdb)))
- '(safe-local-variable-values
-   (quote
-    ((org-log-done . t))))
+    (cargo yaml-mode typescript-mode company-racer racer graphql-mode racket-mode haskell-mode cmake-mode calfw ggtags wanderlust w3m sparql-mode solarized-theme rust-mode rudel paredit pallet markdown-mode magit lua-mode lispy ledger-mode idris-mode helm-projectile helm-ag groovy-mode flymake-easy flycheck-haskell find-file-in-project ess ensime emacs-eclim edts e2wm color-theme-solarized cider bbdb)))
+ '(safe-local-variable-values (quote ((org-log-done . t))))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(user-full-name "Jess Balint")
@@ -474,6 +470,10 @@ A prefix argument can be used to scroll backwards or more than one."
 ;;;;;;;;;;;;
 (autoload 'ledger-mode "ledger-mode" "A major mode for Ledger" t)
 (add-to-list 'auto-mode-alist '("\\.ledger$" . ledger-mode))
+;; TODO : ledger mode doesn't define hooks?
+(add-hook 'ledger-mode-hook
+          (lambda () (interactive)
+	    (electric-indent-local-mode nil)))
 
 ;;;;;;;;;;;;;
 ;; notmuch ;;

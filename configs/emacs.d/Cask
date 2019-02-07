@@ -7,6 +7,7 @@
 (depends-on "avy")
 (depends-on "bbdb")
 (depends-on "calfw")
+(depends-on "cargo")
 (depends-on "cask")
 (depends-on "cider")
 (depends-on "cmake-mode")
@@ -57,3 +58,4 @@
 (depends-on "sparql-mode")
 (depends-on "wanderlust")
 (depends-on "with-editor")
+(depends-on "yaml-mode")
