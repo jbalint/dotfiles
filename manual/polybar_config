@@ -1,0 +1,168 @@
+; c.f. /usr/share/doc/polybar/config
+; https://github.com/polybar/polybar/wiki/Formatting
+; ~/.config/polybar% ln -s ~/sw/dotfiles/manual/polybar_config config
+
+[colors]
+;https://htmlcolors.com/hex/bd2c40
+;background = ${xrdb:color0:#222}
+background = #222
+background-alt = #444
+;foreground = ${xrdb:color7:#222}
+foreground = #dfdfdf
+foreground-alt = #555
+primary = #ffb52a
+secondary = #e60053
+alert = #bd2c40
+
+[bar/mybar]
+monitor = DP-1
+;module-margin = 2
+module-margin-left = 1
+module-margin-right = 2
+modules-left = cpu memory load filesystem kodi network nightscout
+;modules-center = xwindow bspwm
+modules-right = date weather kernel
+width = 100%
+padding-left = 2
+padding-right = 2
+height = 20
+
+;border-color = #00000000
+;border-left-size = 40
+;border-bottom-size = 20
+
+font-0 = "Tamsyn:pixelsize=9;0"
+;font-1 = "Roboto:size=11:weight=bold;2"
+;font-2 = "Noto Sans:size=11;1"
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+fixed-center = true
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; MODULES are in alphabetical order ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+[module/bspwm]
+type = internal/bspwm
+label-focused = %index%
+label-focused-background = ${colors.background-alt}
+label-focused-underline= ${colors.primary}
+label-focused-padding = 2
+
+label-occupied = %index%
+label-occupied-padding = 2
+
+label-urgent = %index%!
+label-urgent-background = ${colors.alert}
+label-urgent-padding = 2
+
+label-empty = %index%
+label-empty-foreground = ${colors.foreground-alt}
+label-empty-padding = 2
+
+; Separator in between workspaces
+; label-separator = |
+
+pin-workspaces = true
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = "CPU: "
+format-prefix-foreground = ${colors.foreground-alt}
+label = %percentage:2%%
+
+[module/date]
+type = internal/date
+interval = 1
+date = " %Y-%m-%d"
+time = %H:%M:%S
+label = "%date% %time%"
+label-foreground = #dfdfdf
+
+[module/filesystem]
+type = internal/fs
+mount-0 = /home
+format-mounted-prefix = "FS: "
+format-mounted-prefix-foreground = ${colors.foreground-alt}
+label-mounted = %percentage_used%%
+
+[module/kernel]
+type = custom/script
+exec = uname -r
+interval = 1024
+label-foreground = #ffc143
+
+[module/kodi]
+type = custom/script
+exec = /home/jbalint/sw/dotfiles/manual/kodi_shortstat.sh
+interval = 5
+format-prefix = "KODI: "
+format-prefix-foreground = ${colors.foreground-alt}
+
+[module/load]
+type = custom/script
+exec = awk '{print $1" "$2" "$3}' < /proc/loadavg
+interval = 2
+format-prefix = "LOAD: "
+; TODO : no way to set this globally?
+format-prefix-foreground = ${colors.foreground-alt}
+click-left = st htop
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = "MEM: "
+format-prefix-foreground = ${colors.foreground-alt}
+
+;; TODO : conditional coloring:
+; https://github.com/polybar/polybar/issues/956
+; https://github.com/polybar/polybar/issues/570
+
+[module/network]
+type = internal/network
+interface = eno1
+format-connected-prefix = "NET: "
+format-connected-prefix-foreground = ${colors.foreground-alt}
+format-connected = <label-connected>
+format-disconnected = <label-disconnected>
+format-packetloss = <animation-packetloss> <label-connected>
+label-connected = %ifname% [D: %downspeed:7%] [U: %upspeed:6%]
+label-connected-foreground = #eefafafa
+label-disconnected = not connected
+label-disconnected-foreground = #66ffffff
+animation-packetloss-0 = ⚠
+animation-packetloss-0-foreground = #ffa64c
+animation-packetloss-1 = 📶
+animation-packetloss-1-foreground = #000000
+animation-packetloss-framerate = 500
+
+[module/nightscout]
+; TODO : conditional colors would be great here too
+;        I could put them into the script I guess
+type = custom/script
+exec = /home/jbalint/sw/java-sw/nightscout-virtual-graph/latest_bg.sh
+interval = 120
+format-prefix = "BG: "
+format-prefix-foreground = ${colors.foreground-alt}
+click-left = chromium https://jbalint-bg.herokuapp.com
+
+[module/weather]
+type = custom/script
+exec = curl -s -o - https://tgftp.nws.noaa.gov/data/observations/metar/decoded/KMSN.TXT | tr '\n' ' ' | perl -lpe's/.*Temperature: (.+?) .*/$1°/'
+interval = 600
+format-prefix = "MSN: "
+format-prefix-foreground = ${colors.foreground-alt}
+click-left = chromium https://www.accuweather.com/en/us/madison-wi/53715/weather-radar/331530
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:30:...%
+
+[global/wm]
+margin-top = 0
+margin-bottom = 0
+margin-left = 30
+margin-right = 50
