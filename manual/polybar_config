@@ -14,12 +14,10 @@ primary = #ffb52a
 secondary = #e60053
 alert = #bd2c40
 
-[bar/mybar]
-monitor = DP-1
+[section/base]
 ;module-margin = 2
 module-margin-left = 1
 module-margin-right = 2
-modules-left = cpu memory load filesystem kodi network nightscout
 ;modules-center = xwindow bspwm
 modules-right = date weather kernel
 width = 100%
@@ -42,6 +40,16 @@ background = ${colors.background}
 foreground = ${colors.foreground}
 
 fixed-center = true
+
+[bar/camus]
+inherit = section/base
+monitor = eDP1
+modules-left = cpu memory load network_wlp3s0 kodi nightscout battery
+
+[bar/tagore]
+inherit = section/base
+monitor = DP-1
+modules-left = cpu memory load filesystem_tagore_home network kodi network nightscout
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MODULES are in alphabetical order ;;
@@ -85,7 +93,7 @@ time = %H:%M:%S
 label = "%date% %time%"
 label-foreground = #dfdfdf
 
-[module/filesystem]
+[module/filesystem_tagore_home]
 type = internal/fs
 mount-0 = /home
 format-mounted-prefix = "FS: "
@@ -130,7 +138,7 @@ format-underline = #fe0000
 ; https://github.com/polybar/polybar/issues/956
 ; https://github.com/polybar/polybar/issues/570
 
-[module/network]
+[section/network_base]
 type = internal/network
 interface = eno1
 format-connected-prefix = "NET: "
@@ -147,6 +155,14 @@ animation-packetloss-0-foreground = #ffa64c
 animation-packetloss-1 = 📶
 animation-packetloss-1-foreground = #000000
 animation-packetloss-framerate = 500
+
+[module/network_eno1]
+inherit = section/network_base
+interface = eno1
+
+[module/network_wlp3s0]
+inherit = section/network_base
+interface = wlp3s0
 
 [module/nightscout]
 ; TODO : conditional colors would be great here too
@@ -175,3 +191,82 @@ margin-top = 0
 margin-bottom = 0
 margin-left = 30
 margin-right = 50
+
+
+[module/battery]
+type = internal/battery
+full-at = 99
+battery = BAT0
+adapter = AC
+poll-interval = 60
+; see "man date" for details on how to format the time string
+; NOTE: if you want to use syntax tags here you need to use %%{...}
+; Default: %H:%M:%S
+time-format = %H:%M
+
+; Available tags:
+;   <label-charging> (default)
+;   <bar-capacity>
+;   <ramp-capacity>
+;   <animation-charging>
+format-charging = <animation-charging> <label-charging>
+
+; Available tags:
+;   <label-discharging> (default)
+;   <bar-capacity>
+;   <ramp-capacity>
+;   <animation-discharging>
+format-discharging = <ramp-capacity> <label-discharging>
+
+; Available tags:
+;   <label-full> (default)
+;   <bar-capacity>
+;   <ramp-capacity>
+;format-full = <ramp-capacity> <label-full>
+
+; Available tokens:
+;   %percentage% (default) - is set to 100 if full-at is reached
+;   %percentage_raw%
+;   %time%
+;   %consumption% (shows current charge rate in watts)
+label-charging = Charging %percentage%%
+
+; Available tokens:
+;   %percentage% (default) - is set to 100 if full-at is reached
+;   %percentage_raw%
+;   %time%
+;   %consumption% (shows current discharge rate in watts)
+label-discharging = Discharging %percentage%%
+
+; Available tokens:
+;   %percentage% (default) - is set to 100 if full-at is reached
+;   %percentage_raw%
+label-full = Fully charged
+
+; Only applies if <ramp-capacity> is used
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+
+; Only applies if <bar-capacity> is used
+bar-capacity-width = 10
+
+; Only applies if <animation-charging> is used
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
+; Framerate in milliseconds
+animation-charging-framerate = 750
+
+; Only applies if <animation-discharging> is used
+animation-discharging-0 = 
+animation-discharging-1 = 
+animation-discharging-2 = 
+animation-discharging-3 = 
+animation-discharging-4 = 
+; Framerate in milliseconds
+animation-discharging-framerate = 500
