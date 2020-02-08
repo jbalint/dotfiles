@@ -51,6 +51,7 @@
 (add-to-list 'load-path "~/.emacs.d/lisp")
 (add-to-list 'load-path "~/.emacs.d/lisp/ecb")
 (add-to-list 'load-path "/usr/share/emacs/site-lisp")
+(add-to-list 'load-path (concat (getenv "BS_HOME") "/percy"))
 (require 'ecb nil t)
 
 ;; (unless (require 'el-get nil 'noerror)
