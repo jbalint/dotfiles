@@ -479,18 +479,6 @@ A prefix argument can be used to scroll backwards or more than one."
 (autoload 'tuareg-mode "tuareg" "Major mode for editing Caml code" t)
 ;(autoload 'ocamldebug "ocamldebug" "Run the Caml debugger" t)
 
-;;;;;;;;;;;;;;;;;;;
-;; Flycheck Java ;;
-;;;;;;;;;;;;;;;;;;;
-;; using my branch because the other one doesn't work with project settings
-;; requires package "dash" and "s"
-(add-to-list 'load-path "/home/jbalint/sw/emacs-sw/flycheck-java")
-(setq flycheck-java-ecj-jar-path "/home/jbalint/sw/java-sw/ecj-4.4.2.jar")
-;; have to do this after init....
-(add-hook 'after-init-hook (lambda ()
-							 (require 'flycheck)
-							 (require 'flycheck-java)))
-
 ;;;;;;;;;;;
 ;; Idris ;;
 ;;;;;;;;;;;
