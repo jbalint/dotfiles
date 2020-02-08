@@ -35,7 +35,7 @@ xrandr --output DP-2 --auto --left-of DP-1
 sxhkd &
 # Conky places a significant load on Xorg, not sure why
 #conky &
-polybar mybar &
+polybar `hostname` &
 #st &
 #exec /home/jbalint/sw/bspwm/bspwm 2>&1 >> /tmp/bsp.log
 #exec /usr/bin/bspwm 2>&1 >> /tmp/bsp.log
