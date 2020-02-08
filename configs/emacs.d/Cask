@@ -37,6 +37,7 @@
 (depends-on "lispy")
 (depends-on "lua-mode")
 (depends-on "markdown-mode")
+(depends-on "monokai-theme")
 (depends-on "org-make-toc")
 (depends-on "package-build")
 (depends-on "pallet")

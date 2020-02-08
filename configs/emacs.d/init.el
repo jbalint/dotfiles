@@ -5,7 +5,7 @@
 (require 'pallet)
 (pallet-mode t)
 
-;;;(package-initialize)
+(load-theme 'monokai t)
 
 (require 'font-lock)
 (require 'cc-mode)
@@ -76,7 +76,7 @@
  '(cursor-color nil)
  '(custom-safe-themes
    (quote
-    ("8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" default)))
+    ("a2cde79e4cc8dc9a03e7d9a42fabf8928720d420034b66aecc5b665bbf05d4e9" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" default)))
  '(default-input-method (quote kannada-jessscript))
  '(ecb-options-version "2.40")
  '(foreground-color nil)
@@ -88,7 +88,7 @@
     (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m org-wl)))
  '(package-selected-packages
    (quote
-    (cargo yaml-mode typescript-mode company-racer racer graphql-mode racket-mode haskell-mode cmake-mode calfw ggtags wanderlust w3m sparql-mode solarized-theme rust-mode rudel paredit pallet markdown-mode magit lua-mode lispy ledger-mode idris-mode helm-projectile helm-ag groovy-mode flymake-easy flycheck-haskell find-file-in-project ess ensime emacs-eclim edts e2wm color-theme-solarized cider bbdb)))
+    (monokai-theme cargo yaml-mode typescript-mode company-racer racer graphql-mode racket-mode haskell-mode cmake-mode calfw ggtags wanderlust w3m sparql-mode rust-mode rudel paredit pallet markdown-mode magit lua-mode lispy ledger-mode idris-mode helm-projectile helm-ag groovy-mode flymake-easy flycheck-haskell find-file-in-project ess ensime emacs-eclim edts e2wm cider bbdb)))
  '(safe-local-variable-values (quote ((org-log-done . t))))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
@@ -423,15 +423,6 @@ A prefix argument can be used to scroll backwards or more than one."
 ;; ESS (for R) ;;
 ;;;;;;;;;;;;;;;;;
 ;;(require 'ess-site)
-
-;;;;;;;;;;;;;;;;;;;;;
-;; Solarized theme ;;
-;;;;;;;;;;;;;;;;;;;;;
-;; https://github.com/sellout/emacs-color-theme-solarized
-;; https://github.com/sellout/emacs-color-theme-solarized/issues/142
-;;(setq custom-theme-load-path '("/home/jbalint/sw/emacs-sw/emacs-color-theme-solarized"))
-;;(set-terminal-parameter nil 'background-mode 'dark)
-;;(load-theme 'solarized t)
 
 ;;;;;;;;;;;;;
 ;; Haskell ;;
