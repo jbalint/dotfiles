@@ -1,3 +1,4 @@
+# -*- mode: sh -*-
 autoload -U colors && colors
 export PROMPT="%{$fg[green]%}%~%{$fg_bold[blue]%}%% %{$reset_color%}"
 unsetopt sharehistory
@@ -37,6 +38,8 @@ export EDITOR=vim
 export LUA_PATH="/home/jbalint/sw/yellow-tree/?.lua;/home/jbalint/sw/lunit/lua/?.lua;/home/jbalint/share/lua/5.2/?.lua;/home/jbalint/share/lua/5.2/?/init.lua;/home/jbalint/lib/share/?.lua;;"
 export LUA_CPATH="/home/jbalint/lib/lua/5.2/?.so;/home/jbalint/lib/lib/?.so;/home/jbalint/sw/banshee-sympatico/prototype-code/?.so"
 export RUST_BACKTRACE=1
+# Needed for IntelliJ to (consistenly) work properly with bspwm
+export _JAVA_AWT_WM_NONREPARENTING=1
 cat ~/.artifactory_credentials| while read i ; do eval "export $i"; done
 
 if [ "$JAVA_HOME" = "" ] ; then
