@@ -6,8 +6,8 @@
 
 # I've hardcoded player id = 1 here
 # and not sure why but "id" is necessary, didn't care enough to check why
-FILE=`curl -g -o - 'http://warbler:7654/jsonrpc?request={"jsonrpc":"2.0","method":"Player.GetItem","params":{"properties":["streamdetails"],"playerid":1},"id":"dunno_what_this_is"}' 2> /dev/null | jq '.result.item.label'`
-PROPS=`curl -g -o - 'http://warbler:7654/jsonrpc?request={"jsonrpc":"2.0","method":"Player.GetProperties","params":{"properties":["percentage","speed","time","totaltime","position"],"playerid":1},"id":"x"}' 2> /dev/null`
+FILE=`curl -g -o - 'http://jessandmorgan.com:7654/jsonrpc?request={"jsonrpc":"2.0","method":"Player.GetItem","params":{"properties":["streamdetails"],"playerid":1},"id":"dunno_what_this_is"}' 2> /dev/null | jq '.result.item.label'`
+PROPS=`curl -g -o - 'http://jessandmorgan.com:7654/jsonrpc?request={"jsonrpc":"2.0","method":"Player.GetProperties","params":{"properties":["percentage","speed","time","totaltime","position"],"playerid":1},"id":"x"}' 2> /dev/null`
 PERCENT=`echo $PROPS | jq '.result.percentage'`
 
 CUR_H=`echo $PROPS | jq '.result.time.hours'`
