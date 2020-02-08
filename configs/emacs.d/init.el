@@ -82,17 +82,6 @@
  '(foreground-color nil)
  '(menu-bar-mode nil)
  '(message-citation-line-function (quote message-insert-formatted-citation-line))
- '(notmuch-saved-searches
-   (quote
-    ((:name "followup" :query "folder:followup")
-     (:name "inboxtwo" :query "tab:i2")
-     (:name "inbox" :query "tag:inbox")
-     (:name "unread" :query "tag:unread" :key "u")
-     (:name "flagged" :query "tag:flagged" :key "f")
-     (:name "sent" :query "tag:sent" :key "t")
-     (:name "drafts" :query "tag:draft" :key "d")
-     (:name "all mail" :query "*" :key "a")
-     (:name "folder:INBOX" :query "folder:INBOX"))))
  '(org-capture-templates (quote (("" "hi" entry (file "~/org/notes.org") ""))))
  '(org-modules
    (quote
@@ -429,30 +418,6 @@ A prefix argument can be used to scroll backwards or more than one."
 (add-hook 'ledger-mode-hook
           (lambda () (interactive)
 	    (electric-indent-local-mode nil)))
-
-;;;;;;;;;;;;;
-;; notmuch ;;
-;;;;;;;;;;;;;
-(autoload 'notmuch "notmuch" "notmuch mail" t)
-(require 'notmuch)
-(setq notmuch-show-relative-dates nil)
-(define-key notmuch-show-mode-map "d"
-  (lambda ()
-	(interactive)
-	(notmuch-show-tag '("+deleted"))))
-(define-key notmuch-search-mode-map "d"
-  (lambda ()
-	(interactive)
-	(notmuch-search-tag '("+deleted"))))
-(add-hook 'notmuch-search-hook 'add-oracle-elem-open-binding)
-(add-hook 'notmuch-show-hook
-		  (lambda () (interactive)
-			(add-oracle-elem-open-binding)
-			(flyspell-mode t)))
-(add-hook 'notmuch-message-mode-hook
-		  (lambda () (interactive)
-			(add-oracle-elem-open-binding)
-			(flyspell-mode t)))
 
 ;;;;;;;;;;;;;;;;;
 ;; ESS (for R) ;;
