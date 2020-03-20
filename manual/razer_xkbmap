@@ -1,0 +1,51 @@
+# xkbcomp -i 14 -synch /home/jbalint/sw/dotfiles/manual/razer_xkbmap :0
+xkb_keymap {
+	xkb_keycodes  {
+          minimum = 8;
+          maximum = 255;
+  
+          <AE02> = 11;
+          <AE01> = 10;
+          <AE03> = 12;
+          <AE04> = 13;
+          <AE05> = 14;
+          <AE06> = 15;
+          <AE07> = 16;
+          <AE08> = 17;
+          <AE09> = 18;
+          <AE10> = 19;
+          <AE11> = 20;
+          <AE12> = 21;
+	};
+	xkb_types     { include "complete"	};
+	xkb_compat    { include "complete"	};
+	xkb_symbols   {
+	key <AE01> {        [         KP_1          ]       };
+	key <AE02> {        [         KP_2          ]       };
+	key <AE03> {        [         XF86WWW,    exclam          ]       };
+	key <AE04> {        [         4,    exclam          ]       };
+	key <AE05> {        [         5,    exclam          ]       };
+	key <AE06> {        [         6,    exclam          ]       };
+	key <AE07> {        [         7,    exclam          ]       };
+	key <AE08> {        [         8,    exclam          ]       };
+	key <AE09> {        [         9,    exclam          ]       };
+	key <AE10> {        [         0,    exclam          ]       };
+	key <AE11> {        [         minus,    exclam          ]       };
+	key <AE12> {        [         equal,    exclam          ]       };
+		# Tibetan from "/usr/share/X11/xkb/symbols/cn"
+      #key <AE01> { [ 0x1000f21, 0x1000f2a, 0x1000f04, 0x1000f76 ] }; # ༡ ༪ ༄ ྲྀ
+      #key <AE02> { [ 0x1000f22, 0x1000f2b, 0x1000f05, 0x1000f77 ] }; # ༢ ༫ ༅ ཷ
+      #key <AE03> { [ 0x1000f23, 0x1000f2c, 0x1000f7e, 0x1000f78 ] }; # ༣ ༬ ཾ ླྀ
+      #key <AE04> { [ 0x1000f24, 0x1000f2d, 0x1000f83, 0x1000f79 ] }; # ༤ ༭ ྃ ཹ
+      #key <AE05> { [ 0x1000f25, 0x1000f2e, 0x1000f37, 0x1000f81 ] }; # ༥ ༮ ༷ ཱྀ
+      #key <AE06> { [ 0x1000f26, 0x1000f2f, 0x1000f35, 0x1000f09 ] }; # ༦ ༯ ༵ ༉
+      #key <AE07> { [ 0x1000f27, 0x1000f30, 0x1000f7f, 0x1000f0a ] }; # ༧ ༰ ཿ ༊
+      #key <AE08> { [ 0x1000f28, 0x1000f31, 0x1000f14, 0x1000f0f ] }; # ༨ ༱ ༔ ༏
+      #key <AE09> { [ 0x1000f29, 0x1000f32, 0x1000f11, 0x1000f10 ] }; # ༩ ༲ ༑ ༐
+      #key <AE10> { [ 0x1000f20, 0x1000f33, 0x1000f08, 0x1000f12 ] }; # ༠ ༳ ༈ ༒
+      #key <AE11> { [ 0x1000f67, 0x1000f3c, 0x1000fb7, 0x1000f0c ] }; # ཧ ༼ ྷ ༌
+      #key <AE12> { [ 0x1000f5d, 0x1000f3d, 0x1000fba, 0x1000f13 ] }; # ཝ ༽ ྺ ༓
+
+	};
+	xkb_geometry  { include "pc(pc105)"	};
+};
