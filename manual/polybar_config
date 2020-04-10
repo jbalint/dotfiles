@@ -34,6 +34,7 @@ line-size = 1
 ;border-bottom-size = 20
 
 font-0 = "Tamsyn:pixelsize=9;0"
+font-1 = "Lohit Hindi"
 ;font-1 = "Roboto:size=11:weight=bold;2"
 ;font-2 = "Noto Sans:size=11;1"
 
@@ -49,9 +50,9 @@ modules-left = cpu memory load network_wlp3s0 kodi nightscout battery
 
 [bar/jrussell]
 inherit = section/base
-; TODO : need this also on eDP-1
-monitor = HDMI-1
-modules-left = cpu memory load network_enp109s0f1 kodi nightscout battery
+monitor = DP-1
+modules-left = cpu memory load network_enp109s0f1 kodi nightscout battery bspwm russian-alphabet
+locale = ru_RU.UTF-8
 
 [bar/tagore]
 inherit = section/base
@@ -62,43 +63,62 @@ modules-left = cpu memory load filesystem_tagore_home network kodi network night
 ;; MODULES are in alphabetical order ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+[module/battery]
+type = internal/battery
+full-at = 99
+battery = BAT0
+adapter = AC
+poll-interval = 60
+time-format = %H:%M
+format-charging = <label-charging>
+format-discharging = <label-discharging>
+format-full = <label-full>
+label-charging = Charging %percentage%%
+label-discharging = Discharging %percentage%%
+;label-full = Fully charged
+label-full = полностью заряжена
+
 [module/bspwm]
 type = internal/bspwm
-label-focused = %index%
+label-focused = %name%
 label-focused-background = ${colors.background-alt}
 label-focused-underline= ${colors.primary}
-label-focused-padding = 2
+label-focused-padding = 1
 
-label-occupied = %index%
-label-occupied-padding = 2
+label-occupied = %name%
+label-occupied-padding = 1
 
-label-urgent = %index%!
+label-urgent = %name%!
 label-urgent-background = ${colors.alert}
-label-urgent-padding = 2
+label-urgent-padding = 1
 
-label-empty = %index%
+label-empty = %name%
 label-empty-foreground = ${colors.foreground-alt}
-label-empty-padding = 2
+label-empty-padding = 1
 
 ; Separator in between workspaces
 ; label-separator = |
 
-pin-workspaces = true
+pin-workspaces = false
 
 [module/cpu]
 type = internal/cpu
 interval = 2
-format-prefix = "CPU: "
-format-prefix-foreground = ${colors.foreground-alt}
+format-prefix = "Процессор: "
+;format-prefix = "CPU: "
+;format-prefix-foreground = ${colors.foreground-alt}
 label = %percentage:2%%
 
 [module/date]
 type = internal/date
 interval = 1
-date = " %a %Y-%m-%d"
+;date = " %a %Y-%m-%d"
+; russian_days is a local script to open https://www.babbel.com/en/magazine/how-to-write-the-date-in-russian
+date = " %{A1:russian_days:}%A/%a%{A} %Y-%m-%d"
 time = %H:%M:%S
 label = "%date% %time%"
 label-foreground = #dfdfdf
+click-left = 
 
 [module/filesystem_tagore_home]
 type = internal/fs
@@ -129,16 +149,19 @@ format-prefix-foreground = ${colors.foreground-alt}
 type = custom/script
 exec = awk '{print $1" "$2" "$3}' < /proc/loadavg
 interval = 2
-format-prefix = "LOAD: "
+format-prefix = "нагрузка: "
+;format-prefix = "भार: "
+;format-prefix = "LOAD: "
 ; TODO : no way to set this globally?
-format-prefix-foreground = ${colors.foreground-alt}
+;format-prefix-foreground = ${colors.foreground-alt}
 click-left = st htop
 
 [module/memory]
 type = internal/memory
 interval = 2
-format-prefix = "MEM: "
-format-prefix-foreground = ${colors.foreground-alt}
+format-prefix = "Память: "
+;format-prefix = "MEM: "
+;format-prefix-foreground = ${colors.foreground-alt}
 format-underline = #fe0000
 
 ;; TODO : conditional coloring:
@@ -148,8 +171,9 @@ format-underline = #fe0000
 [section/network_base]
 type = internal/network
 interface = eno1
-format-connected-prefix = "NET: "
-format-connected-prefix-foreground = ${colors.foreground-alt}
+format-connected-prefix = "नेटवर्क:"
+;format-connected-prefix = "NET: "
+;format-connected-prefix-foreground = ${colors.foreground-alt}
 format-connected = <label-connected>
 format-disconnected = <label-disconnected>
 format-packetloss = <animation-packetloss> <label-connected>
@@ -188,9 +212,19 @@ interface = wlp3s0
 type = custom/script
 exec = /home/jbalint/sw/java-sw/nightscout-virtual-graph/latest_bg.sh
 interval = 120
-format-prefix = "BG: "
-format-prefix-foreground = ${colors.foreground-alt}
+format-prefix = "уровень сахара: "
+;format-prefix = "BG: "
+;format-prefix-foreground = ${colors.foreground-alt}
 click-left = chromium https://jbalint-bg.herokuapp.com
+
+[module/russian-alphabet]
+type = custom/text
+; in keyboard order
+content = "Ёё-ЙйЦцУуКкЕеНнГгШшЩщЗзХхЪъ-ФфЫыВвАаПпРрОоЛлДдЖжЭэ-ЯяЧчСсМмИиТтЬьБбЮю"
+; in alphabetical order
+;content = "Аа Бб Вв Гг Дд Ее Ёё Жж Зз Ии Йй Кк Лл Мм Нн Оо Пп Рр Сс Тт Уу Фф Хх Цц Чч Шш Щщ Ъъ Ыы Ьь Ээ Юю Яя"
+click-left = xdg-open http://www.russianlessons.net/lessons/lesson1_alphabet.php
+click-right = xdg-open https://localhost/mediawiki/index.php/Russian
 
 [module/weather]
 type = custom/script
@@ -199,6 +233,10 @@ interval = 600
 format-prefix = "MSN: "
 format-prefix-foreground = ${colors.foreground-alt}
 click-left = chromium https://www.accuweather.com/en/us/madison-wi/53715/weather-radar/331530
+
+[module/xkeyboard]
+type = internal/xkeyboard
+; tried this but it's showing the opposite layout (when only two are present)
 
 [module/xwindow]
 type = internal/xwindow
@@ -209,37 +247,3 @@ margin-top = 0
 margin-bottom = 0
 margin-left = 30
 margin-right = 50
-
-
-[module/battery]
-type = internal/battery
-full-at = 99
-battery = BAT0
-adapter = AC
-poll-interval = 60
-; see "man date" for details on how to format the time string
-; NOTE: if you want to use syntax tags here you need to use %%{...}
-; Default: %H:%M:%S
-time-format = %H:%M
-format-charging = <label-charging>
-format-discharging = <label-discharging>
-format-full = <label-full>
-
-; Available tokens:
-;   %percentage% (default) - is set to 100 if full-at is reached
-;   %percentage_raw%
-;   %time%
-;   %consumption% (shows current charge rate in watts)
-label-charging = Charging %percentage%%
-
-; Available tokens:
-;   %percentage% (default) - is set to 100 if full-at is reached
-;   %percentage_raw%
-;   %time%
-;   %consumption% (shows current discharge rate in watts)
-label-discharging = Discharging %percentage%%
-
-; Available tokens:
-;   %percentage% (default) - is set to 100 if full-at is reached
-;   %percentage_raw%
-label-full = Fully charged
