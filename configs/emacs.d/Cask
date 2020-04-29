@@ -5,6 +5,7 @@
 
 (depends-on "ace-window")
 (depends-on "avy")
+(depends-on "bazel-mode")
 (depends-on "bbdb")
 (depends-on "calfw")
 (depends-on "cargo")
