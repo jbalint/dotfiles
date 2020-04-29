@@ -29,9 +29,6 @@ super + {s,S}
 super + {grave,Tab}
 	bspc {node,desktop} -f last
 
-super + apostrophe
-	bspc node -s last
-
 super + {o,i}
 	bspc control --record-history off; \
 	bspc node {older,newer} -f; \
@@ -40,17 +37,11 @@ super + {o,i}
 super + y
 	bspc query -N -n focused.automatic && bspc node -n last.!automatic || bspc node last.leaf -n focused
 
-super + m
-	bspc node -s biggest
-
 super + {_,shift + }{h,j,k,l}
 	bspc node -{f,s} {west,south,north,east}
 
 super + {_,shift + }c
 	bspc node -f {next,prev}
-
-super + {comma,period}
-	bspc desktop -C {backward,forward}
 
 super + bracket{left,right}
 	bspc desktop -f {prev,next}
@@ -70,15 +61,16 @@ super + alt + shift + {h,j,k,l}
 super + ctrl + {1-9}
 	bspc node -r 0.{1-9}
 
-super + {_,shift + }{1-9,0}
-	bspc {desktop -f,node -d} ^{1-9,10}
+super + {_,shift + }{1-9,0,q}
+	bspc {desktop -f,node -d} {1-9,0,q}
 
 #
 # wm independent hotkeys
 #
 
 super + Return
-	st
+	urxvt
+#st
 
 # make sxhkd reload its configuration files:
 super + Escape
@@ -95,9 +87,6 @@ AudioRaiseVolume
 # c.f. /usr/include/X11/XF86keysym.h
 Messenger
 	xdotool windowactivate --sync `xdotool search chromium | head -1` && xdotool key --clearmodifiers ctrl+1
-
-#super + x
-#	bspc desktop -f ^4
 
 XF86WWW
 	bspc desktop -f ^4
