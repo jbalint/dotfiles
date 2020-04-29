@@ -51,7 +51,7 @@ modules-left = cpu memory load network_wlp3s0 kodi nightscout battery
 [bar/jrussell]
 inherit = section/base
 monitor = DP-1
-modules-left = cpu memory load network_enp109s0f1 kodi nightscout battery bspwm russian-alphabet
+modules-left = cpu memory load network_enp109s0f1 kodi nightscout battery bspwm git-monitor russian-alphabet
 locale = ru_RU.UTF-8
 
 [bar/tagore]
@@ -107,6 +107,7 @@ interval = 2
 format-prefix = "Процессор: "
 ;format-prefix = "CPU: "
 ;format-prefix-foreground = ${colors.foreground-alt}
+; TODO : when this is set properly, the rest of the bar should not be shifted over when CPU goes from single to double digits
 label = %percentage:2%%
 
 [module/date]
@@ -131,6 +132,13 @@ label-mounted = %percentage_used%%
 ;click-left = st bash -c "du -Pxh * | sort -h| less +G"
 interval = 300
 ;format-mounted-underline = #fe0000
+
+[module/git-monitor]
+type = custom/script
+exec = $BS_HOME/git_repo_monitor/git_modified_repo_count.sh
+click-left = urxvt -hold -e $BS_HOME/git_repo_monitor/./git_monitor_report.sh &
+interval = 600
+format-underline = #fe0000
 
 [module/kernel]
 type = custom/script
@@ -177,7 +185,7 @@ format-connected-prefix = "नेटवर्क:"
 format-connected = <label-connected>
 format-disconnected = <label-disconnected>
 format-packetloss = <animation-packetloss> <label-connected>
-label-connected = %ifname% [D: %downspeed:7%] [U: %upspeed:6%]
+label-connected = %ifname% [D: %downspeed:9%] [U: %upspeed:9%]
 label-connected-foreground = #eefafafa
 label-disconnected = not connected
 label-disconnected-foreground = #66ffffff
