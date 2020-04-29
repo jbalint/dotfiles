@@ -47,7 +47,7 @@ if [ "$JAVA_HOME" = "" ] ; then
 fi
 
 if [ "$HOSTNAME" = "tagore" ] ; then
-	export PATH=${PATH}:/opt/cuda/bin:/home/jbalint/sw/java-sw/stardog-bin/bin:/home/jbalint/.gem/ruby/2.3.0/bin
+	export PATH=${PATH}:/opt/cuda/bin
 	export PATH=${PATH}:$HOME/sw/postgres-9.6.1-jess/bin
 	export PATH=${PATH}:$HOME/.cargo/bin
 	. /home/jbalint/sw/torch/install/bin/torch-activate
@@ -70,8 +70,7 @@ fi
 for X ( \
 	~/bin \
 	~/.local/bin \
-	~/.cabal/bin \
-	~/sw/emacs-sw/cask/bin \
+        ~/sw/java-sw/stardog-bin \
 	$BS_HOME/bin \
 	$JAVA_HOME/bin \
 	~/.cask/bin ) ; do
@@ -80,14 +79,10 @@ done
 
 alias vi=vim
 alias rein=". ~/.zshrc"
-alias java5="export JAVA_HOME=$JAVA5_HOME ; rein"
-alias java6="export JAVA_HOME=$JAVA6_HOME ; rein"
-alias java7="export JAVA_HOME=$JAVA7_HOME ; rein"
 alias java8="export JAVA_HOME=$JAVA8_HOME ; rein"
 alias java9="export JAVA_HOME=$JAVA9_HOME ; rein"
 alias edrc="vi ~/.zshrc"
 alias reset_inotify="echo 9999 | sudo tee /proc/sys/fs/inotify/max_user_watches"
-alias dnsme="echo '#@VPNC_GENERATED@\nnameserver 127.0.0.1' | sudo tee /etc/resolv.conf"
 alias dnsreset="echo 'nameserver 192.168.1.1' | sudo tee /etc/resolv.conf"
 alias screenshot="sleep 3s; import -window root screenshot.png"
 alias facebook="chromium facebook.com"
@@ -100,11 +95,11 @@ alias bl100="xbacklight = 100"
 alias feh="feh -Z -."
 # http://stackoverflow.com/questions/424071/list-all-the-files-for-a-commit-in-git
 alias git-files-changed="git diff-tree --no-commit-id --name-only -r HEAD"
-alias rebar3='/home/jbalint/sw/erlang-sw/rebar3/rebar3'
 alias ncc='setxkbmap -option ctrl:nocaps'
 # Thanks. https://unix.stackexchange.com/a/187256/178680
 alias urldecode='sed "s@+@ @g;s@%@\\\\x@g" | xargs -0 printf "%b"'
 alias usage='du -Psx * | sort -n'
+alias recaf='setsid java -jar ~/sw/java-sw/Recaf/recaf-1.15.10.jar'
 
 ptsproc() { ps auxw | grep pts/`pts` }
 pts() {	basename `readlink /proc/self/fd/0` } # same as tty command
@@ -179,6 +174,17 @@ aur_install() { # Install a downloaded AUR package
 grep_gradle() {
     SEARCH=$1
     find . -name '*.gradle' | while read i ; do
+	if grep $SEARCH $i > /dev/null ; then
+            echo ">>> Found in $i <<<"
+            grep $SEARCH $i
+        fi
+    done
+}
+
+# TODO : refactor shared code, but need to quote arguments properly!
+grep_bazel() {
+    SEARCH=$1
+    find . -name 'BUILD.bazel' | while read i ; do
 	if grep $SEARCH $i > /dev/null ; then
             echo ">>> Found in $i <<<"
             grep $SEARCH $i

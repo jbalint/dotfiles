@@ -30,7 +30,9 @@ syndaemon -i 1 -t -k &
 
 synclient TapButton1=1 TapButton2=3 TapButton3=2
 
-xrandr --output DP-2 --auto --left-of DP-1
+#xrandr --output DP-2 --auto --left-of DP-1
+#xrandr --output HDMI-1 --left-of eDP-1
+#xrandr --output eDP-1 --off
 
 sxhkd &
 # Conky places a significant load on Xorg, not sure why
