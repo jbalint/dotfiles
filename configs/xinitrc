@@ -23,6 +23,9 @@ xset -dpms
 
 setxkbmap -option ctrl:nocaps
 
+setxkbmap -layout en_US,ru
+setxkbmap -option grp:toggle
+
 # Disable inertial scrolling [RUKH-7]
 xinput --set-prop --type=float "SynPS/2 Synaptics TouchPad" "Synaptics Coasting Speed" 0 0
 # Disable touchpad while typing [SYS-52]
