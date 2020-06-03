@@ -40,7 +40,6 @@ export LUA_CPATH="/home/jbalint/lib/lua/5.2/?.so;/home/jbalint/lib/lib/?.so;/hom
 export RUST_BACKTRACE=1
 # Needed for IntelliJ to (consistenly) work properly with bspwm
 export _JAVA_AWT_WM_NONREPARENTING=1
-cat ~/.artifactory_credentials| while read i ; do eval "export $i"; done
 
 if [ "$JAVA_HOME" = "" ] ; then
 	export JAVA_HOME=$JAVA8_HOME
@@ -100,6 +99,7 @@ alias ncc='setxkbmap -option ctrl:nocaps'
 alias urldecode='sed "s@+@ @g;s@%@\\\\x@g" | xargs -0 printf "%b"'
 alias usage='du -Psx * | sort -n'
 alias recaf='setsid java -jar ~/sw/java-sw/Recaf/recaf-1.15.10.jar'
+alias emm='export $(gpg --decrypt ~/sw/private_code/emm.gpg | grep -v "^#" | xargs)'
 
 ptsproc() { ps auxw | grep pts/`pts` }
 pts() {	basename `readlink /proc/self/fd/0` } # same as tty command
