@@ -633,7 +633,23 @@ A prefix argument can be used to scroll backwards or more than one."
    "kannada-jessscript" "Kannada" "KndJ"
    "Kannada keyboard Inscript."))
 
+;;;;;;;;;;;
+;; Dired ;;
+;;;;;;;;;;;
+;; https://www.emacswiki.org/emacs/OperatingOnFilesInDired
+(defun dired-open-file ()
+  "In dired, open the file named on this line."
+  (interactive)
+  (let* ((file (dired-get-filename nil t)))
+    (call-process "xdg-open" nil 0 nil file)))
+(add-hook 'dired-mode-hook
+  (lambda ()
+    (local-unset-key (kbd "C-c o"))
+    (define-key dired-mode-map (kbd "C-c o") 'dired-open-file)))
+
+;;;;;;;;;;
 ;; Misc ;;
+;;;;;;;;;;
 
 ;; use my normal colors in shell mode
 ;; c.f. https://stackoverflow.com/questions/25819034/colors-in-emacs-shell-prompt
