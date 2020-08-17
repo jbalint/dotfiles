@@ -9,12 +9,8 @@ bspc config gapless_monocle     true
 bspc config focus_by_distance   true
 
 # Height of polybar
-bspc config top_padding 20
-
-bspc monitor -d 0 1 2 3 4 5 6 7 8 9 0 q
-
-#bspc rule -a Gimp desktop=^8 follow=on floating=on
-#bspc rule -a Chromium desktop=^2
+bspc config -m DP-1 top_padding 20
+bspc config -m DP-3 top_padding 0
 
 # for Java apps showing up blank
 wmname LG3D

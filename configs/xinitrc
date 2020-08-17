@@ -30,12 +30,15 @@ setxkbmap -option grp:toggle
 xinput --set-prop --type=float "SynPS/2 Synaptics TouchPad" "Synaptics Coasting Speed" 0 0
 # Disable touchpad while typing [SYS-52]
 syndaemon -i 1 -t -k &
+# Elecom [N88-233]
+xinput set-prop 11 'libinput Scroll Method Enabled' 0 0 1
+xinput --set-button-map 11 1 2 3 4 5 6 7 8 9 10 11 12
 
 synclient TapButton1=1 TapButton2=3 TapButton3=2
 
-#xrandr --output DP-2 --auto --left-of DP-1
-#xrandr --output HDMI-1 --left-of eDP-1
-#xrandr --output eDP-1 --off
+# Jrussell setup with external monitors
+xrandr --output DP-3 --left-of DP-1
+xrandr --output DP-0 --off
 
 sxhkd &
 # Conky places a significant load on Xorg, not sure why
