@@ -328,9 +328,6 @@
 (autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
 (autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
 
-;(set-default-font "Fixed Medium Semi-Condensed 10")
-(set-default-font "Inconsolata:pixelsize=14:antialias=true:autohint=true")
-
 (add-hook 'c-mode-common-hook
 		  (lambda () (local-unset-key (kbd "C-c C-l"))))
 
@@ -665,6 +662,5 @@ A prefix argument can be used to scroll backwards or more than one."
   (add-to-list
    'package-archives
    '("melpa" . "http://melpa.org/packages/")
-   t)
-  (package-initialize))
+   t))
 (put 'downcase-region 'disabled nil)

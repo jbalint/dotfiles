@@ -38,6 +38,8 @@ xinput set-prop "pointer:ELECOM TrackBall Mouse DEFT Pro TrackBall" 'libinput Bu
 synclient TapButton1=1 TapButton2=3 TapButton3=2
 
 # Jrussell setup with external monitors
+xrandr --output DP-1 --auto
+xrandr --output DP-3 --auto
 xrandr --output DP-3 --left-of DP-1
 xrandr --output DP-0 --off
 
