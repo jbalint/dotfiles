@@ -2,9 +2,9 @@
 
 ! https://bbs.archlinux.org/viewtopic.php?id=164108
 URxvt.intensityStyles: false
-URxvt.url-launcher: /usr/bin/chromium
+URxvt.urlLauncher: xdg-open
 URxvt.buffered: false
-URxvt.perl-ext-common: default,resize-font
+URxvt.perl-ext-common: default,resize-font,matcher
 URxvt.font: xft:inconsolata:pixelsize=14:antialias=true:hinting=true
 URxvt.scrollBar: false
 URxvt.termName: xterm-256color
