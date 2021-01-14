@@ -2,12 +2,18 @@
 
 ! https://bbs.archlinux.org/viewtopic.php?id=164108
 URxvt.intensityStyles: false
-URxvt.urlLauncher: xdg-open
 URxvt.buffered: false
 URxvt.perl-ext-common: default,resize-font,matcher
 URxvt.font: xft:inconsolata:pixelsize=14:antialias=true:hinting=true
 URxvt.scrollBar: false
 URxvt.termName: xterm-256color
+
+! note url-launcher is the NEW name, urlLauncher is the old one
+URxvt.url-launcher: xdg-open
+URxvt.matcher.button: 1
+URxvt.keysym.C-Delete:    matcher:last
+URxvt.keysym.M-Delete:    matcher:list
+
 
 ! color theme from https://terminal.sexy/
 ! special
