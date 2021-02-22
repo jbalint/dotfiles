@@ -40,10 +40,13 @@ export LUA_CPATH="/home/jbalint/lib/lua/5.2/?.so;/home/jbalint/lib/lib/?.so;/hom
 export RUST_BACKTRACE=full
 # Needed for IntelliJ to (consistenly) work properly with bspwm
 export _JAVA_AWT_WM_NONREPARENTING=1
+cat ~/.artifactory_credentials| while read i ; do eval "export $i"; done
 
 if [ "$JAVA_HOME" = "" ] ; then
 	export JAVA_HOME=$JAVA8_HOME
 fi
+
+export LD_LIBRARY_PATH=~/sw/yellow-tree:~/lib:$JAVA_HOME/jre/lib/amd64/server
 
 if [ "$HOSTNAME" = "tagore" ] ; then
 	export PATH=${PATH}:/opt/cuda/bin
@@ -93,13 +96,13 @@ alias bl10="xbacklight = 10"
 alias bl100="xbacklight = 100"
 alias feh="feh -Z -."
 # http://stackoverflow.com/questions/424071/list-all-the-files-for-a-commit-in-git
-alias git-files-changed="git diff-tree --no-commit-id --name-only -r HEAD"
-alias ncc='setxkbmap -option ctrl:nocaps'
+alias git-files-changed="git diff-tree --no-commit-id --name-only -r"
 # Thanks. https://unix.stackexchange.com/a/187256/178680
 alias urldecode='sed "s@+@ @g;s@%@\\\\x@g" | xargs -0 printf "%b"'
 alias usage='du -Psx * | sort -n'
 alias recaf='setsid java -jar ~/sw/java-sw/Recaf/recaf-1.15.10.jar'
 alias emm='export $(gpg --decrypt ~/sw/private_code/emm.gpg | grep -v "^#" | xargs)'
+alias bspcd='bspc query -M --names | while read i ; do echo ">> Desktops on $i <<" ; bspc query -D --names -m $i ; done'
 
 ptsproc() { ps auxw | grep pts/`pts` }
 pts() {	basename `readlink /proc/self/fd/0` } # same as tty command
@@ -198,6 +201,85 @@ diffdir() {
     diff -W 300 -y /tmp/diffdir_a.txt /tmp/diffdir_b.txt | egrep '(<|>)'
 }
 
+# Switch wm from desktop mode to laptop
+# Monitors:
+#   * DP-0: laptop screen
+#   * DP-1: primary monitor
+#   * DP-3: secondary monitor (left-of DP-3)
+bspc_laptop() {
+    # Turn on the laptop screen
+    xrandr --output DP-0 --auto --right-of DP-1
+
+    # create implicit desktops
+    bspc monitor DP-1 -a Desktop
+    bspc monitor DP-3 -a Desktop
+
+    # Move 0+q desktops to DP-0
+    # Move 1-9 desktops to DP-0
+    for i in 0 q ; do bspc desktop $i -m DP-0 ; done
+    for i in `seq 1 9` ; do bspc desktop $i -m DP-0 ; done
+
+    # TODO: re-focus the prev focused
+
+    # Remove other monitors
+    xrandr --output DP-3 --off --output DP-1 --off
+    bspc monitor DP-3 -r
+    bspc monitor DP-1 -r
+
+    # Remove any implicitly created desktops
+    for i in `seq 1 4` ; do bspc desktop Desktop -r ; done
+
+    # Restart polybar
+    bspc config -m DP-0 top_padding 20
+    killall polybar
+    setsid polybar `hostname`-DP-0
+
+    # In case anything got lost, adopt orphaned windows
+    bspc wm -o
+
+}
+
+bspc_desktop() {
+    xrandr --output DP-1 --auto --left-of DP-0
+    xrandr --output DP-3 --auto --left-of DP-1
+    # xrandr --fb 5120x1440 --output DP-1 --auto --panning 0x0 --output DP-3 --auto --panning 0x0 --left-of DP-1 --output DP-0 --off
+    # xrandr --output DP-1 --auto --output DP-3 --auto --left-of DP-1 --output DP-0 --off
+    # To disable panning
+    # xrandr -s 0
+
+    bspc monitor DP-0 -a Desktop
+
+    for i in 0 q ; do bspc desktop $i -m DP-3 ; done
+    for i in `seq 1 9` ; do bspc desktop $i -m DP-1 ; done
+
+    xrandr --output DP-0 --off
+
+    bspc monitor DP-0 -r
+    # There could be a few...
+    for i in `seq 1 4` ; do bspc desktop Desktop -r ; done
+
+    # Restart polybar
+    bspc config -m DP-1 top_padding 20
+    bspc config -m DP-3 top_padding 0
+    killall polybar
+    setsid polybar `hostname`-DP-1
+
+}
+
+ncc() {
+    setxkbmap -option ctrl:nocaps
+    local DEFT_ID=`xinput list | grep DEFT | grep pointer | grep -v "Consumer Control" | perl -lpe's/.*id=(\d+).*/$1/'`
+    xinput set-prop $DEFT_ID 'libinput Scroll Method Enabled' 0 0 1
+    xinput set-prop $DEFT_ID 'libinput Button Scrolling Button' 11
+    echo 2 | sudo tee -a /sys/module/hid_apple/parameters/fnmode
+}
+
+msshfs() {
+    sshfs -oport=6701,reconnect,ServerAliveInterval=45,ServerAliveCountMax=2 jessandmorgan.com:/home/jbalint tagore_home
+    sshfs -oport=6701,reconnect,ServerAliveInterval=45,ServerAliveCountMax=2 jessandmorgan.com:/ tagore/
+    #sshfs -oreconnect,ServerAliveInterval=45,ServerAliveCountMax=2 agelaius:/mnt/red_or_blue red_or_blue
+}
+
 # Prevent C-s and C-q from sending term codes (Needed for rtorrent)
 stty stop undef
 stty start undef
@@ -220,4 +302,3 @@ HISTSIZE=10000
 SAVEHIST=10000
 setopt appendhistory autocd extendedglob nomatch
 # End of lines configured by zsh-newuser-install
-
