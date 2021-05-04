@@ -50,9 +50,17 @@ modules-left = cpu memory load network_wlp3s0 kodi nightscout battery
 
 [bar/jrussell]
 inherit = section/base
-monitor = DP-1
-modules-left = cpu memory load network_enp109s0f1 kodi nightscout battery bspwm git-monitor russian-alphabet
+modules-left = cpu memory load network_enp109s0f1 kodi nightscout battery bspwm git-monitor
+;;russian-alphabet
 locale = ru_RU.UTF-8
+
+[bar/jrussell-DP-1]
+inherit = bar/jrussell
+monitor = DP-1
+
+[bar/jrussell-DP-0]
+inherit = bar/jrussell
+monitor = DP-0
 
 [bar/tagore]
 inherit = section/base

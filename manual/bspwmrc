@@ -8,22 +8,9 @@ bspc config borderless_monocle  true
 bspc config gapless_monocle     true
 bspc config focus_by_distance   true
 
-# Height of polybar
-bspc config -m DP-1 top_padding 20
-bspc config -m DP-3 top_padding 0
-
-# for Java apps showing up blank
-wmname LG3D
-export _JAVA_AWT_WM_NONREPARENTING=1
-
-# http://www.reddit.com/r/unixporn/comments/1tsox7/bspwm_cursor_is_an_x/
-# Use normal cursor
-xsetroot -cursor_name left_ptr
-
-xset s off
-xset -dpms
-
 bspc config click_to_focus true
 
 # Percy
 bspc rule -a Emacs:percy state=floating focus=on
+
+bspc monitor -a 0 q 1 2 3 4 5 6 7 8 9

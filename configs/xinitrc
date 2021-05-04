@@ -18,8 +18,13 @@ redshift -v -b 0.9:0.8 -t 6000K:3000K -l "48.08:-89.38" &
 xset s off
 xset -dpms
 
-# for the kensington mac mouse after mine broke 2015-04-19
-#xset m 3/1 0
+# for Java apps showing up blank
+wmname LG3D
+export _JAVA_AWT_WM_NONREPARENTING=1
+
+# http://www.reddit.com/r/unixporn/comments/1tsox7/bspwm_cursor_is_an_x/
+# Use normal cursor
+xsetroot -cursor_name left_ptr
 
 setxkbmap -option ctrl:nocaps
 
@@ -30,24 +35,9 @@ setxkbmap -option grp:toggle
 xinput --set-prop --type=float "SynPS/2 Synaptics TouchPad" "Synaptics Coasting Speed" 0 0
 # Disable touchpad while typing [SYS-52]
 syndaemon -i 1 -t -k &
-# Elecom [N88-233] - https://www.reddit.com/r/Trackballs/comments/8brc5n/linux_users_with_elecom_huge_how_have_you_binded/dxapuia/
-#xinput --set-button-map 11 1 2 3 4 5 6 7 8 9 10 11 12
-xinput set-prop "pointer:ELECOM TrackBall Mouse DEFT Pro TrackBall" 'libinput Scroll Method Enabled' 0 0 1
-xinput set-prop "pointer:ELECOM TrackBall Mouse DEFT Pro TrackBall" 'libinput Button Scrolling Button' 11
 
 synclient TapButton1=1 TapButton2=3 TapButton3=2
 
-# Jrussell setup with external monitors
-xrandr --output DP-1 --auto
-xrandr --output DP-3 --auto
-xrandr --output DP-3 --left-of DP-1
-xrandr --output DP-0 --off
-
 sxhkd &
-# Conky places a significant load on Xorg, not sure why
-#conky &
-polybar `hostname` &
-#st &
-#exec /home/jbalint/sw/bspwm/bspwm 2>&1 >> /tmp/bsp.log
 #exec /usr/bin/bspwm 2>&1 >> /tmp/bsp.log
 exec bspwm

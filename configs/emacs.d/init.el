@@ -72,24 +72,21 @@
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["black" "red" "green" "yellow" "blue" "magenta" "cyan" "yellow"])
- '(browse-url-browser-function (quote browse-url-xdg-open))
+ '(browse-url-browser-function 'browse-url-xdg-open)
  '(cursor-color nil)
  '(custom-safe-themes
-   (quote
-    ("a2cde79e4cc8dc9a03e7d9a42fabf8928720d420034b66aecc5b665bbf05d4e9" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" default)))
- '(default-input-method (quote kannada-jessscript))
+   '("a2cde79e4cc8dc9a03e7d9a42fabf8928720d420034b66aecc5b665bbf05d4e9" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" default))
+ '(default-input-method 'kannada-jessscript)
  '(ecb-options-version "2.40")
  '(foreground-color nil)
  '(menu-bar-mode nil)
- '(message-citation-line-function (quote message-insert-formatted-citation-line))
- '(org-capture-templates (quote (("" "hi" entry (file "~/org/notes.org") ""))))
+ '(message-citation-line-function 'message-insert-formatted-citation-line)
+ '(org-capture-templates '(("" "hi" entry (file "~/org/notes.org") "")))
  '(org-modules
-   (quote
-    (org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m org-wl)))
+   '(org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m org-wl))
  '(package-selected-packages
-   (quote
-    (bazel-mode monokai-theme cargo yaml-mode typescript-mode company-racer racer graphql-mode racket-mode haskell-mode cmake-mode calfw ggtags wanderlust w3m sparql-mode rust-mode rudel paredit pallet markdown-mode magit lua-mode lispy ledger-mode idris-mode helm-projectile helm-ag groovy-mode flymake-easy flycheck-haskell find-file-in-project ess ensime emacs-eclim edts e2wm cider bbdb)))
- '(safe-local-variable-values (quote ((org-log-done . t))))
+   '(terraform-mode slime lsp-mode bazel-mode monokai-theme cargo yaml-mode typescript-mode company-racer racer graphql-mode racket-mode haskell-mode cmake-mode calfw ggtags wanderlust w3m sparql-mode rust-mode rudel paredit pallet markdown-mode magit lua-mode lispy ledger-mode idris-mode helm-projectile helm-ag groovy-mode flymake-easy flycheck-haskell find-file-in-project ess ensime emacs-eclim edts e2wm cider bbdb))
+ '(safe-local-variable-values '((org-log-done . t)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
  '(user-full-name "Jess Balint")
@@ -523,6 +520,12 @@ A prefix argument can be used to scroll backwards or more than one."
 (require 'n3-mode) ;; locally in .emacs.d/lisp/
 (add-to-list 'auto-mode-alist '("\\.ttl\\'" . n3-mode))
 (add-to-list 'auto-mode-alist '("\\.n3\\'" . n3-mode))
+
+;;;;;;;;;;;
+;; Slime ;;
+;;;;;;;;;;;
+(setq inferior-lisp-program "/usr/bin/sbcl")
+(require 'slime-autoloads)
 
 ;;;;;;;;;;;;;;;
 ;; Bookmarks ;;
