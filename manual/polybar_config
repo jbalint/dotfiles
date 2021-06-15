@@ -50,7 +50,7 @@ modules-left = cpu memory load network_wlp3s0 kodi nightscout battery
 
 [bar/jrussell]
 inherit = section/base
-modules-left = cpu memory load network_enp109s0f1 kodi nightscout battery bspwm git-monitor
+modules-left = cpu memory load network_enp109s0f1 kodi nightscout battery bspwm git-monitor dogecoin-price
 ;;russian-alphabet
 locale = ru_RU.UTF-8
 
@@ -128,6 +128,13 @@ time = %H:%M:%S
 label = "%date% %time%"
 label-foreground = #dfdfdf
 click-left = 
+
+[module/dogecoin-price]
+type = custom/script
+exec = /home/jbalint/sw/dotfiles/manual/dogecoin_price.sh
+format-prefix = "дожкоин: "
+click-left = chromium https://www.coindesk.com/price/dogecoin
+interval = 600
 
 [module/filesystem_tagore_home]
 type = internal/fs
