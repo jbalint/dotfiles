@@ -5,8 +5,6 @@
 (require 'pallet)
 (pallet-mode t)
 
-(load-theme 'monokai t)
-
 (require 'font-lock)
 (require 'cc-mode)
 (setq-default indent-tabs-mode nil)
@@ -48,6 +46,7 @@
 
 ;;;;;(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 (add-to-list 'load-path "~/sw/emacs-gargoyle")
+;;(add-to-list 'load-path "~/sw/emacs-sw/ledger-mode")
 (add-to-list 'load-path "~/.emacs.d/lisp")
 (add-to-list 'load-path "~/.emacs.d/lisp/ecb")
 (add-to-list 'load-path "/usr/share/emacs/site-lisp")
@@ -83,7 +82,7 @@
  '(message-citation-line-function 'message-insert-formatted-citation-line)
  '(org-capture-templates '(("" "hi" entry (file "~/org/notes.org") "")))
  '(org-modules
-   '(org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m org-wl))
+   '(org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m))
  '(package-selected-packages
    '(bazel terraform-mode slime lsp-mode bazel-mode monokai-theme cargo yaml-mode typescript-mode company-racer racer graphql-mode racket-mode haskell-mode cmake-mode calfw ggtags wanderlust w3m sparql-mode rust-mode rudel paredit pallet markdown-mode magit lua-mode lispy ledger-mode idris-mode helm-projectile helm-ag groovy-mode flymake-easy flycheck-haskell find-file-in-project ess ensime emacs-eclim edts e2wm cider bbdb))
  '(safe-local-variable-values '((org-log-done . t)))
@@ -206,59 +205,6 @@
 						   '((side . right)
 							 (window-width 0.5))))))
 
-;;;;;;;;;;;;;;;;;
-;; Oracle crap ;;
-;;;;;;;;;;;;;;;;;
-(defun oracle-elem-id (prefix)
-  "Get element id at from element link point given prefix, e.g WL #1234, HAM-567"
-  (save-excursion
-	(unless (string-equal
-			 (downcase prefix)
-			 (downcase (buffer-substring (point) (min (buffer-size) (+ (string-width prefix) (point))))))
-	  ;; these are done sequentially in hopes that we won't get BEFORE the elem link
-	  ;; including "-" due to "3-" for SR # prefix
-	  (skip-chars-backward "0123456789-")
-	  (skip-chars-backward " #-")
-	  (skip-chars-backward (concat (downcase prefix) (upcase prefix))))
-	;; include optional "3-" for SR # prefix
-	(if (looking-at (concat " *" prefix "\\( *#\\|-\\)\\(3-\\)?\\([0-9]+\\)\\b"))
-		(concat (match-string 2) (match-string 3)))))
-
-(defun oracle-mysql-bug-link (id)
-  (if (> (string-to-number id) 500000)
-	  (concat "http://clustra.no.oracle.com/orabugs/bug.php?id=" id)
-	(concat "http://bugs.mysql.com/" id)))
-
-(setq oracle-elem-link-urls-alist
-	  '(("rb" . "http://rb.no.oracle.com/rb/r/")
-		("wl" . "http://wl.no.oracle.com/?tid=")
-		;; ("ham" . "http://tyr41.no.oracle.com:48080/jira/browse/HAM-")
-		("ham" . "https://etools-jira.no.oracle.com:48443/jira/browse/HAM-")
-		("bug" . oracle-mysql-bug-link)
-		("mysqlconnj" . "https://jira.oraclecorp.com/jira/browse/MYSQLCONNJ-")
-		("myc" . "https://jira.oraclecorp.com/jira/browse/MYC-")
-		("my" . "https://jira.oraclecorp.com/jira/browse/MY-")
-		("myp" . "https://jira.oraclecorp.com/jira/browse/MYP-")
-		;; ("sr" . "https://mosemp.us.oracle.com/mosspui/src/sr/viewer/index.html#/")
-        ("sr" . "https://mosemp.us.oracle.com/mosspui/src/sr/viewer/index.html#/")))
-(defun oracle-elem-open ()
-  (interactive)
-  ;; find an element id
-  (let ((link-data
-		 (catch 'loop
-		   (dolist (elem-link-url oracle-elem-link-urls-alist)
-			 (let ((e (oracle-elem-id (car elem-link-url))))
-			   (if e (throw 'loop (list e (cdr elem-link-url)))))))))
-	;; open it
-	(when link-data
-	  (let ((id (car link-data))
-			(url-prefix-or-resolver (car (cdr link-data))))
-		(message "Oracle opening %s" id)
-		(browse-url
-		 (if (stringp url-prefix-or-resolver)
-			 (concat url-prefix-or-resolver id)
-		   (funcall url-prefix-or-resolver id)))))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Note: this requires existence of xclip binary
 (if (not window-system)
@@ -271,7 +217,6 @@
 		  (lambda () (if (or (string-match "com/oasis.*\.java" (buffer-file-name))
 							 (string-match "agora.*\.java" (buffer-file-name)))
 						 (setq tab-width 8))))
-(put 'erase-buffer 'disabled nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; MySQL Connector/J code style settings ;;
@@ -320,10 +265,6 @@
    "[([][^]})({[]"
    "\\s-{[^({[]"
    ))
-
-(autoload 'wl "wl" "Wanderlust" t)
-(autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
-(autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
 
 (add-hook 'c-mode-common-hook
 		  (lambda () (local-unset-key (kbd "C-c C-l"))))
@@ -379,30 +320,6 @@ A prefix argument can be used to scroll backwards or more than one."
 		 
         ))
 
-;; TODO make this nicer
-;; TODO need `shr-browse-url' here? (when in notmuch HTML emails)
-(defun add-oracle-elem-open-binding ()
-  (interactive)
-  "Add the C-c C-o binding to open an Oracle element or fall back to opening a URL"
-  (local-set-key "\C-c\C-o"
-				 (lambda () (interactive)
-				   ;; try org link FIRST
-				   (condition-case nil ;; could check the `major-mode' here
-					   (org-open-at-point)
-					 ;; fallback if `org-open-at-point' fails
-					 (error (unless (oracle-elem-open)
-							  (if (string= "No URL at point" (w3m-external-view-this-url))
-								  (browse-url-at-point))))))))
-
-(add-hook 'wl-message-redisplay-hook 'add-oracle-elem-open-binding)
-
-(add-hook 'wl-summary-mode-hook 'add-oracle-elem-open-binding)
-
-(add-hook 'wl-mail-setup-hook
-		  (lambda () (interactive)
-			(add-oracle-elem-open-binding)
-			(flyspell-mode t)))
-
 ;;;;;;;;;;;;
 ;; ledger ;;
 ;;;;;;;;;;;;
@@ -411,7 +328,10 @@ A prefix argument can be used to scroll backwards or more than one."
 ;; TODO : ledger mode doesn't define hooks?
 (add-hook 'ledger-mode-hook
           (lambda () (interactive)
-	    (electric-indent-local-mode nil)))
+	    (electric-indent-local-mode nil)
+            (setq-local tab-always-indent 'complete)
+            (setq-local completion-cycle-threshold t)
+            (setq-local ledger-complete-in-steps t)))
 
 ;;;;;;;;;;;;;;;;;
 ;; ESS (for R) ;;
@@ -647,6 +567,12 @@ A prefix argument can be used to scroll backwards or more than one."
     (local-unset-key (kbd "C-c o"))
     (define-key dired-mode-map (kbd "C-c o") 'dired-open-file)))
 
+;;;;;;;;;;;;
+;; Octave ;;
+;;;;;;;;;;;;
+(autoload 'octave-mode "octave-mod" nil)
+(add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
+
 ;;;;;;;;;;
 ;; Misc ;;
 ;;;;;;;;;;
@@ -660,10 +586,5 @@ A prefix argument can be used to scroll backwards or more than one."
   (interactive)
   (setq indent-tabs-mode nil))
 
-(when (>= emacs-major-version 24)
-  (require 'package)
-  (add-to-list
-   'package-archives
-   '("melpa" . "http://melpa.org/packages/")
-   t))
 (put 'downcase-region 'disabled nil)
+(put 'erase-buffer 'disabled nil)
