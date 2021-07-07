@@ -40,6 +40,8 @@ export LUA_CPATH="/home/jbalint/lib/lua/5.2/?.so;/home/jbalint/lib/lib/?.so;/hom
 export RUST_BACKTRACE=full
 # Needed for IntelliJ to (consistenly) work properly with bspwm
 export _JAVA_AWT_WM_NONREPARENTING=1
+# Python
+export VIRTUAL_ENV_DISABLE_PROMPT=1
 cat ~/.artifactory_credentials| while read i ; do eval "export $i"; done
 
 if [ "$JAVA_HOME" = "" ] ; then
@@ -49,10 +51,9 @@ fi
 export LD_LIBRARY_PATH=~/sw/yellow-tree:~/lib:$JAVA_HOME/jre/lib/amd64/server
 
 if [ "$HOSTNAME" = "tagore" ] ; then
-	export PATH=${PATH}:/opt/cuda/bin
-	export PATH=${PATH}:$HOME/sw/postgres-9.6.1-jess/bin
+	export PATH=${PATH}:/opt/cuda/bin:/home/jbalint/sw/java-sw/stardog-bin/bin:/home/jbalint/.gem/ruby/2.3.0/bin
+	export PATH=${PATH}:$HOME/sw/postgres-12.0b3-jess/bin
 	export PATH=${PATH}:$HOME/.cargo/bin
-	. /home/jbalint/sw/torch/install/bin/torch-activate
 	# # these are all cuda-convnet2 variables (not sure if they are
 	# # interpreted the same in other libraries)
 	# export CUDA_INSTALL_PATH=/opt/cuda
@@ -65,7 +66,7 @@ if [ "$HOSTNAME" = "tagore" ] ; then
 	export STARDOG_HOME=/home/jbalint/stardog-home
 	export STARDOG_EXT=/home/jbalint/stardog-home/ext_jars
 	export PGDATA=/home/jbalint/pg-cluster
-	export STARDOG_SERVER_JAVA_ARGS="-Dbs.svc=STARDOG -Xmx2g -Xms2g -XX:MaxDirectMemorySize=1g -Djava.io.tmpdir=$STARDOG_HOME/TMP -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:NativeMemoryTracking=summary"
+	export STARDOG_SERVER_JAVA_ARGS="-Dbs.svc=STARDOG -Xmx2g -Xms2g -XX:MaxDirectMemorySize=1g -Djava.io.tmpdir=$STARDOG_HOME/TMP -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:NativeMemoryTracking=summary -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005"
 fi
 
 
@@ -103,6 +104,8 @@ alias usage='du -Psx * | sort -n'
 alias recaf='setsid java -jar ~/sw/java-sw/Recaf/recaf-1.15.10.jar'
 alias emm='export $(gpg --decrypt ~/sw/private_code/emm.gpg | grep -v "^#" | xargs)'
 alias bspcd='bspc query -M --names | while read i ; do echo ">> Desktops on $i <<" ; bspc query -D --names -m $i ; done'
+alias clion="sg jira /home/jbalint/dl/clion-2019.1.4/bin/clion.sh"
+alias luke="/home/jbalint/sw/java-sw/lucene-8.3.0/luke/luke.sh"
 
 ptsproc() { ps auxw | grep pts/`pts` }
 pts() {	basename `readlink /proc/self/fd/0` } # same as tty command
@@ -118,6 +121,8 @@ laptop_off() { xrandr --output LVDS1 --off }
 git-log-graph() { git log --pretty=oneline --graph }
 gstack() { gdb -batch -ex "thread apply all bt full" -p $1 }
 mailsync() { notmuch search --format=text0 --output=files tag:deleted | xargs -0 --no-run-if-empty rm && mbsync -a && notmuch new }
+sd-graphs() { stardog query execute $1 'select distinct ?g { graph ?g {} } order by ?g' }
+sd-g-contents() { stardog query execute $1 "select ?s ?p ?o { graph <$2> { ?s ?p ?o } } order by ?s ?p ?o" }
 
 # Show the top-level dirs in an archive
 zdirs() {
@@ -290,6 +295,14 @@ stty start undef
 
 # dbus-monitor "path='/im/pidgin/purple/PurpleObject',interface='im.pidgin.purple.PurpleInterface',member='ReceivedChatMsg'"
 # egrep -v '(torrent|guestbook|mediawiki|OPTIONS|POST|HEAD)' access_log | less
+
+# https://wiki.archlinux.org/index.php/SSH_keys#SSH_agents
+if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+    ssh-agent | grep -v "Agent pid" > "$XDG_RUNTIME_DIR/ssh-agent.env"
+fi
+if [[ ! "$SSH_AUTH_SOCK" ]]; then
+    eval "$(<"$XDG_RUNTIME_DIR/ssh-agent.env")"
+fi
 
 ################################################
 # The following lines were added by compinstall
