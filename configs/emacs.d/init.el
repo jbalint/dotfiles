@@ -167,11 +167,6 @@
 (add-hook 'org-mode-hook
 		  (lambda ()
 			(local-set-key "\C-ca" 'org-agenda)
-			(local-unset-key "\C-c\C-o")
-			(local-set-key "\C-c\C-o"
-						   (lambda () (interactive)
-							 (unless (oracle-elem-open)
-							   (org-open-at-point))))
 			(require 'ob-plantuml)
 			(flyspell-mode t)
 			(auto-fill-mode t)
