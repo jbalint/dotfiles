@@ -1,6 +1,6 @@
 ;; Install Cask/Pallet packages first
 
-(require 'cask "/home/jbalint/.cask/cask.el")
+(require 'cask "/home/jbalint/sw/emacs-sw/cask/cask.el")
 (cask-initialize)
 (require 'pallet)
 (pallet-mode t)
@@ -84,7 +84,10 @@
  '(org-modules
    '(org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m))
  '(package-selected-packages
-   '(bazel terraform-mode slime lsp-mode bazel-mode monokai-theme cargo yaml-mode typescript-mode company-racer racer graphql-mode racket-mode haskell-mode cmake-mode calfw ggtags wanderlust w3m sparql-mode rust-mode rudel paredit pallet markdown-mode magit lua-mode lispy ledger-mode idris-mode helm-projectile helm-ag groovy-mode flymake-easy flycheck-haskell find-file-in-project ess ensime emacs-eclim edts e2wm cider bbdb))
+   '(dumb-jump bazel terraform-mode slime lsp-mode bazel-mode monokai-theme cargo yaml-mode typescript-mode company-racer racer graphql-mode racket-mode haskell-mode cmake-mode calfw ggtags wanderlust w3m sparql-mode rust-mode rudel paredit pallet markdown-mode magit lua-mode lispy ledger-mode idris-mode helm-projectile helm-ag groovy-mode flymake-easy flycheck-haskell find-file-in-project ess ensime emacs-eclim edts e2wm cider bbdb
+               lsp-mode yasnippet lsp-treemacs helm-lsp
+    projectile hydra flycheck company avy which-key helm-xref dap-mode
+               ))
  '(safe-local-variable-values '((org-log-done . t)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
