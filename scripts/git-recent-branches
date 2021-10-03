@@ -1,0 +1,12 @@
+#!/bin/bash
+# Script to change git branches. An X menu is shown with the
+# branches with the most recent commits.
+
+# Set's the X and Y env vars to refer to current pointer position
+eval $(xdotool getmouselocation --shell)
+
+# https://stackoverflow.com/questions/5188320/how-can-i-get-a-list-of-git-branches-ordered-by-most-recent-commit
+(echo "Recent branches" ; git branch --sort=-committerdate) | \
+    head | \
+    dzen2 -x $X -y $Y -tw 400 -w 400 -l 9 -ta l -p -m -e 'onstart=uncollapse;button1=menuprint,exit' | \
+    xargs git checkout
