@@ -326,6 +326,12 @@ A prefix argument can be used to scroll backwards or more than one."
 		 
         ))
 
+;;;;;;;;;;;;;;;
+;; bookmarks ;;
+;;;;;;;;;;;;;;;
+(setq bookmark-save-flag 0)
+(setq bookmark-default-file "~/tmp/bookmarks")
+
 ;;;;;;;;;;;;
 ;; ledger ;;
 ;;;;;;;;;;;;
