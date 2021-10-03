@@ -80,14 +80,18 @@
  '(foreground-color nil)
  '(menu-bar-mode nil)
  '(message-citation-line-function 'message-insert-formatted-citation-line)
+ '(notmuch-saved-searches
+   '((:name "inbox" :query "tag:inbox -tag:save -tag:calcite -tag:save30days" :key "i" :sort-order newest-first)
+     (:name "unread" :query "tag:unread" :key "u" :sort-order newest-first)
+     (:name "flagged" :query "tag:flagged" :key "f")
+     (:name "sent" :query "tag:sent" :key "t")
+     (:name "drafts" :query "tag:draft" :key "d")
+     (:name "all mail" :query "*" :key "a" :sort-order newest-first)))
  '(org-capture-templates '(("" "hi" entry (file "~/org/notes.org") "")))
  '(org-modules
    '(org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m))
  '(package-selected-packages
-   '(dumb-jump bazel terraform-mode slime lsp-mode bazel-mode monokai-theme cargo yaml-mode typescript-mode company-racer racer graphql-mode racket-mode haskell-mode cmake-mode calfw ggtags wanderlust w3m sparql-mode rust-mode rudel paredit pallet markdown-mode magit lua-mode lispy ledger-mode idris-mode helm-projectile helm-ag groovy-mode flymake-easy flycheck-haskell find-file-in-project ess ensime emacs-eclim edts e2wm cider bbdb
-               lsp-mode yasnippet lsp-treemacs helm-lsp
-    projectile hydra flycheck company avy which-key helm-xref dap-mode
-               ))
+   '(sqlformat dumb-jump bazel terraform-mode slime lsp-mode bazel-mode monokai-theme cargo yaml-mode typescript-mode company-racer racer graphql-mode racket-mode haskell-mode cmake-mode calfw ggtags wanderlust w3m sparql-mode rust-mode rudel paredit pallet markdown-mode magit lua-mode lispy ledger-mode idris-mode helm-projectile helm-ag groovy-mode flymake-easy flycheck-haskell find-file-in-project ess ensime emacs-eclim edts e2wm cider bbdb lsp-mode yasnippet lsp-treemacs helm-lsp projectile hydra flycheck company avy which-key helm-xref dap-mode))
  '(safe-local-variable-values '((org-log-done . t)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
@@ -570,6 +574,26 @@ A prefix argument can be used to scroll backwards or more than one."
 ;;;;;;;;;;;;
 (autoload 'octave-mode "octave-mod" nil)
 (add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
+
+;;;;;;;;;;;;;
+;; notmuch ;;
+;;;;;;;;;;;;;
+(add-hook 'notmuch-search-hook
+          (lambda () (define-key notmuch-search-mode-map "`" 'notmuch-search-apply-tag-macro)))
+
+(setq notmuch-search-tag-macro-alist
+      (list
+       '("s" ("+save"))
+       '("t" ("+save30days"))
+       '("d" ("+deleted"))
+       '("c" ("+calcite"))))
+
+(defun notmuch-search-apply-tag-macro (key)
+  (interactive "k")
+  (let ((macro (assoc key notmuch-search-tag-macro-alist)))
+    (apply 'notmuch-search-tag (cdr macro))))
+
+(autoload 'notmuch "notmuch" "notmuch mail" t)
 
 ;;;;;;;;;;
 ;; Misc ;;
