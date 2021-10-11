@@ -48,19 +48,19 @@ inherit = section/base
 monitor = eDP1
 modules-left = cpu memory load network_wlp3s0 kodi nightscout battery
 
-[bar/jrussell]
+[bar/wuwei]
 inherit = section/base
-modules-left = cpu memory load network_enp109s0f1 kodi nightscout battery bspwm git-monitor dogecoin-price
+modules-left = cpu memory load network_wlp0s20f3 kodi nightscout battery bspwm git-monitor dogecoin-price notmuch
 ;;russian-alphabet
 locale = ru_RU.UTF-8
 
-[bar/jrussell-DP-1]
-inherit = bar/jrussell
-monitor = DP-1
+[bar/wuwei-DP-3]
+inherit = bar/wuwei
+monitor = DP-3
 
-[bar/jrussell-DP-0]
-inherit = bar/jrussell
-monitor = DP-0
+[bar/wuwei-HDMI-0]
+inherit = bar/wuwei
+monitor = HDMI-0
 
 [bar/tagore]
 inherit = section/base
@@ -121,9 +121,9 @@ label = %percentage:2%%
 [module/date]
 type = internal/date
 interval = 1
-;date = " %a %Y-%m-%d"
+date = " %a %Y-%m-%d"
 ; russian_days is a local script to open https://www.babbel.com/en/magazine/how-to-write-the-date-in-russian
-date = " %{A1:russian_days:}%A/%a%{A} %Y-%m-%d"
+;date = " %{A1:russian_days:}%A/%a%{A} %Y-%m-%d"
 time = %H:%M:%S
 label = "%date% %time%"
 label-foreground = #dfdfdf
@@ -215,14 +215,14 @@ animation-packetloss-framerate = 500
 inherit = section/network_base
 interface = eno1
 
-; jrussell
-[module/network_wlp110s0]
+; wuwei
+[module/network_wlp0s20f3]
 inherit = section/network_base
-interface = wlp110s0
-; jrussell
-[module/network_enp109s0f1]
+interface = wlp0s20f3
+; wuwei
+[module/network_enp0s31f6]
 inherit = section/network_base
-interface = enp109s0f1
+interface = enp0s31f6
 
 ; camus
 [module/network_wlp3s0]
@@ -239,6 +239,12 @@ format-prefix = "уровень сахара: "
 ;format-prefix = "BG: "
 ;format-prefix-foreground = ${colors.foreground-alt}
 click-left = chromium https://jbalint-bg.herokuapp.com
+
+[module/notmuch]
+type = custom/script
+exec = /home/jbalint/sw/dotfiles/scripts/notmuch-status
+format-prefix = "nm: "
+interval = 60
 
 [module/russian-alphabet]
 type = custom/text
