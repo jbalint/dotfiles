@@ -4,7 +4,23 @@
 URxvt.intensityStyles: false
 URxvt.buffered: false
 URxvt.perl-ext-common: default,resize-font,matcher
-URxvt.font: xft:inconsolata:pixelsize=14:antialias=true:hinting=true
+
+! URxvt.font: xft:inconsolata:pixelsize=14:antialias=true:hinting=true
+URxvt.font: xft:Inconsolata Nerd Font:style=Regular:size=9:antialias=true:hinting=true
+URxvt.boldFont: xft:Inconsolata Nerd Font:style=Bold:size=9:antialias=true:hinting=true
+URxvt.italicFont: xft:Inconsolata Nerd Font:style=Medium:size=9:antialias=true:hinting=true
+
+! URxvt.font: xft:iosevka:size=13
+! URxvt.boldFont: xft:iosevka:bold:size=13
+! URxvt.italicFont: xft:iosevka:italic:size=13
+
+! URxvt.font: xft:Fira Code Retina:style=Retina:pixelsize=14
+! URxvt.boldFont: xft:Fira Code:style=Bold:pixelsize:14
+! URxvt.italicFont: xft:Fira Code:style=Light:pixelsize:14
+
+URxvt.letterSpace: 0
+URxvt.lineSpace: -1
+
 URxvt.scrollBar: false
 URxvt.termName: xterm-256color
 
