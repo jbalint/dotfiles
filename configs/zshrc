@@ -20,6 +20,7 @@ export JAVA6_HOME=~/sw/java-sw/jdk6
 export JAVA7_HOME=~/sw/java-sw/jdk7
 export JAVA8_HOME=~/sw/java-sw/jdk8
 export JAVA9_HOME=~/sw/java-sw/jdk9
+export JAVA11_HOME=~/sw/java-sw/jdk11
 #export LUA_HOME=~/sw/lua-5.2.2
 #export MYSQL_HOME=~/sw/mysql-5.5.30-linux2.6-x86_64
 export LD_LIBRARY_PATH=~/sw/yellow-tree:~/lib
@@ -50,6 +51,7 @@ fi
 
 export LD_LIBRARY_PATH=~/sw/yellow-tree:~/lib:$JAVA_HOME/jre/lib/amd64/server
 
+export PATH=${PATH}:$HOME/.cargo/bin
 if [ "$HOSTNAME" = "tagore" ] ; then
 	export PATH=${PATH}:/opt/cuda/bin:/home/jbalint/sw/java-sw/stardog-bin/bin:/home/jbalint/.gem/ruby/2.3.0/bin
 	export PATH=${PATH}:$HOME/sw/postgres-12.0b3-jess/bin
@@ -84,10 +86,12 @@ alias vi=vim
 alias rein=". ~/.zshrc"
 alias java8="export JAVA_HOME=$JAVA8_HOME ; rein"
 alias java9="export JAVA_HOME=$JAVA9_HOME ; rein"
+alias java11="export JAVA_HOME=$JAVA11_HOME ; rein"
 alias edrc="vi ~/.zshrc"
 alias reset_inotify="echo 9999 | sudo tee /proc/sys/fs/inotify/max_user_watches"
 alias dnsreset="echo 'nameserver 192.168.1.1' | sudo tee /etc/resolv.conf"
-alias screenshot="sleep 3s; import -window root screenshot_\$(date "+%Y-%m-%d_%H:%M:%S").png"
+alias screenshot="SS_FILE=screenshot_\$(date "+%Y-%m-%d_%H%M%S").png ; sleep 3s; import -window root \$SS_FILE ; echo \$SS_FILE"
+alias screenshot_g="screenshot ; gimp \$SS_FILE"
 alias facebook="chromium facebook.com"
 alias timidity="timidity -iA -R 1"
 alias bldec="xbacklight -dec 10 ; xbacklight"
@@ -208,38 +212,41 @@ diffdir() {
 
 # Switch wm from desktop mode to laptop
 # Monitors:
-#   * DP-0: laptop screen
-#   * DP-1: primary monitor
-#   * DP-3: secondary monitor (left-of DP-3)
+#   * eDP-1: laptop screen
+#   * HDMI-1-1: primary monitor
+#   * (?? TBD ??) DP-3: secondary monitor (left-of DP-3)
+
+M_LAPTOP=DP-3
+M_0=HDMI-0
+M_1=HDMI-0
+
 bspc_laptop() {
 
     # Turn on the laptop screen
-    xrandr --output DP-0 --auto --right-of DP-1
+    xrandr --output $M_LAPTOP --auto --right-of $M_0
 
     # create implicit desktops
-    bspc monitor DP-1 -a Desktop
-    bspc monitor DP-3 -a Desktop
+    bspc monitor $M_0 -a Desktop
+    bspc monitor $M_1 -a Desktop
     CURR_DESKTOP=$(bspc query -D -d focused)
-    # Move 0+q desktops to DP-0
-    # Move 1-9 desktops to DP-0
-    for i in 0 q ; do bspc desktop $i -m DP-0 ; done
-    for i in `seq 1 9` ; do bspc desktop $i -m DP-0 ; done
+    for i in 0 q ; do bspc desktop $i -m $M_LAPTOP ; done
+    for i in `seq 1 9` ; do bspc desktop $i -m $M_LAPTOP ; done
     bspc desktop -f $CURR_DESKTOP
 
     # TODO: re-focus the prev focused
 
     # Remove other monitors
-    xrandr --output DP-3 --off --output DP-1 --off
-    bspc monitor DP-3 -r
-    bspc monitor DP-1 -r
+    xrandr --output $M_1 --off --output $M_0 --off
+    bspc monitor $M_0 -r
+    bspc monitor $M_1 -r
 
     # Remove any implicitly created desktops
     for i in `seq 1 4` ; do bspc desktop Desktop -r ; done
 
     # Restart polybar
-    bspc config -m DP-0 top_padding 20
+    bspc config -m $M_LAPTOP top_padding 20
     killall polybar
-    setsid polybar `hostname`-DP-0
+    setsid polybar `hostname`-$M_LAPTOP
 
     # In case anything got lost, adopt orphaned windows
     bspc wm -o
@@ -247,31 +254,30 @@ bspc_laptop() {
 }
 
 bspc_desktop() {
-
     # These do not work reliably when combined into one command
-    xrandr --output DP-1 --auto --left-of DP-0
-    xrandr --output DP-3 --auto --left-of DP-1
-    # xrandr --fb 5120x1440 --output DP-1 --auto --panning 0x0 --output DP-3 --auto --panning 0x0 --left-of DP-1 --output DP-0 --off
-    # xrandr --output DP-1 --auto --output DP-3 --auto --left-of DP-1 --output DP-0 --off
+    xrandr --output $M_0 --auto --left-of $M_LAPTOP
+    xrandr --output $M_1 --auto --left-of $M_0
+    # xrandr --fb 5120x1440 --output $M_0 --auto --panning 0x0 --output $M_1 --auto --panning 0x0 --left-of $M_0 --output $M_LAPTOP --off
+    # xrandr --output $M_0 --auto --output $M_1 --auto --left-of $M_0 --output $M_LAPTOP --off
     # To disable panning
     # xrandr -s 0
 
-    bspc monitor DP-0 -a Desktop
+    bspc monitor $M_LAPTOP -a Desktop
 
-    for i in 0 q ; do bspc desktop $i -m DP-3 ; done
-    for i in `seq 1 9` ; do bspc desktop $i -m DP-1 ; done
+    for i in 0 q ; do bspc desktop $i -m $M_0 ; done
+    for i in `seq 1 9` ; do bspc desktop $i -m $M_1 ; done
 
-    xrandr --output DP-0 --off
+    xrandr --output $M_LAPTOP --off
 
-    bspc monitor DP-0 -r
+    bspc monitor $M_LAPTOP -r
     # There could be a few...
     for i in `seq 1 4` ; do bspc desktop Desktop -r ; done
 
     # Restart polybar
-    bspc config -m DP-1 top_padding 20
-    bspc config -m DP-3 top_padding 0
+    bspc config -m $M_1 top_padding 0
+    bspc config -m $M_0 top_padding 20
     killall polybar
-    setsid polybar `hostname`-DP-1
+    setsid polybar `hostname`-$M_0
 
 }
 
