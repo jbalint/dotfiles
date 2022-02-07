@@ -21,6 +21,7 @@ export JAVA7_HOME=~/sw/java-sw/jdk7
 export JAVA8_HOME=~/sw/java-sw/jdk8
 export JAVA9_HOME=~/sw/java-sw/jdk9
 export JAVA11_HOME=~/sw/java-sw/jdk11
+export JAVA17_HOME=~/sw/java-sw/jdk17
 #export LUA_HOME=~/sw/lua-5.2.2
 #export MYSQL_HOME=~/sw/mysql-5.5.30-linux2.6-x86_64
 export LD_LIBRARY_PATH=~/sw/yellow-tree:~/lib
@@ -45,7 +46,7 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 if [ "$JAVA_HOME" = "" ] ; then
-	export JAVA_HOME=$JAVA8_HOME
+	export JAVA_HOME=$JAVA11_HOME
 fi
 
 export LD_LIBRARY_PATH=~/sw/yellow-tree:~/lib:$JAVA_HOME/jre/lib/amd64/server
@@ -74,6 +75,7 @@ fi
 for X ( \
 	~/bin \
 	~/.local/bin \
+	~/.toolbox/bin \
         ~/sw/java-sw/stardog-bin \
 	$BS_HOME/bin \
 	$JAVA_HOME/bin \
@@ -86,6 +88,7 @@ alias rein=". ~/.zshrc"
 alias java8="export JAVA_HOME=$JAVA8_HOME ; rein"
 alias java9="export JAVA_HOME=$JAVA9_HOME ; rein"
 alias java11="export JAVA_HOME=$JAVA11_HOME ; rein"
+alias java17="export JAVA_HOME=$JAVA17_HOME ; rein"
 alias edrc="vi ~/.zshrc"
 alias reset_inotify="echo 9999 | sudo tee /proc/sys/fs/inotify/max_user_watches"
 alias dnsreset="echo 'nameserver 192.168.1.1' | sudo tee /etc/resolv.conf"
@@ -109,6 +112,8 @@ alias emm='export $(gpg --decrypt ~/sw/private_code/emm.gpg | grep -v "^#" | xar
 alias bspcd='bspc query -M --names | while read i ; do echo ">> Desktops on $i <<" ; bspc query -D --names -m $i ; done'
 alias clion="sg jira /home/jbalint/dl/clion-2019.1.4/bin/clion.sh"
 alias luke="/home/jbalint/sw/java-sw/lucene-8.3.0/luke/luke.sh"
+alias mdb-vpn-up="nmcli c up mongodb-vpn --ask"
+alias mdb-vpn-down="nmcli c down mongodb-vpn"
 
 ptsproc() { ps auxw | grep pts/`pts` }
 pts() {	basename `readlink /proc/self/fd/0` } # same as tty command
@@ -119,8 +124,6 @@ Tr() { tmux attach-session -t "$1" }
 Td() { tmux detach-client -s "$1" }
 touchpad_off() { synclient TouchpadOff=1 }
 touchpad_on() { synclient TouchpadOff=0 }
-laptop_on() { xrandr --output LVDS1 --auto --mode 1366x768 }
-laptop_off() { xrandr --output LVDS1 --off }
 git-log-graph() { git log --pretty=oneline --graph }
 gstack() { gdb -batch -ex "thread apply all bt full" -p $1 }
 mailsync() { notmuch search --format=text0 --output=files tag:deleted | xargs -0 --no-run-if-empty rm && mbsync -a && notmuch new }
@@ -217,7 +220,7 @@ diffdir() {
 
 M_LAPTOP=DP-3
 M_0=HDMI-0
-M_1=HDMI-0
+M_1=DP-4
 
 bspc_laptop() {
 
@@ -263,8 +266,8 @@ bspc_desktop() {
 
     bspc monitor $M_LAPTOP -a Desktop
 
-    for i in 0 q ; do bspc desktop $i -m $M_0 ; done
-    for i in `seq 1 9` ; do bspc desktop $i -m $M_1 ; done
+    for i in 0 q ; do bspc desktop $i -m $M_1 ; done
+    for i in `seq 1 9` ; do bspc desktop $i -m $M_0 ; done
 
     xrandr --output $M_LAPTOP --off
 
