@@ -43,7 +43,6 @@ export RUST_BACKTRACE=full
 export _JAVA_AWT_WM_NONREPARENTING=1
 # Python
 export VIRTUAL_ENV_DISABLE_PROMPT=1
-cat ~/.artifactory_credentials| while read i ; do eval "export $i"; done
 
 if [ "$JAVA_HOME" = "" ] ; then
 	export JAVA_HOME=$JAVA8_HOME
