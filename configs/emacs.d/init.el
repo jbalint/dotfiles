@@ -18,6 +18,8 @@
 
 (ido-mode t)
 
+(add-to-list 'warning-suppress-types '(undo discard-info))
+
 ;;(add-to-list 'auto-save-file-name-transforms '("\\(.*\\)" "~/tmp/emacs/\\1" t))
 (setq auto-save-file-name-transforms `((".*" "~/tmp/emacs" t)))
 
@@ -43,6 +45,8 @@
 ; gud-jdb-directories - :X
 
 (setq default-tab-width 4)
+;; https://emacs.stackexchange.com/questions/3824/what-piece-of-code-in-emacs-makes-line-number-mode-print-as-line-number-i
+(setq line-number-display-limit-width 2000000)
 
 ;;;;;(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 (add-to-list 'load-path "~/sw/emacs-gargoyle")
@@ -81,7 +85,7 @@
  '(menu-bar-mode nil)
  '(message-citation-line-function 'message-insert-formatted-citation-line)
  '(notmuch-saved-searches
-   '((:name "inbox" :query "tag:inbox -tag:save -tag:calcite -tag:save30days -tag:mailinglists" :key "i" :sort-order newest-first)
+   '((:name "inbox" :query "tag:inbox -tag:save -tag:calcite -tag:save30days -tag:mailinglists date:2w.." :key "i" :sort-order newest-first)
      (:name "unread" :query "tag:unread" :key "u" :sort-order newest-first)
      (:name "flagged" :query "tag:flagged" :key "f")
      (:name "sent" :query "tag:sent" :key "t")
@@ -91,7 +95,7 @@
  '(org-modules
    '(org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m org-wl))
  '(package-selected-packages
-   '(sqlformat dumb-jump bazel terraform-mode slime lsp-mode bazel-mode monokai-theme cargo yaml-mode typescript-mode company-racer racer graphql-mode racket-mode haskell-mode cmake-mode calfw ggtags wanderlust w3m sparql-mode rust-mode rudel paredit pallet markdown-mode magit lua-mode lispy ledger-mode idris-mode helm-projectile helm-ag groovy-mode flymake-easy flycheck-haskell find-file-in-project ess ensime emacs-eclim edts e2wm cider bbdb lsp-mode yasnippet lsp-treemacs helm-lsp projectile hydra flycheck company avy which-key helm-xref dap-mode))
+   '(helm-flycheck flycheck-vdm eglot go-mode sqlformat dumb-jump bazel terraform-mode slime lsp-mode bazel-mode monokai-theme cargo yaml-mode typescript-mode company-racer racer graphql-mode racket-mode haskell-mode cmake-mode calfw ggtags wanderlust w3m sparql-mode rust-mode rudel paredit pallet markdown-mode magit lua-mode lispy ledger-mode idris-mode helm-projectile helm-ag groovy-mode flymake-easy flycheck-haskell find-file-in-project ess ensime emacs-eclim edts e2wm cider bbdb lsp-mode yasnippet lsp-treemacs helm-lsp projectile hydra flycheck company avy which-key helm-xref dap-mode))
  '(safe-local-variable-values '((org-log-done . t)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
@@ -575,6 +579,18 @@ A prefix argument can be used to scroll backwards or more than one."
 (autoload 'octave-mode "octave-mod" nil)
 (add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
 
+;;;;;;;;;
+;; C++ ;;
+;;;;;;;;;
+;; https://ddavis.io/posts/eglot-cpp-ide/
+(defun jb/projectile-proj-find-function (dir)
+  (let ((root (projectile-project-root dir)))
+    (and root (cons 'transient root))))
+
+(with-eval-after-load 'project
+  (add-to-list 'project-find-functions
+               'jb/projectile-proj-find-function))
+
 ;;;;;;;;;;;;;
 ;; notmuch ;;
 ;;;;;;;;;;;;;
@@ -586,7 +602,7 @@ A prefix argument can be used to scroll backwards or more than one."
        '("s" ("+save"))
        '("t" ("+save30days"))
        '("d" ("+deleted"))
-       '("c" ("+calcite"))))
+       '("v" ("+calcite"))))
 
 (defun notmuch-search-apply-tag-macro (key)
   (interactive "k")
@@ -610,3 +626,5 @@ A prefix argument can be used to scroll backwards or more than one."
 
 (put 'downcase-region 'disabled nil)
 (put 'erase-buffer 'disabled nil)
+
+(setq sqlformat-command 'pgformatter)
