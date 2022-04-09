@@ -50,17 +50,17 @@ modules-left = cpu memory load network_wlp3s0 kodi nightscout battery
 
 [bar/wuwei]
 inherit = section/base
-modules-left = cpu memory load network_wlp0s20f3 kodi nightscout battery bspwm git-monitor dogecoin-price notmuch
+modules-left = cpu memory load network_wlp0s20f3 kodi nightscout battery bspwm git-monitor dogecoin-price notmuch io
 ;;russian-alphabet
 locale = ru_RU.UTF-8
 
-[bar/wuwei-DP-3]
+[bar/wuwei-eDP-1]
 inherit = bar/wuwei
 monitor = DP-3
 
-[bar/wuwei-HDMI-0]
+[bar/wuwei-HDMI-1-0]
 inherit = bar/wuwei
-monitor = HDMI-0
+monitor = HDMI-1-0
 
 [bar/tagore]
 inherit = section/base
@@ -154,6 +154,11 @@ exec = $BS_HOME/git_repo_monitor/git_modified_repo_count.sh
 click-left = urxvt -hold -e $BS_HOME/git_repo_monitor/./git_monitor_report.sh &
 interval = 600
 format-underline = #fe0000
+
+[module/io]
+type = custom/script
+exec = iostat -x -s -o JSON | jq -r '.sysstat.hosts[0].statistics[0].disk | .[] | @html "\(.disk_device)(\(.util))"' | tr '\n' ' '
+interval = 2
 
 [module/kernel]
 type = custom/script
