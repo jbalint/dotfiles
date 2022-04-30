@@ -1,6 +1,7 @@
 [user]
 	email = jbalint@gmail.com
 	name = Jess Balint
+	signingkey = C09BA4E5B0A8BB04
 
 [color]
 	diff = auto
@@ -8,7 +9,7 @@
 	branch = auto
 [core]
 	pager = less
-	excludesFile = "somewhere"
+	excludesFile = ~/.gitignore
 
 [status]
 #	showUntrackedFiles = no
@@ -32,3 +33,12 @@
 	autocorrect = 0
 [init]
 	defaultBranch = main
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+
+[include]
+	path = ~/sw/private_code/private-config
