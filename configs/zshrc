@@ -112,8 +112,7 @@ alias emm='export $(gpg --decrypt ~/sw/private_code/emm.gpg | grep -v "^#" | xar
 alias bspcd='bspc query -M --names | while read i ; do echo ">> Desktops on $i <<" ; bspc query -D --names -m $i ; done'
 alias clion="sg jira /home/jbalint/dl/clion-2019.1.4/bin/clion.sh"
 alias luke="/home/jbalint/sw/java-sw/lucene-8.3.0/luke/luke.sh"
-alias mdb-vpn-up="nmcli c up mongodb-vpn --ask"
-alias mdb-vpn-down="nmcli c down mongodb-vpn"
+alias chromium-kill-gpu="ps auxw | grep chromium | grep type=gpu-process | grep -v jxbrowser | awk '{print \$2}' | xargs kill"
 
 ptsproc() { ps auxw | grep pts/`pts` }
 pts() {	basename `readlink /proc/self/fd/0` } # same as tty command
@@ -218,9 +217,9 @@ diffdir() {
 #   * HDMI-1-1: primary monitor
 #   * (?? TBD ??) DP-3: secondary monitor (left-of DP-3)
 
-M_LAPTOP=DP-3
-M_0=HDMI-0
-M_1=DP-4
+M_LAPTOP=eDP-1
+M_0=HDMI-1-0
+M_1=DP-1-3
 
 bspc_laptop() {
 
@@ -247,8 +246,7 @@ bspc_laptop() {
 
     # Restart polybar
     bspc config -m $M_LAPTOP top_padding 20
-    killall polybar
-    setsid polybar `hostname`-$M_LAPTOP
+    killall polybar ; setsid polybar `hostname`-$M_LAPTOP
 
     # In case anything got lost, adopt orphaned windows
     bspc wm -o
@@ -278,8 +276,7 @@ bspc_desktop() {
     # Restart polybar
     bspc config -m $M_1 top_padding 0
     bspc config -m $M_0 top_padding 20
-    killall polybar
-    setsid polybar `hostname`-$M_0
+    killall polybar ; setsid polybar `hostname`-$M_0
 
 }
 
@@ -292,8 +289,8 @@ ncc() {
 }
 
 msshfs() {
-    sshfs -oport=6701,reconnect,ServerAliveInterval=45,ServerAliveCountMax=2 jessandmorgan.com:/home/jbalint tagore_home
-    sshfs -oport=6701,reconnect,ServerAliveInterval=45,ServerAliveCountMax=2 jessandmorgan.com:/ tagore/
+    sshfs -oport=6701,reconnect,ServerAliveInterval=45,ServerAliveCountMax=2 jessandmorgan.com:/home/jbalint /home/jbalint/tagore_home
+    sshfs -oport=6701,reconnect,ServerAliveInterval=45,ServerAliveCountMax=2 jessandmorgan.com:/ /home/jbalint/tagore
     #sshfs -oreconnect,ServerAliveInterval=45,ServerAliveCountMax=2 agelaius:/mnt/red_or_blue red_or_blue
 }
 
@@ -327,3 +324,5 @@ HISTSIZE=10000
 SAVEHIST=10000
 setopt appendhistory autocd extendedglob nomatch
 # End of lines configured by zsh-newuser-install
+
+[ -e $HOME/sw/private_code/dotfiles/scripts/private-env.sh ] && source $HOME/sw/private_code/dotfiles/scripts/private-env.sh
