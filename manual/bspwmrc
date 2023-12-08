@@ -10,7 +10,9 @@ bspc config focus_by_distance   true
 
 bspc config click_to_focus true
 
-# Percy
-bspc rule -a Emacs:percy state=floating focus=on
+# Percy window should be floating
+# https://www.reddit.com/r/bspwm/comments/ka34xr/bspc_rule_based_on_net_wm_name/
+# use xprop to examine WM_CLASS and WM_NAME
+bspc rule -a 'Emacs:*:percy' state=floating focus=on
 
-bspc monitor -a 0 q 1 2 3 4 5 6 7 8 9
+bspc monitor -a 0 q w 1 2 3 4 5 6 7 8 9
