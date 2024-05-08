@@ -597,6 +597,26 @@ A prefix argument can be used to scroll backwards or more than one."
   (add-to-list 'project-find-functions
                'jb/projectile-proj-find-function))
 
+;;;;;;;;;;;
+;; gptel ;;
+;;;;;;;;;;;
+(setq
+ gptel-model "claude-3-sonnet-20240229"
+ gptel-backend
+ (gptel-make-anthropic "Claude"
+   :stream t
+   :key (lambda ()
+          (password-store-get "Insight/N88-726/gptel_api_key"))))
+
+(setq
+ gptel-model "gpt-4"
+ gptel-backend
+ (gptel-make-openai "ChatGPT"
+   :stream t
+   :models '("gpt-4-turbo")
+   :key (lambda ()
+          (password-store-get "Insight/N88-730/gptel_api_key"))))
+
 ;;;;;;;;;;;;;
 ;; notmuch ;;
 ;;;;;;;;;;;;;
