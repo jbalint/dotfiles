@@ -1,9 +1,6 @@
 ;; Install Cask/Pallet packages first
-
 (require 'cask "/home/jbalint/sw/emacs-sw/cask/cask.el")
 (cask-initialize)
-(require 'pallet)
-(pallet-mode t)
 
 (require 'font-lock)
 (require 'cc-mode)
@@ -73,19 +70,16 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["black" "red" "green" "yellow" "blue" "magenta" "cyan" "yellow"])
  '(browse-url-browser-function 'browse-url-xdg-open)
- '(cursor-color nil)
  '(custom-safe-themes
-   '("a2cde79e4cc8dc9a03e7d9a42fabf8928720d420034b66aecc5b665bbf05d4e9" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" default))
+   '("00445e6f15d31e9afaa23ed0d765850e9cd5e929be5e8e63b114a3346236c44c" "37c8c2817010e59734fe1f9302a7e6a2b5e8cc648cf6a6cc8b85f3bf17fececf" "a2cde79e4cc8dc9a03e7d9a42fabf8928720d420034b66aecc5b665bbf05d4e9" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "fc5fcb6f1f1c1bc01305694c59a1a861b008c534cae8d0e48e4d5e81ad718bc6" default))
  '(default-input-method 'kannada-jessscript)
  '(ecb-options-version "2.40")
- '(foreground-color nil)
+ '(geiser-chicken-binary "chicken-csi")
  '(menu-bar-mode nil)
  '(message-citation-line-function 'message-insert-formatted-citation-line)
  '(notmuch-saved-searches
-   '((:name "inbox" :query "tag:inbox -tag:save -tag:calcite -tag:save30days -tag:mailinglists date:2w.." :key "i" :sort-order newest-first)
+   '((:name "inbox" :query "tag:inbox -tag:save -tag:calcite -tag:save30days -tag:mailinglists -tag:spark -to:morganbecker@hotmail.com date:2w.." :key "i" :sort-order newest-first)
      (:name "unread" :query "tag:unread" :key "u" :sort-order newest-first)
      (:name "flagged" :query "tag:flagged" :key "f")
      (:name "sent" :query "tag:sent" :key "t")
@@ -95,7 +89,9 @@
  '(org-modules
    '(org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m org-wl))
  '(package-selected-packages
-   '(helm-flycheck flycheck-vdm eglot go-mode sqlformat dumb-jump bazel terraform-mode slime lsp-mode bazel-mode monokai-theme cargo yaml-mode typescript-mode company-racer racer graphql-mode racket-mode haskell-mode cmake-mode calfw ggtags wanderlust w3m sparql-mode rust-mode rudel paredit pallet markdown-mode magit lua-mode lispy ledger-mode idris-mode helm-projectile helm-ag groovy-mode flymake-easy flycheck-haskell find-file-in-project ess ensime emacs-eclim edts e2wm cider bbdb lsp-mode yasnippet lsp-treemacs helm-lsp projectile hydra flycheck company avy which-key helm-xref dap-mode))
+   '(eglot-hierarchy gptel password-store paredit tide git-link shen-mode geiser-racket lsp-java geiser-chicken polymode vimrc-mode helm-flycheck flycheck-vdm eglot go-mode sqlformat dumb-jump bazel terraform-mode slime lsp-mode bazel-mode monokai-theme cargo yaml-mode typescript-mode company-racer racer graphql-mode racket-mode haskell-mode cmake-mode calfw ggtags wanderlust w3m sparql-mode rudel pallet markdown-mode magit lua-mode lispy ledger-mode idris-mode helm-projectile helm-ag groovy-mode flymake-easy flycheck-haskell find-file-in-project ess ensime emacs-eclim edts e2wm cider bbdb lsp-mode yasnippet lsp-treemacs helm-lsp projectile hydra flycheck company avy which-key helm-xref dap-mode))
+ '(package-vc-selected-packages
+   '((eglot-hierarchy :vc-backend Git :url "https://github.com/dolmens/eglot-hierarchy")))
  '(safe-local-variable-values '((org-log-done . t)))
  '(scroll-bar-mode nil)
  '(tool-bar-mode nil)
@@ -111,12 +107,11 @@
 ;;;;;;;;;;
 ;; Helm ;;
 ;;;;;;;;;;
-(require 'helm-config)
 (helm-mode 1)
 ;; List of times to show in helm-world-time
 (setq display-time-world-list '(("America/Chicago" "Madison")
                                 ("Europe/Berlin" "Heidelberg")
-                                ("America/New_York" "DC")
+                                ("America/New_York" "NYC")
                                 ("Europe/Moscow" "Moscow")
                                 ("Pacific/Honolulu" "Hawaii")
                                 ("UTC" "UTC")
@@ -340,7 +335,8 @@ A prefix argument can be used to scroll backwards or more than one."
 ;; TODO : ledger mode doesn't define hooks?
 (add-hook 'ledger-mode-hook
           (lambda () (interactive)
-	    (electric-indent-local-mode nil)
+            ;; this is against convention? I thought it would be nil instead of -1
+	    (electric-indent-local-mode -1)
             (setq-local tab-always-indent 'complete)
             (setq-local completion-cycle-threshold t)
             (setq-local ledger-complete-in-steps t)))
@@ -416,10 +412,9 @@ A prefix argument can be used to scroll backwards or more than one."
 (require 'projectile)
 (require 'helm-projectile)
 (projectile-global-mode)
+(define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
 (setq projectile-completion-system 'helm)
 (helm-projectile-on)
-;; Erlang/rebar3
-(add-to-list 'projectile-globally-ignored-directories "_build")
 ;; Java
 (add-to-list 'projectile-globally-ignored-directories "build")
 
@@ -457,7 +452,7 @@ A prefix argument can be used to scroll backwards or more than one."
 ;; Slime ;;
 ;;;;;;;;;;;
 (setq inferior-lisp-program "/usr/bin/sbcl")
-(require 'slime-autoloads)
+;;(require 'slime-autoloads)
 
 ;;;;;;;;;;;;;;;
 ;; Bookmarks ;;
@@ -467,13 +462,6 @@ A prefix argument can be used to scroll backwards or more than one."
 ;;;;;;;;;;
 ;; Rust ;;
 ;;;;;;;;;;
-(add-hook 'rust-mode-hook #'racer-mode)
-(add-hook 'racer-mode-hook #'eldoc-mode)
-(add-hook 'racer-mode-hook #'company-mode)
-
-(require 'rust-mode)
-(define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
-(setq company-tooltip-align-annotations t)
 
 ;;;;;;;;;;;;;
 ;; Kannada ;;
@@ -597,6 +585,14 @@ A prefix argument can be used to scroll backwards or more than one."
   (add-to-list 'project-find-functions
                'jb/projectile-proj-find-function))
 
+;;;;;;;;;;
+;; PDDL ;;
+;;;;;;;;;;
+(let ((downloaded-pddl-file "/home/jbalint/sw/emacs-sw/pddl-mode.el"))
+  (cond ((file-exists-p downloaded-pddl-file)
+         (progn (load-file downloaded-pddl-file)
+                (add-to-list 'auto-mode-alist '("\\.PDDL$" . PDDL-mode))))))
+
 ;;;;;;;;;;;
 ;; gptel ;;
 ;;;;;;;;;;;
@@ -638,6 +634,65 @@ A prefix argument can be used to scroll backwards or more than one."
 (autoload 'notmuch "notmuch" "notmuch mail" t)
 
 ;;;;;;;;;;
+;; TLA+ ;;
+;;;;;;;;;;
+(add-to-list 'load-path "~/sw/emacs-sw/tla-tools")
+
+(require 'tla-tools)
+;;(require 'tla-pcal-mode)
+
+;;;;;;;;;;;;;
+;; Paredit ;;
+;;;;;;;;;;;;;
+(autoload 'enable-paredit-mode "paredit"
+  "Turn on pseudo-structural editing of Lisp code."
+  t)
+(add-hook 'emacs-lisp-mode-hook       'enable-paredit-mode)
+(add-hook 'lisp-mode-hook             'enable-paredit-mode)
+(add-hook 'lisp-interaction-mode-hook 'enable-paredit-mode)
+(add-hook 'scheme-mode-hook           'enable-paredit-mode)
+
+;;;;;;;;;;;
+;; Shell ;;
+;;;;;;;;;;;
+(defun shell-clear-and-run ()
+  "Clear the shell buffer and rerun the last command"
+  (interactive)
+  (erase-buffer)
+  (comint-previous-input 0)
+  (comint-send-input))
+
+(add-hook 'shell-mode-hook
+          (lambda ()
+            (local-set-key (kbd "C-x r e") 'shell-clear-and-run)))
+
+;;;;;;;;;;;
+;; Tide/Javascript ;;
+;;;;;;;;;;;
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  ;; company is an optional dependency. You have to
+  ;; install it separately via package-install
+  ;; `M-x package-install [ret] company`
+  (company-mode +1))
+
+;; aligns annotation to the right hand side
+(setq company-tooltip-align-annotations t)
+
+;; formats the buffer before saving
+(add-hook 'before-save-hook 'tide-format-before-save)
+
+;; if you use typescript-mode
+(add-hook 'typescript-mode-hook #'setup-tide-mode)
+;; if you use treesitter based typescript-ts-mode (emacs 29+)
+(add-hook 'typescript-ts-mode-hook #'setup-tide-mode)
+
+;;;;;;;;;;
 ;; Misc ;;
 ;;;;;;;;;;
 
@@ -651,6 +706,8 @@ A prefix argument can be used to scroll backwards or more than one."
   (setq indent-tabs-mode nil))
 
 (put 'downcase-region 'disabled nil)
-(put 'erase-buffer 'disabled nil)
 
 (setq sqlformat-command 'pgformatter)
+(put 'erase-buffer 'disabled nil)
+
+(load-theme 'modus-vivendi t)
