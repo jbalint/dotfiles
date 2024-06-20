@@ -7,12 +7,13 @@
 	diff = auto
 	status = auto
 	branch = auto
+
 [core]
 	pager = less
 	excludesFile = ~/.gitignore
 
 [status]
-#	showUntrackedFiles = no
+	showUntrackedFiles = no
 
 [push]
 	default = simple
@@ -23,14 +24,19 @@
 
 [show]
 	fullIndex = true
+
 [log]
 	decorate = true
+
 [rebase]
 	autoStash = true
+
 [pull]
 	rebase = true
+
 [help]
 	autocorrect = 0
+
 [init]
 	defaultBranch = main
 
@@ -42,3 +48,6 @@
 
 [include]
 	path = ~/sw/private_code/private-config
+
+[credential]
+	helper = cache
