@@ -645,10 +645,12 @@ A prefix argument can be used to scroll backwards or more than one."
 ;;;;;;;;;;
 ;; TLA+ ;;
 ;;;;;;;;;;
-(add-to-list 'load-path "~/sw/emacs-sw/tla-tools")
+(let ((tla-tools-dir "~/sw/emacs-sw/tla-tools"))
+  (when (file-exists-p tla-tools-dir)
+    (add-to-list 'load-path tla-tools-dir)
+    (require 'tla-tools)
+    (require 'tla-pcal-mode)))
 
-(require 'tla-tools)
-;;(require 'tla-pcal-mode)
 
 ;;;;;;;;;;;;;
 ;; Paredit ;;
