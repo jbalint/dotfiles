@@ -68,3 +68,7 @@ URxvt.keysym.M-Delete:    matcher:list
 ! white
 *.color7:       #f8f8f2
 *.color15:      #f9f8f5
+
+! http://www.leonerd.org.uk/hacks/hints/xterm-8bit.html
+!*eightBitInput:    false
+!*eightBitOutput:   true
