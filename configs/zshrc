@@ -22,6 +22,7 @@ export JAVA8_HOME=~/sw/java-sw/jdk8
 export JAVA9_HOME=~/sw/java-sw/jdk9
 export JAVA11_HOME=~/sw/java-sw/jdk11
 export JAVA17_HOME=~/sw/java-sw/jdk17
+export JAVA21_HOME=~/sw/java-sw/jdk21
 #export LUA_HOME=~/sw/lua-5.2.2
 #export MYSQL_HOME=~/sw/mysql-5.5.30-linux2.6-x86_64
 export LD_LIBRARY_PATH=~/sw/yellow-tree:~/lib
@@ -46,7 +47,7 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 if [ "$JAVA_HOME" = "" ] ; then
-	export JAVA_HOME=$JAVA11_HOME
+    export JAVA_HOME=$JAVA17_HOME
 fi
 
 export LD_LIBRARY_PATH=~/sw/yellow-tree:~/lib:$JAVA_HOME/jre/lib/amd64/server
@@ -89,6 +90,7 @@ alias java8="export JAVA_HOME=$JAVA8_HOME ; rein"
 alias java9="export JAVA_HOME=$JAVA9_HOME ; rein"
 alias java11="export JAVA_HOME=$JAVA11_HOME ; rein"
 alias java17="export JAVA_HOME=$JAVA17_HOME ; rein"
+alias java21="export JAVA_HOME=$JAVA21_HOME ; rein"
 alias edrc="vi ~/.zshrc"
 alias reset_inotify="echo 9999 | sudo tee /proc/sys/fs/inotify/max_user_watches"
 alias dnsreset="echo 'nameserver 192.168.1.1' | sudo tee /etc/resolv.conf"
