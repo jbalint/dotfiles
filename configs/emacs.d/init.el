@@ -1,6 +1,15 @@
-;; Install Cask/Pallet packages first
-(require 'cask "/home/jbalint/sw/emacs-sw/cask/cask.el")
-(cask-initialize)
+;;;;;;;;;;
+;; Package Management ;;
+;;;;;;;;;;
+
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+;; (package-initialize)
+;; (package-install-selected-packages)
+;; (package-refresh-contents)
+
+;;;;;;;;;;;;;
+;; General ;;
+;;;;;;;;;;;;;
 
 (require 'font-lock)
 (require 'cc-mode)
@@ -89,7 +98,7 @@
  '(org-modules
    '(org-bbdb org-bibtex org-docview org-gnus org-habit org-info org-irc org-mhe org-rmail org-w3m org-wl))
  '(package-selected-packages
-   '(eglot-hierarchy gptel password-store paredit tide git-link shen-mode geiser-racket lsp-java geiser-chicken polymode vimrc-mode helm-flycheck flycheck-vdm eglot go-mode sqlformat dumb-jump bazel terraform-mode slime lsp-mode bazel-mode monokai-theme cargo yaml-mode typescript-mode company-racer racer graphql-mode racket-mode haskell-mode cmake-mode calfw ggtags wanderlust w3m sparql-mode rudel pallet markdown-mode magit lua-mode lispy ledger-mode idris-mode helm-projectile helm-ag groovy-mode flymake-easy flycheck-haskell find-file-in-project ess ensime emacs-eclim edts e2wm cider bbdb lsp-mode yasnippet lsp-treemacs helm-lsp projectile hydra flycheck company avy which-key helm-xref dap-mode))
+   '(scala-mode eglot-hierarchy gptel password-store paredit tide git-link shen-mode geiser-racket lsp-java geiser-chicken polymode vimrc-mode helm-flycheck flycheck-vdm eglot go-mode sqlformat dumb-jump bazel terraform-mode slime lsp-mode bazel-mode monokai-theme cargo yaml-mode typescript-mode company-racer racer graphql-mode racket-mode haskell-mode cmake-mode calfw ggtags wanderlust w3m sparql-mode rudel pallet markdown-mode magit lua-mode lispy ledger-mode idris-mode helm-projectile helm-ag groovy-mode flymake-easy flycheck-haskell find-file-in-project ess ensime emacs-eclim edts e2wm cider bbdb lsp-mode yasnippet lsp-treemacs helm-lsp projectile hydra flycheck company avy which-key helm-xref dap-mode rust-mode paredit))
  '(package-vc-selected-packages
    '((eglot-hierarchy :vc-backend Git :url "https://github.com/dolmens/eglot-hierarchy")))
  '(safe-local-variable-values '((org-log-done . t)))
