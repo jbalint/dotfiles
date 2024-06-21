@@ -34,9 +34,12 @@ line-size = 1
 ;border-bottom-size = 20
 
 font-0 = "Tamsyn:pixelsize=9;0"
-font-1 = "Lohit Hindi"
+;font-1 = "Lohit Hindi"
 ;font-1 = "Roboto:size=11:weight=bold;2"
 ;font-2 = "Noto Sans:size=11;1"
+
+;; For the polypomo (pomodoro timer)
+font-1 = Noto Color Emoji:scale=15:antialias=false;0
 
 background = ${colors.background}
 foreground = ${colors.foreground}
@@ -50,17 +53,29 @@ modules-left = cpu memory load network_wlp3s0 kodi nightscout battery
 
 [bar/wuwei]
 inherit = section/base
-modules-left = cpu memory load network_wlp0s20f3 kodi nightscout battery bspwm git-monitor dogecoin-price notmuch io
+modules-left = cpu memory load nightscout battery bspwm git-monitor notmuch fs-disk2 fs-home polypomo
+;; modules-left = cpu memory load network_wlp9s0 kodi nightscout battery bspwm git-monitor notmuch fs-disk2 fs-home polypomo
+;; kodi
+;; io
+;; dogecoin-price
 ;;russian-alphabet
 locale = ru_RU.UTF-8
 
-[bar/wuwei-eDP-1]
+[bar/wuwei-eDP1]
 inherit = bar/wuwei
-monitor = DP-3
+monitor = eDP1
 
 [bar/wuwei-HDMI-1-0]
 inherit = bar/wuwei
 monitor = HDMI-1-0
+
+[bar/wuwei-DP-1]
+inherit = bar/wuwei
+monitor = DP-1
+
+[bar/wuwei-DP-3]
+inherit = bar/wuwei
+monitor = DP-3
 
 [bar/tagore]
 inherit = section/base
@@ -148,6 +163,22 @@ label-mounted = %percentage_used%%
 interval = 300
 ;format-mounted-underline = #fe0000
 
+[fs-base]
+type = internal/fs
+fixed-values = true
+label-mounted = %{A1:urxvt -e ncdu -x %mountpoint% &:}%mountpoint%: %percentage_used%%%{A}
+; TODO: warning isn't working
+;warn-percentage = 75
+;label-warn = %mountpoint%: WARNING
+
+[module/fs-disk2]
+inherit = fs-base
+mount-0 = /home/jbalint/disk2
+
+[module/fs-home]
+inherit = fs-base
+mount-0 = /home/jbalint
+
 [module/git-monitor]
 type = custom/script
 exec = $BS_HOME/git_repo_monitor/git_modified_repo_count.sh
@@ -221,18 +252,13 @@ inherit = section/network_base
 interface = eno1
 
 ; wuwei
-[module/network_wlp0s20f3]
+[module/network_wlp9s0]
 inherit = section/network_base
-interface = wlp0s20f3
+interface = wlp9s0
 ; wuwei
 [module/network_enp0s31f6]
 inherit = section/network_base
 interface = enp0s31f6
-
-; camus
-[module/network_wlp3s0]
-inherit = section/network_base
-interface = wlp3s0
 
 [module/nightscout]
 ; TODO : conditional colors would be great here too
@@ -250,6 +276,20 @@ type = custom/script
 exec = /home/jbalint/sw/dotfiles/scripts/notmuch-status
 format-prefix = "nm: "
 interval = 60
+
+; https://github.com/unode/polypomo
+[module/polypomo]
+type = custom/script
+
+exec = /home/jbalint/sw/misc/polypomo/polypomo
+tail = true
+
+label = %output%
+click-left = /home/jbalint/sw/misc/polypomo/polypomo toggle
+click-right = /home/jbalint/sw/misc/polypomo/polypomo end
+click-middle = /home/jbalint/sw/misc/polypomo/polypomo lock
+scroll-up = /home/jbalint/sw/misc/polypomo/polypomo time +60
+scroll-down = /home/jbalint/sw/misc/polypomo/polypomo time -60
 
 [module/russian-alphabet]
 type = custom/text
