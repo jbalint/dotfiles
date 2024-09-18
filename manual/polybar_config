@@ -53,7 +53,7 @@ modules-left = cpu memory load network_wlp3s0 kodi nightscout battery
 
 [bar/wuwei]
 inherit = section/base
-modules-left = cpu memory load nightscout kodi battery bspwm git-monitor notmuch fs-disk2 fs-home polypomo
+modules-left = cpu memory load nightscout kodi battery bspwm git-monitor notmuch fs-disk2 fs-home polypomo playerctl
 ;; kodi
 ;; io
 ;; dogecoin-price
@@ -275,6 +275,14 @@ type = custom/script
 exec = /home/jbalint/sw/dotfiles/scripts/notmuch-status
 format-prefix = "nm: "
 interval = 60
+
+[module/playerctl]
+type = custom/text
+content = "|>"
+;type = custom/script
+;exec = /home/jbalint/sw/dotfiles/scripts/playerctl
+click-left = /home/jbalint/sw/dotfiles/scripts/playerctl-status
+click-right = playerctl -a pause
 
 ; https://github.com/unode/polypomo
 [module/polypomo]
