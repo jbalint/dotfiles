@@ -53,8 +53,7 @@ modules-left = cpu memory load network_wlp3s0 kodi nightscout battery
 
 [bar/wuwei]
 inherit = section/base
-modules-left = cpu memory load nightscout battery bspwm git-monitor notmuch fs-disk2 fs-home polypomo
-;; modules-left = cpu memory load network_wlp9s0 kodi nightscout battery bspwm git-monitor notmuch fs-disk2 fs-home polypomo
+modules-left = cpu memory load nightscout kodi battery bspwm git-monitor notmuch fs-disk2 fs-home polypomo
 ;; kodi
 ;; io
 ;; dogecoin-price
@@ -182,13 +181,13 @@ mount-0 = /home/jbalint
 [module/git-monitor]
 type = custom/script
 exec = $BS_HOME/git_repo_monitor/git_modified_repo_count.sh
-click-left = urxvt -hold -e $BS_HOME/git_repo_monitor/./git_monitor_report.sh &
+click-left = urxvt -hold -e $BS_HOME/git_repo_monitor/git_monitor_report.sh &
 interval = 600
 format-underline = #fe0000
 
 [module/io]
 type = custom/script
-exec = iostat -x -s -o JSON | jq -r '.sysstat.hosts[0].statistics[0].disk | .[] | @html "\(.disk_device)(\(.util))"' | tr '\n' ' '
+;exec = iostat -x -s -o JSON | jq -r '.sysstat.hosts[0].statistics[0].disk | .[] | @html "\(.disk_device)(\(.util))"' | tr '\n' ' '
 interval = 2
 
 [module/kernel]
@@ -298,11 +297,11 @@ content = "Ёё-ЙйЦцУуКкЕеНнГгШшЩщЗзХхЪъ-ФфЫыВвА�
 ; in alphabetical order
 ;content = "Аа Бб Вв Гг Дд Ее Ёё Жж Зз Ии Йй Кк Лл Мм Нн Оо Пп Рр Сс Тт Уу Фф Хх Цц Чч Шш Щщ Ъъ Ыы Ьь Ээ Юю Яя"
 click-left = xdg-open http://www.russianlessons.net/lessons/lesson1_alphabet.php
-click-right = xdg-open https://localhost/mediawiki/index.php/Russian
+click-right = xdg-open https://jessandmorgan.com/mediawiki/index.php/Russian
 
 [module/weather]
 type = custom/script
-exec = curl -s -o - https://tgftp.nws.noaa.gov/data/observations/metar/decoded/KMSN.TXT | tr '\n' ' ' | perl -lpe's/.*Temperature: (.+?) .*/$1°/'
+;exec = curl -s -o - https://tgftp.nws.noaa.gov/data/observations/metar/decoded/KMSN.TXT | tr '\n' ' ' | perl -lpe's/.*Temperature: (.+?) .*/$1°/'
 interval = 600
 format-prefix = "MSN: "
 format-prefix-foreground = ${colors.foreground-alt}
