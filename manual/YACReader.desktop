@@ -1,0 +1,8 @@
+# Install from this directory with `$ desktop-file-install --dir=$HOME/.local/share/applications/ YACReader.desktop`
+
+[Desktop Entry]
+Name=YACReader
+Exec=YACReader %u
+Type=Application
+Terminal=false
+MimeType=application/x-rar
