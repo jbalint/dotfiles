@@ -1,0 +1,38 @@
+#!/bin/sh
+# -*- mode: sh -*-
+
+# playerctl status which shows a menu to play/pause all MPRIS-visible players
+
+# playerctl status of all players with track info (not URL yet). Example output:
+# chromium.instance5638 (Playing) Manjeet Kondal, Mr. Scruff - Bhangra House Xtc - Ishkaan De Mamle - Mr. Scruff Remix
+# mpv.instance3128248 (Paused) - Fantastic.Mr.Fox.2009
+# mpv.instance63954 (Paused) - Pirates.of.the.Caribbean.Curse.of.the.Black.Pearl
+# mpv.instance849714 (Paused) - Day 13.mp4
+
+function status() {
+    # List the players here rather than use {{playerName}} which
+    # includes the binary name but not the pid (needed for eg,
+    # multiple instances of mpv)
+    playerctl -l | \
+        while read i ; do
+            echo -n "$i "
+            playerctl -p $i -f "({{status}}) {{artist}} - {{album}} - {{title}}" metadata
+        done | \
+            sed 's/  / /g;s/- -/-/g' # get rid of missing artist/album
+}
+
+eval $(xdotool getmouselocation --shell)
+
+LINES=$((0 + $(playerctl -l | wc -l)))
+
+if [[ "$1" = "--test" ]] ; then
+    set -x
+    status
+else
+    (echo "Choose player:" ; status) | dzen2 -x $X -y $Y -tw 400 -w 800 -l $LINES -ta l -p -m -e 'onstart=uncollapse;button1=menuprint,exit;button3=ungrabkeys,exit' | \
+        while read i ; do
+            echo "$i"
+            PLAYER=$(echo "$i" | awk '{print $1}')
+            playerctl -p "$PLAYER" play-pause
+        done
+fi
