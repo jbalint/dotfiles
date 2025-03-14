@@ -1,28 +1,22 @@
 ! NOTE : `xrdb -merge .Xresources` after changing
+! NOTE : `fc-list` for some font listings
 
-! https://bbs.archlinux.org/viewtopic.php?id=164108
-URxvt.intensityStyles: false
-URxvt.buffered: false
-URxvt.perl-ext-common: default,resize-font,matcher
+!urxvt.font: xft:Inconsolata Nerd Font:pixelsize=14:antialias=true:hinting=true
+! Temporary for when using laptop screen
+urxvt.font: xft:Inconsolata Nerd Font:pixelsize=18:antialias=true:hinting=true
+urxvt*boldFont: xft:DejaVu Sans Mono:pixelsize=18:antialias=true:hinting=true:style=Bold
+urxvt*italicFont: xft:Fira Code Retina:pixelsize=18:antialias=true:hinting=true:style=Medium
 
-! URxvt.font: xft:inconsolata:pixelsize=14:antialias=true:hinting=true
-URxvt.font: xft:Inconsolata Nerd Font:style=Regular:size=9:antialias=true:hinting=true
-URxvt.boldFont: xft:Inconsolata Nerd Font:style=Bold:size=9:antialias=true:hinting=true
-URxvt.italicFont: xft:Inconsolata Nerd Font:style=Medium:size=9:antialias=true:hinting=true
+! Alacritty*font: xft:Inconsolata Nerd Font:pixelsize=18:antialias=true:hinting=true
+! Alacritty*boldFont: xft:DejaVu Sans Mono:pixelsize=18:antialias=true:hinting=true:style=Bold
+! Alacritty*italicFont: xft:Fira Code Retina:pixelsize=18:antialias=true:hinting=true:style=Medium
 
-! URxvt.font: xft:iosevka:size=13
-! URxvt.boldFont: xft:iosevka:bold:size=13
-! URxvt.italicFont: xft:iosevka:italic:size=13
-
-! URxvt.font: xft:Fira Code Retina:style=Retina:pixelsize=14
-! URxvt.boldFont: xft:Fira Code:style=Bold:pixelsize:14
-! URxvt.italicFont: xft:Fira Code:style=Light:pixelsize:14
-
-URxvt.letterSpace: 0
+URxvt.letterSpace: -1
 URxvt.lineSpace: -1
 
 URxvt.scrollBar: false
 URxvt.termName: xterm-256color
+!URxvt.termName: rxvt-256color
 
 ! note url-launcher is the NEW name, urlLauncher is the old one
 URxvt.url-launcher: xdg-open
@@ -30,44 +24,55 @@ URxvt.matcher.button: 1
 URxvt.keysym.C-Delete:    matcher:last
 URxvt.keysym.M-Delete:    matcher:list
 
+!Emacs*font: xft:Fira Code Retina:pixelsize=12:antialias=true:hinting=true
+Emacs*font: Fira Code Retina
 
 ! color theme from https://terminal.sexy/
 ! special
+! Getting weird escapes when resizing with these: 10;rgb:f800/f800/f200]11;rgb:2700/2800/2200
+! It was this!!! >>> *.cursorColor:  #f8f8f2
 *.foreground:   #f8f8f2
 *.background:   #272822
-*.cursorColor:  #f8f8f2
+!URxvt.*.foreground:   #f8f8f2
+!URxvt.*.background:   #272822
+!URxvt.*.cursorColor:  #f8f8f2
+URxvt*depth: 24
+
 
 ! black
-*.color0:       #272822
-*.color8:       #75715e
+URxvt*.color0:       #272822
+URxvt*.color8:       #75715e
 
 ! red
-*.color1:       #f92672
-*.color9:       #f92672
+URxvt*.color1:       #f92672
+URxvt*.color9:       #f92672
 
 ! green
-*.color2:       #a6e22e
-*.color10:      #a6e22e
+URxvt*.color2:       #a6e22e
+URxvt*.color10:      #a6e22e
 
 ! yellow
-*.color3:       #f4bf75
-*.color11:      #f4bf75
+URxvt*.color3:       #f4bf75
+URxvt*.color11:      #f4bf75
 
 ! blue
-*.color4:       #66d9ef
-*.color12:      #66d9ef
+URxvt*.color4:       #66d9ef
+URxvt*.color12:      #66d9ef
 
 ! magenta
-*.color5:       #ae81ff
-*.color13:      #ae81ff
+URxvt*.color5:       #ae81ff
+URxvt*.color13:      #ae81ff
 
 ! cyan
-*.color6:       #a1efe4
-*.color14:      #a1efe4
+URxvt*.color6:       #a1efe4
+URxvt*.color14:      #a1efe4
 
 ! white
-*.color7:       #f8f8f2
-*.color15:      #f9f8f5
+URxvt*.color7:       #f8f8f2
+URxvt*.color15:      #f9f8f5
+
+! For Emacs font scaling
+Xft.dpi: 96
 
 ! http://www.leonerd.org.uk/hacks/hints/xterm-8bit.html
 !*eightBitInput:    false
