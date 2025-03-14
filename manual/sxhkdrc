@@ -43,6 +43,9 @@ super + {_,shift + }{h,j,k,l}
 super + {_,shift + }c
 	bspc node -f {next,prev}
 
+super + {_,shift + }d
+	bspc node -f {next,prev}.local.!hidden.window
+
 super + bracket{left,right}
 	bspc desktop -f {prev,next}
 
