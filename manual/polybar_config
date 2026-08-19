@@ -34,12 +34,12 @@ line-size = 1
 ;border-bottom-size = 20
 
 font-0 = "Tamsyn:pixelsize=9;0"
-;font-1 = "Lohit Hindi"
-;font-1 = "Roboto:size=11:weight=bold;2"
-;font-2 = "Noto Sans:size=11;1"
-
 ;; For the polypomo (pomodoro timer)
 font-1 = Noto Color Emoji:scale=15:antialias=false;0
+font-2 = "SourceHanSansKR"
+;font-2 = "Lohit Hindi"
+;font-1 = "Roboto:size=11:weight=bold;2"
+;font-2 = "Noto Sans:size=11;1"
 
 background = ${colors.background}
 foreground = ${colors.foreground}
@@ -53,12 +53,13 @@ modules-left = cpu memory load network_wlp3s0 kodi nightscout battery
 
 [bar/wuwei]
 inherit = section/base
-modules-left = cpu memory load nightscout kodi battery bspwm git-monitor notmuch fs-disk2 fs-home polypomo playerctl
+modules-left = cpu memory load nightscout kodi battery bspwm git-monitor notmuch fs-disk2 fs-home polypomo playerctl dunst
 ;; kodi
 ;; io
 ;; dogecoin-price
 ;;russian-alphabet
-locale = ru_RU.UTF-8
+;;locale = ru_RU.UTF-8
+locale = ko_KR.UTF-8
 
 [bar/wuwei-eDP1]
 inherit = bar/wuwei
@@ -71,6 +72,10 @@ monitor = HDMI-1-0
 [bar/wuwei-DP-1]
 inherit = bar/wuwei
 monitor = DP-1
+
+[bar/wuwei-DP-4]
+inherit = bar/wuwei
+monitor = DP-4
 
 [bar/wuwei-DP-3]
 inherit = bar/wuwei
@@ -149,6 +154,12 @@ exec = /home/jbalint/sw/dotfiles/manual/dogecoin_price.sh
 format-prefix = "дожкоин: "
 click-left = chromium https://www.coindesk.com/price/dogecoin
 interval = 600
+
+[module/dunst]
+type = custom/text
+content = "🔔"
+click-left = dunstctl history-pop
+;;click-right = alacritty --hold -e dunstctl history | jq '.data[0].[] | @text "\(.timestamp.data | strflocaltime("%Y-%m-%dT%H:%M:%S %Z")) \(.appname.data): \(.summary.data) - \(.message.data)"'
 
 [module/filesystem_tagore_home]
 type = internal/fs
@@ -265,10 +276,12 @@ interface = enp0s31f6
 type = custom/script
 exec = /home/jbalint/sw/java-sw/nightscout-virtual-graph/latest_bg.sh
 interval = 120
-format-prefix = "уровень сахара: "
+format-prefix = "혈당:"
+;format-prefix = "уровень сахара: "
 ;format-prefix = "BG: "
 ;format-prefix-foreground = ${colors.foreground-alt}
 click-left = chromium https://jbalint-bg.herokuapp.com
+click-right = urxvt -e /home/jbalint/sw/java-sw/nightscout-virtual-graph/latest_bg.sh --test
 
 [module/notmuch]
 type = custom/script
