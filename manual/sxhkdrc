@@ -5,7 +5,7 @@
 super + alt + Escape
 	bspc quit
 
-super + w
+super + W
 	bspc node -c
 
 super + t
@@ -23,8 +23,16 @@ super + e
 super + {f,F}
 	bspc node `bspc query -T -d  | jq '.root.id'` -F {vertical,horizontal}
 
-super + {s,S}
-	bspc node -t {floating,tiled}
+#super + {s,S}
+#	bspc node -t {floating,tiled}
+
+super + S
+	bspc node -t floating
+
+# Switch out the current node for a "hidden" node (stored in Desktop "q")
+super + s
+        bspc query -d q -N | grep -v '0x00A0' | head -1 | while read windowid ; do bspc node -s $windowid ; done
+	#bspc query -d q -N | grep -v '0x00A0' | while read windowid ; do xprop -id $windowid WM_CLASS | awk '{print $4}' ; done
 
 super + {grave,Tab}
 	bspc {node,desktop} -f last
@@ -64,15 +72,16 @@ super + alt + shift + {h,j,k,l}
 super + ctrl + {1-9}
 	bspc node -r 0.{1-9}
 
-super + {_,shift + }{1-9,0,q}
-	bspc {desktop -f,node -d} {1-9,0,q}
+super + {_,shift + }{1-9,0,q,w}
+	bspc {desktop -f,node -d} {1-9,0,q,w}
 
 #
 # wm independent hotkeys
 #
 
 super + Return
-	urxvt
+	alacritty
+#	urxvt
 #st
 
 # make sxhkd reload its configuration files:
@@ -93,3 +102,6 @@ Messenger
 
 XF86WWW
 	bspc desktop -f ^4
+
+super + m ; ctrl + c ; ctrl + k ; ctrl + g
+	urxvt
