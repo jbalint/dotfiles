@@ -38,3 +38,21 @@ set print pretty on
 
 set auto-load safe-path /
 
+#dashboard -layout breakpoints expressions source stack variables
+
+set logging on
+# https://stackoverflow.com/questions/5941158/gdb-print-to-file-instead-of-stdout
+set logging redirect on
+
+# Don't detach either process on fork: instead, follow both parent and child.
+set detach-on-fork off
+# Don't pause newly attached processes; let the child continue immediately
+set non-stop on
+
+# https://stackoverflow.com/questions/5697042/command-to-suspend-a-thread-with-gdb
+set target-async 1
+set non-stop on
+# ??
+#set scheduler-locking on
+
+set debuginfod enabled on
