@@ -285,12 +285,18 @@ stty start undef
 # dbus-monitor "path='/im/pidgin/purple/PurpleObject',interface='im.pidgin.purple.PurpleInterface',member='ReceivedChatMsg'"
 # egrep -v '(torrent|guestbook|mediawiki|OPTIONS|POST|HEAD)' access_log | less
 
-# https://wiki.archlinux.org/index.php/SSH_keys#SSH_agents
-if ! pgrep -u "$USER" ssh-agent > /dev/null; then
-    ssh-agent | grep -v "Agent pid" > "$XDG_RUNTIME_DIR/ssh-agent.env"
+# ssh-agent is supervised by systemd --user (ssh-agent.socket/service);
+# honor a forwarded agent first, else fall back to the fixed local socket.
+if [[ -z "$SSH_AUTH_SOCK" ]]; then
+    export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 fi
-if [[ ! "$SSH_AUTH_SOCK" ]]; then
-    eval "$(<"$XDG_RUNTIME_DIR/ssh-agent.env")"
+
+# On interactive login, auto-load the server's own key into the local agent.
+# Only when using the fallback local socket, and only if it holds no keys yet.
+if [[ -o interactive ]] && \
+   [[ "$SSH_AUTH_SOCK" == "$XDG_RUNTIME_DIR/ssh-agent.socket" ]] && \
+   ! ssh-add -l >/dev/null 2>&1; then
+    ssh-add "${HOME}/.ssh/id_rsa" 2>/dev/null || true
 fi
 
 ################################################
