@@ -72,6 +72,25 @@ systemctl --user status  ssh-agent.socket ssh-agent.service
 
 After `restart`, loaded keys are cleared — run `ssh-add` again to repopulate.
 
+## Installing on another machine
+
+Clone the repo, run the installer to create the symlinks, then enable the socket.
+
+```sh
+git clone <url> ~/sw/dotfiles
+cd ~/sw/dotfiles
+./bin/install.sh        # symlinks configs/* + systemd/* + environment.d/* into ~/.config
+systemctl --user daemon-reload
+systemctl --user enable --now ssh-agent.socket
+```
+
+That brings up the global agent and sets `SSH_AUTH_SOCK`. The `.zshrc` block
+(forwarded-first, global fallback, interactive auto-`ssh-add`) comes along with the
+`configs/zshrc` symlink. Confirm with `SSH_AUTH_SOCK="\$XDG_RUNTIME_DIR/ssh-agent.socket" ssh-add -l`.
+
+The `systemd/*` and `environment.d/*` symlinks land under `~/.config/`; the installer
+skips any target that already exists (so existing configs are left intact).
+
 ## Notes and caveats
 
 - **Agent forwarding**: this server is reached over SSH, and forwarding exposes the
